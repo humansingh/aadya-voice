@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#123d31" />
+<title>Sahayak — A public-service desk that speaks your language</title>
+<meta name="description" content="Ask about government schemes, scholarships, pensions and jobs by voice—in the language you already speak." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/product.css">
+<style>
+  :root {
+    --paper: #f4f1e8;
+    --paper-2: #ebe7dc;
+    --surface: #fffdf8;
+    --ink: #17352d;
+    --muted: #68756f;
+    --line: rgba(23, 53, 45, .14);
+    --forest: #123d31;
+    --forest-2: #0a2c23;
+    --leaf: #2f845e;
+    --mint: #ccebd8;
+    --mint-2: #e6f5eb;
+    --sun: #f3bd52;
+    --coral: #ea7966;
+    --blue: #6e9ec3;
+    --shadow: 0 28px 80px rgba(30, 55, 47, .12);
+    --radius-xl: 38px;
+    --radius-lg: 28px;
+    --radius-md: 20px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    color: var(--ink);
+    background:
+      radial-gradient(circle at 14% 4%, rgba(243, 189, 82, .10), transparent 27rem),
+      radial-gradient(circle at 92% 16%, rgba(47, 132, 94, .08), transparent 32rem),
+      var(--paper);
+    font-family: "DM Sans", "Noto Sans Devanagari", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    opacity: .26;
+    pointer-events: none;
+    z-index: 20;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  }
+  a { color: inherit; text-decoration: none; }
+  button, input { font: inherit; }
+  button { cursor: pointer; }
+  ::selection { background: var(--sun); color: var(--forest-2); }
+
+  .page { width: min(1440px, calc(100% - 28px)); margin: 14px auto 0; }
+  .shell { border-radius: 34px 34px 0 0; overflow: clip; }
+  .wrap { width: min(1180px, calc(100% - 44px)); margin: 0 auto; }
+
+  /* Navigation */
+  .nav-wrap {
+    position: fixed;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(1040px, calc(100% - 40px));
+    z-index: 50;
+  }
+  nav {
+    min-height: 62px;
+    padding: 8px 9px 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 22px;
+    border: 1px solid rgba(255, 255, 255, .72);
+    background: rgba(255, 253, 248, .82);
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    border-radius: 999px;
+    box-shadow: 0 12px 38px rgba(23, 53, 45, .12);
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+  }
+  nav.scrolled { background: rgba(255, 253, 248, .94); box-shadow: 0 16px 46px rgba(23, 53, 45, .16); }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: "Manrope", sans-serif; font-weight: 700; letter-spacing: -.03em; }
+  .brand-mark {
+    width: 35px; height: 35px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--forest); color: #fff;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+  }
+  .brand-mark svg { width: 19px; height: 19px; }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-links a { color: #4d5e57; padding: 10px 13px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; transition: .2s ease; }
+  .nav-links a:hover { background: var(--paper-2); color: var(--forest); }
+  .nav-account-actions { display:flex; align-items:center; gap:5px; }
+  .nav-signin { display:inline-flex; align-items:center; min-height:44px; padding:0 14px; border-radius:999px; color:var(--forest); font-size:13px; font-weight:700; white-space:nowrap; }
+  .nav-signin:hover { background:var(--paper-2); }
+  .nav-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--forest); color: #fff; min-height: 44px; padding: 0 18px; border-radius: 999px; font-size: 13px; font-weight: 700; white-space:nowrap; }
+  .nav-cta svg { width: 14px; transition: transform .2s ease; }
+  .nav-cta:hover svg { transform: translateX(3px); }
+  .menu-btn { display: none; width: 42px; height: 42px; border-radius: 50%; border: 0; background: var(--forest); color: #fff; place-items: center; transition: transform .2s ease, background .2s ease; }
+  .menu-btn:hover { background: #09291f; }
+  .menu-btn svg { transition: transform .22s ease; }
+  .menu-btn.open svg { transform: rotate(90deg); }
+  .mobile-nav-sheet {
+    display: none;
+    position: absolute;
+    top: 70px; left: 0; right: 0;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,.78);
+    border-radius: 24px;
+    background: rgba(255,253,248,.96);
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+    box-shadow: 0 22px 55px rgba(23,53,45,.19);
+    opacity: 0;
+    transform: translateY(-8px) scale(.985);
+    transform-origin: top;
+    pointer-events: none;
+    transition: opacity .2s ease, transform .24s cubic-bezier(.2,.75,.25,1);
+  }
+  .mobile-nav-sheet.open { opacity: 1; transform: none; pointer-events: auto; }
+  .mobile-nav-sheet a {
+    min-height: 48px;
+    padding: 0 15px;
+    border-radius: 15px;
+    display: flex; align-items: center; justify-content: space-between; gap: 14px;
+    color: #40554c;
+    font-size: 13px; font-weight: 700;
+  }
+  .mobile-nav-sheet a:hover { background: var(--paper-2); color: var(--forest); }
+  .mobile-nav-sheet a svg { width: 14px; }
+  .mobile-nav-sheet .mobile-open { margin-top: 5px; background: var(--forest); color: #fff; }
+  .mobile-nav-sheet .mobile-open:hover { background: #09291f; color: #fff; }
+  .mobile-nav-sheet .mobile-signin { margin-top:5px; border:1px solid var(--line); }
+
+  /* Hero */
+  .hero {
+    min-height: 860px;
+    padding: 154px 0 70px;
+    border-radius: var(--radius-xl);
+    color: #f8fff9;
+    background: linear-gradient(137deg, #164f3d 0%, #0e382c 48%, #09281f 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: .9fr 1.1fr; gap: 58px; align-items: center; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: #d7eee0; }
+  .eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sun); box-shadow: 0 0 0 7px rgba(243,189,82,.12); }
+  h1 { margin: 23px 0 24px; max-width: 680px; font-family: "Manrope", sans-serif; font-size: clamp(46px, 5.4vw, 72px); line-height: 1; letter-spacing: -.06em; font-weight: 600; text-wrap: balance; }
+  #hero-title { height: 2.12em; }
+  h1 .soft { color: #b8dbc6; }
+  .hero-copy > p { margin: 0; max-width: 610px; color: #c8dbd1; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.62; }
+  .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+  .button { min-height: 52px; padding: 0 22px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid transparent; font-size: 14px; font-weight: 700; transition: transform .2s ease, background .2s ease, border-color .2s ease; }
+  .button:hover { transform: translateY(-2px); }
+  .button.light { background: #fffdf8; color: var(--forest); }
+  .button.outline { border-color: rgba(255,255,255,.22); color: #fff; background: rgba(255,255,255,.06); }
+  .button svg { width: 17px; height: 17px; }
+  .type-caret{display:none;width:.075em;height:.8em;margin-left:.08em;vertical-align:-.04em;background:var(--sun)}
+  #hero-title.is-typing .type-caret{display:inline-block;animation:typeCaret .72s steps(1,end) infinite}
+  #hero-title.typing-done .type-caret{display:inline-block;animation:typeCaretFade .7s ease forwards}
+  @keyframes typeCaret{0%,48%{opacity:1}49%,100%{opacity:0}}
+  @keyframes typeCaretFade{0%{opacity:1}100%{opacity:0}}
+  .hero-proof { margin-top: 34px; display: flex; align-items: center; gap: 14px; color: #a9c6b8; font-size: 12px; }
+  .language-stack { display: flex; align-items: center; }
+  .language-stack span { width: 32px; height: 32px; margin-left: -7px; border: 2px solid var(--forest); border-radius: 50%; display: grid; place-items: center; background: #f2eadb; color: var(--forest); font-size: 10px; font-weight: 700; }
+  .language-stack span:first-child { margin-left: 0; }
+
+  /* Interactive call stage */
+  .call-stage {
+    position: relative;
+    min-height: 580px;
+    display: grid;
+    align-items: end;
+  }
+  .call-card {
+    position: relative; z-index: 3;
+    margin-left: auto;
+    width: min(100%, 600px);
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 29px;
+    background: rgba(245, 250, 246, .94);
+    color: var(--ink);
+    box-shadow: 0 34px 90px rgba(0,0,0,.28);
+    overflow: hidden;
+  }
+  .call-card-top { min-height: 52px; padding: 0 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(23,53,45,.09); background:rgba(255,255,255,.62); }
+  .live-label { display:flex; align-items:center; gap:8px; color: var(--forest); font-size: 11px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
+  .live-label span { width:7px;height:7px;border-radius:50%;background:#35a56f;box-shadow:0 0 0 5px rgba(53,165,111,.12); }
+  .call-card-time { color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums; }
+  .call-content { display:grid; grid-template-columns: 1fr 1.08fr; min-height: 285px; }
+  .transcript-pane { padding: 24px; border-right:1px solid rgba(23,53,45,.09); display:flex;flex-direction:column;justify-content:space-between; gap:18px; background:#fffdf9; }
+  .pane-label { color:#718078;font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:800; }
+  .speaker-line { font-family:"Manrope", "Noto Sans Devanagari", sans-serif; font-size:20px;line-height:1.42;letter-spacing:-.025em; }
+  .speaker-meta { display:flex;align-items:center;gap:9px;font-size:11px;color:var(--muted); }
+  .mini-avatar { width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:var(--paper-2);font-weight:700;color:var(--forest); }
+  .answer-pane { padding:24px;display:flex;flex-direction:column;gap:14px;background:var(--mint-2); }
+  .answer-title { font-size:12px;font-weight:800;color:var(--forest);display:flex;align-items:center;gap:7px; }
+  .answer-title svg { width:15px; }
+  .answer-copy { font-size:15px;line-height:1.55; }
+  .mini-checklist { display:flex;flex-direction:column;gap:8px;margin-top:auto; }
+  .mini-check { display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#36564a; }
+  .mini-check i { width:17px;height:17px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--leaf);font-style:normal;font-size:10px; }
+  .call-controls { padding:14px 15px;display:grid;grid-template-columns:1fr auto;gap:10px;border-top:1px solid rgba(23,53,45,.09);background:#fff; }
+  .scenario-switcher { display:flex;gap:7px;overflow-x:auto;scrollbar-width:none; }
+  .scenario-switcher::-webkit-scrollbar{display:none}
+  .scenario { flex:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:8px 11px;border-radius:999px;font-size:11px;font-weight:700;transition:.18s ease; }
+  .scenario.active,.scenario:hover{background:var(--forest);border-color:var(--forest);color:#fff;}
+  .call-mic { width:42px;height:42px;border:0;border-radius:50%;display:grid;place-items:center;background:var(--sun);color:var(--forest);box-shadow:0 8px 20px rgba(243,189,82,.35);transition:.2s ease; }
+  .call-mic:hover { transform:scale(1.06); }
+  .call-mic svg { width:18px; }
+
+  .language-ribbon {
+    position: relative; z-index:3;
+    margin-top:58px;
+    display:none;align-items:center;gap:34px;overflow:hidden;
+    color:#abc9ba;font-size:13px;font-weight:600;white-space:nowrap;
+  }
+  .language-ribbon-track { display:flex;gap:34px;min-width:max-content; }
+  .language-ribbon span::before { content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--sun);margin:0 10px 2px 0; }
+
+  /* Thesis */
+  .thesis-section { padding: 120px 0 80px; }
+  .thesis-grid { display:grid;grid-template-columns:.72fr 1.28fr;gap:62px;align-items:start; }
+  .section-kicker { font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--leaf);display:flex;align-items:center;gap:9px; }
+  .section-kicker::before{content:"";width:22px;height:1px;background:currentColor;}
+  .thesis-copy h2 { margin:0;font-family:"Manrope",sans-serif;font-size:clamp(38px,5.4vw,72px);line-height:1.05;letter-spacing:-.055em;font-weight:600;text-wrap:balance; }
+  .thesis-copy h2 em{font-style:normal;color:var(--leaf)}
+  .thesis-copy p{font-size:18px;line-height:1.7;color:var(--muted);max-width:760px;margin:30px 0 0;}
+  .thesis-note { margin-top:28px;padding:18px 20px;border-left:3px solid var(--sun);background:rgba(255,253,248,.62);font-size:14px;line-height:1.6;color:#475a52; }
+
+  /* Journey */
+  .journey { padding: 42px 0 120px; }
+  .section-head { display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:34px; }
+  .section-head h2 { margin:10px 0 0;font-family:"Manrope",sans-serif;font-size:clamp(34px,4vw,54px);line-height:1.05;letter-spacing:-.05em;font-weight:600; }
+  .section-head p { max-width:440px;margin:0;color:var(--muted);font-size:15px;line-height:1.65; }
+  .journey-stage { border-radius:var(--radius-xl);background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);overflow:hidden; }
+  .journey-grid { display:grid;grid-template-columns:repeat(4,1fr); }
+  .journey-step { min-height:360px;padding:28px;position:relative;border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden;transition:.25s ease; }
+  .journey-step:last-child{border-right:0}
+  .journey-step:hover{background:var(--mint-2)}
+  .step-number { color:var(--leaf);font-size:11px;font-weight:800;letter-spacing:.12em; }
+  .step-visual { height:158px;display:grid;place-items:center;position:relative; }
+  .step-visual svg { width:132px;height:132px;overflow:visible; }
+  .journey-step h3{margin:8px 0 9px;font-family:"Manrope",sans-serif;font-size:20px;letter-spacing:-.025em;}
+  .journey-step p{margin:0;color:var(--muted);font-size:13px;line-height:1.55;}
+  .voice-bars { display:flex;align-items:center;gap:6px;height:90px; }
+  .voice-bars i{width:7px;border-radius:9px;background:var(--forest);animation:softWave 1.1s ease-in-out infinite;}
+  .voice-bars i:nth-child(1){height:28%;}.voice-bars i:nth-child(2){height:64%;animation-delay:-.2s}.voice-bars i:nth-child(3){height:92%;animation-delay:-.4s}.voice-bars i:nth-child(4){height:55%;animation-delay:-.6s}.voice-bars i:nth-child(5){height:75%;animation-delay:-.8s}
+  @keyframes softWave{0%,100%{transform:scaleY(.55);opacity:.45}50%{transform:scaleY(1);opacity:1}}
+  .transcript-slip { width:145px;padding:14px;border:1px solid var(--line);border-radius:15px;background:#fff;box-shadow:0 10px 30px rgba(23,53,45,.1);transform:rotate(-4deg); }
+  .transcript-slip i{display:block;height:7px;border-radius:10px;background:var(--paper-2);margin:7px 0}.transcript-slip i:nth-child(2){width:72%;background:var(--mint)}.transcript-slip i:nth-child(3){width:86%}
+  .source-stamp { width:130px;height:130px;border:1px solid var(--leaf);border-radius:50%;display:grid;place-items:center;text-align:center;color:var(--forest);font-size:12px;font-weight:800;line-height:1.2;transform:rotate(8deg);box-shadow:inset 0 0 0 8px var(--mint-2); }
+  .check-card { width:150px;padding:15px;border-radius:17px;background:var(--forest);color:#fff;box-shadow:0 18px 36px rgba(18,61,49,.25);transform:rotate(3deg); }
+  .check-card b{font-size:11px;display:block;margin-bottom:9px;color:#bfe0cc}.check-card span{display:flex;gap:7px;align-items:center;font-size:10px;margin-top:7px}.check-card span::before{content:"✓";width:15px;height:15px;border-radius:50%;display:grid;place-items:center;background:var(--sun);color:var(--forest);font-weight:800}
+
+  /* Use cases */
+  .moments { background:var(--forest);color:#f7fff9;border-radius:var(--radius-xl);padding:78px 0;position:relative;overflow:hidden; }
+  .moments::before { content:"";position:absolute;width:700px;height:700px;border-radius:50%;right:-350px;top:-380px;border:1px solid rgba(255,255,255,.08);box-shadow:0 0 0 80px rgba(255,255,255,.025),0 0 0 160px rgba(255,255,255,.018); }
+  .moments .section-kicker{color:#bcdac8}.moments .section-head p{color:#b7cbbf}.moments .section-head{position:relative;z-index:2}
+  .moments-grid{position:relative;z-index:2;display:grid;grid-template-columns:1.2fr .8fr;gap:16px;}
+  .story-card{border-radius:30px;overflow:hidden;background:#f8f4e9;color:var(--ink);min-height:520px;display:grid;grid-template-rows:1fr auto;position:relative;}
+  .story-art{position:relative;min-height:340px;padding:34px;display:flex;align-items:center;justify-content:center;background:linear-gradient(155deg,#d8ecdf,#b7dcc7);overflow:hidden;}
+  .story-art::before{content:"";position:absolute;width:360px;height:360px;border-radius:50%;border:1px solid rgba(18,61,49,.16);box-shadow:0 0 0 48px rgba(18,61,49,.04),0 0 0 96px rgba(18,61,49,.025);}
+  .story-person { width:210px;height:250px;border-radius:110px 110px 34px 34px;background:linear-gradient(160deg,#1c5d47,#0d3328);position:relative;box-shadow:0 28px 50px rgba(23,53,45,.25); }
+  .story-person::before { content:"";position:absolute;width:88px;height:88px;border-radius:50%;background:#cb865f;left:61px;top:25px;box-shadow:inset -12px -8px 0 rgba(94,42,29,.12); }
+  .story-person::after { content:"";position:absolute;width:48px;height:25px;border-radius:28px 28px 8px 8px;background:#17352d;left:80px;top:19px;transform:rotate(-8deg); }
+  .story-phone{position:absolute;width:62px;height:112px;border:5px solid #172e27;border-radius:15px;background:#fff;right:96px;bottom:74px;transform:rotate(10deg);box-shadow:0 14px 25px rgba(0,0,0,.25);display:grid;place-items:center;}
+  .story-phone::after{content:"";width:28px;height:28px;border-radius:50%;background:var(--sun);box-shadow:0 0 0 8px var(--mint-2)}
+  .story-bubble{position:absolute;left:40px;top:38px;max-width:250px;padding:15px 17px;border-radius:18px 18px 18px 5px;background:#fff;color:var(--forest);font-family:"Noto Sans Devanagari",sans-serif;font-size:15px;font-weight:600;box-shadow:0 12px 34px rgba(23,53,45,.12);}
+  .story-copy{padding:28px 30px 30px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;}
+  .story-copy h3{margin:0 0 8px;font-family:"Manrope",sans-serif;font-size:28px;letter-spacing:-.04em}.story-copy p{margin:0;color:var(--muted);font-size:14px;line-height:1.6;max-width:560px}
+  .story-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.story-tab{border:1px solid var(--line);background:transparent;color:var(--muted);padding:9px 12px;border-radius:999px;font-size:11px;font-weight:700}.story-tab.active{background:var(--forest);color:#fff;border-color:var(--forest)}
+  .small-stories{display:grid;gap:16px;}
+  .small-story{min-height:252px;border-radius:30px;padding:28px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;justify-content:space-between;transition:.25s ease;}
+  .small-story:hover{background:rgba(255,255,255,.12);transform:translateY(-3px)}
+  .story-icon{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:var(--sun);color:var(--forest)}.story-icon svg{width:23px}
+  .small-story h3{font-family:"Manrope",sans-serif;font-size:23px;line-height:1.14;letter-spacing:-.035em;margin:22px 0 8px}.small-story p{margin:0;color:#b9cec2;font-size:13px;line-height:1.55}.small-story .quote{font-family:"Noto Sans Devanagari",sans-serif;color:#fff;font-size:14px;margin-top:16px}
+
+  /* Trust */
+  .trust-section { padding:120px 0; }
+  .trust-grid { display:grid;grid-template-columns:.78fr 1.22fr;gap:70px;align-items:start; }
+  .trust-copy h2{font-family:"Manrope",sans-serif;font-size:clamp(36px,4.4vw,60px);line-height:1.05;letter-spacing:-.055em;margin:16px 0 24px;font-weight:600}.trust-copy p{font-size:16px;line-height:1.68;color:var(--muted);margin:0}.trust-rule{margin-top:28px;padding:16px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:flex;gap:12px;color:var(--forest);font-size:13px;font-weight:700}.trust-rule svg{width:20px;flex:none}
+  .confidence-stack{display:grid;gap:12px}.confidence-card{display:grid;grid-template-columns:76px 1fr auto;gap:20px;align-items:center;padding:22px 24px;border-radius:24px;background:var(--surface);border:1px solid var(--line);transition:.25s ease}.confidence-card:hover{transform:translateX(-6px);box-shadow:0 18px 45px rgba(23,53,45,.09)}
+  .confidence-mark{width:58px;height:58px;border-radius:18px;display:grid;place-items:center;font-family:"Manrope",sans-serif;font-size:20px;font-weight:700}.confidence-card:nth-child(1) .confidence-mark{background:#d9eee1;color:#2f744f}.confidence-card:nth-child(2) .confidence-mark{background:#f8e7be;color:#94691d}.confidence-card:nth-child(3) .confidence-mark{background:#dce8f0;color:#446b88}
+  .confidence-card h3{margin:0 0 5px;font-size:16px}.confidence-card p{margin:0;color:var(--muted);font-size:12px;line-height:1.5}.confidence-card .signal{font-size:10px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--muted)}
+
+  /* Field workers */
+  .field-panel{border-radius:var(--radius-xl);background:#dcebdd;padding:72px;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center;overflow:hidden;position:relative}.field-panel::after{content:"";position:absolute;width:460px;height:460px;border:1px solid rgba(18,61,49,.11);border-radius:50%;right:-160px;bottom:-250px;box-shadow:0 0 0 60px rgba(18,61,49,.03),0 0 0 120px rgba(18,61,49,.018)}
+  .field-panel h2{font-family:"Manrope",sans-serif;font-size:clamp(35px,4vw,56px);line-height:1.05;letter-spacing:-.05em;margin:17px 0 20px;font-weight:600}.field-panel p{margin:0;color:#4d665b;font-size:16px;line-height:1.65}.field-list{display:grid;gap:10px;position:relative;z-index:2}.field-item{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 20px;border-radius:18px;background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.72);font-size:14px;font-weight:700}.field-item span:last-child{color:var(--leaf);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+
+  /* CTA / footer */
+  .final-cta{margin-top:120px;border-radius:var(--radius-xl);min-height:560px;padding:74px;display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;background:linear-gradient(140deg,#164d3b,#09271f);color:#fff;position:relative;overflow:hidden}.final-cta::before{content:"";position:absolute;inset:auto -10% -62% 18%;height:540px;border-radius:50%;background:radial-gradient(ellipse,rgba(77,173,120,.48),rgba(77,173,120,.06) 54%,transparent 72%);filter:blur(12px)}
+  .final-cta h2{position:relative;z-index:2;font-family:"Manrope",sans-serif;font-size:clamp(45px,6vw,78px);line-height:.98;letter-spacing:-.065em;margin:0 0 24px;font-weight:600}.final-cta p{position:relative;z-index:2;color:#bdd2c7;font-size:17px;line-height:1.65;max-width:540px;margin:0 0 30px}.final-cta .button{position:relative;z-index:2}
+  .cta-art{height:350px;position:relative;z-index:2;display:grid;place-items:center}.cta-disc{width:300px;height:300px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f7d99d,#efb948 50%,#c67b2f 100%);box-shadow:0 40px 90px rgba(0,0,0,.34),inset 0 2px 2px rgba(255,255,255,.5);display:grid;place-items:center;color:var(--forest);position:relative}.cta-disc::before,.cta-disc::after{content:"";position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.18)}.cta-disc::before{inset:-35px}.cta-disc::after{inset:-75px}.cta-disc svg{width:84px;height:84px}.cta-disc span{position:absolute;bottom:53px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.14em}
+  .site-footer{padding:52px 0 34px;display:grid;grid-template-columns:1fr auto;gap:30px;align-items:start;color:var(--muted);font-size:12px}.footer-brand{display:flex;align-items:center;gap:12px;color:var(--forest);font-size:18px;font-weight:800}.footer-copy{margin-top:12px;max-width:540px;line-height:1.55}.footer-links{display:flex;gap:20px;flex-wrap:wrap;justify-content:flex-end;font-weight:600}.footer-links a:hover{color:var(--forest)}
+
+  /* Live operating-cost view */
+  .cost-section{padding:120px 0 8px}.cost-shell{padding:62px;border:1px solid var(--line);border-radius:var(--radius-xl);background:var(--surface);box-shadow:var(--shadow);overflow:hidden;position:relative}.cost-shell::after{content:"";position:absolute;width:430px;height:430px;right:-250px;top:-250px;border:1px solid rgba(18,61,49,.10);border-radius:50%;box-shadow:0 0 0 54px rgba(18,61,49,.025),0 0 0 108px rgba(18,61,49,.018);pointer-events:none}.cost-head{display:grid;grid-template-columns:1fr .78fr;gap:56px;align-items:end;position:relative;z-index:1}.cost-head h2{margin:14px 0 0;font-family:"Manrope",sans-serif;font-size:clamp(38px,5vw,66px);line-height:1.02;letter-spacing:-.058em;font-weight:600}.cost-head p{margin:0;color:var(--muted);font-size:15px;line-height:1.7}.cost-grid{margin-top:44px;display:grid;grid-template-columns:.82fr 1.18fr;gap:18px;position:relative;z-index:1}.cost-controls,.cost-output{border:1px solid var(--line);border-radius:25px}.cost-controls{padding:26px;background:var(--paper)}.cost-control{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:23px}.cost-control:last-child{margin-bottom:0}.cost-control label{font-size:12px;font-weight:800}.cost-value{font:700 12px "Manrope",sans-serif;color:var(--leaf);font-variant-numeric:tabular-nums}.cost-control small{grid-column:1/-1;color:var(--muted);font-size:10px;line-height:1.45}.cost-control input[type="range"]{grid-column:1/-1;width:100%;accent-color:var(--forest)}.cost-control select{grid-column:1/-1;width:100%;min-height:44px;padding:0 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font-weight:700}.cost-output{padding:30px;background:#0d3429;color:#fff}.cost-totals{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.cost-total{min-height:112px;padding:17px;border:1px solid rgba(255,255,255,.13);border-radius:17px;background:rgba(255,255,255,.06)}.cost-total span{display:block;color:#a9c6b8;font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}.cost-total strong{display:block;margin-top:17px;font:600 clamp(19px,2.2vw,28px) "Manrope",sans-serif;letter-spacing:-.035em;font-variant-numeric:tabular-nums}.cost-breakdown{margin-top:27px;display:grid;gap:13px}.cost-line{display:grid;grid-template-columns:112px 1fr 72px;gap:12px;align-items:center;font-size:11px}.cost-line span:first-child{color:#cee1d6}.cost-bar{height:8px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}.cost-bar i{display:block;height:100%;width:0;background:var(--sun);border-radius:inherit;transition:width .25s ease}.cost-line b{text-align:right;font-variant-numeric:tabular-nums}.cost-optional{margin-top:24px;padding:15px 17px;border:1px dashed rgba(255,255,255,.28);border-radius:15px;color:#bdd2c7;font-size:11px;line-height:1.55}.cost-notes{margin-top:23px;display:grid;grid-template-columns:1fr auto;gap:22px;color:var(--muted);font-size:10px;line-height:1.6}.cost-notes p{margin:0}.cost-sources{display:flex;gap:13px;flex-wrap:wrap;justify-content:flex-end;font-weight:800}.cost-sources a{text-decoration:underline;text-underline-offset:3px}.cost-sources a:hover{color:var(--forest)}
+
+  /* Product pathways */
+  .landing-prefs{display:flex;align-items:center}.landing-prefs .preference-controls label>span,.landing-prefs .experience-label{display:none}.landing-prefs .preference-controls label,.landing-prefs .experience-control{min-height:40px;height:40px;padding-left:4px}.landing-prefs .preference-controls select{width:88px;max-width:88px}.landing-mobile-prefs{display:none}
+  .pathways{padding:116px 0 14px}.pathway-head{display:grid;grid-template-columns:.8fr 1.2fr;gap:54px;align-items:end;margin-bottom:31px}.pathway-head h2{margin:0;font-family:"Manrope",sans-serif;font-size:clamp(38px,5vw,67px);line-height:1.04;letter-spacing:-.057em;font-weight:600}.pathway-head p{margin:0;color:var(--muted);font-size:15px;line-height:1.7;max-width:650px}.persona-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.persona-card{min-height:226px;padding:20px;border:1px solid var(--line);border-radius:23px;background:var(--surface);color:var(--ink);text-align:left;display:flex;flex-direction:column;transition:.22s ease}.persona-card:hover,.persona-card.active{transform:translateY(-4px);border-color:rgba(47,132,94,.36);box-shadow:0 18px 42px rgba(23,53,45,.09);background:var(--mint-2)}.persona-symbol{width:42px;height:42px;border-radius:14px;background:var(--mint);display:grid;place-items:center;color:var(--forest);font-size:18px}.persona-card h3{margin:auto 0 7px;font-family:"Manrope",sans-serif;font-size:17px;letter-spacing:-.03em}.persona-card p{margin:0;color:var(--muted);font-size:11px;line-height:1.55}.persona-card span:last-child{margin-top:16px;color:var(--leaf);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.09em}
+  .demo-portal{margin-top:92px;padding:26px;border-radius:34px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);display:grid;grid-template-columns:.72fr 1.28fr;gap:25px;align-items:stretch}.demo-portal-copy{padding:33px 30px}.demo-portal-copy h2{font-family:"Manrope",sans-serif;font-size:clamp(34px,4.3vw,54px);line-height:1.04;letter-spacing:-.052em;margin:14px 0 17px;font-weight:600}.demo-portal-copy p{margin:0 0 25px;color:var(--muted);font-size:14px;line-height:1.65}.demo-portal-copy .button{background:var(--forest);color:#fff}.headless-preview{min-height:370px;padding:18px;border-radius:25px;background:#0b3026;color:#fff;position:relative;overflow:hidden;display:grid;grid-template-rows:38px minmax(0,1fr)}.headless-preview::before{content:"";position:absolute;inset:0;opacity:.14;background-image:linear-gradient(rgba(255,255,255,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.22) 1px,transparent 1px);background-size:31px 31px}.preview-bar{height:38px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}.preview-live{display:flex;align-items:center;gap:7px;color:#b9d4c4;font-size:9px;font-weight:800;letter-spacing:.1em}.preview-live i{width:7px;height:7px;border-radius:50%;background:#53c184;box-shadow:0 0 0 5px rgba(83,193,132,.12)}.preview-flow{position:relative;z-index:2;min-height:0;height:100%;padding:20px 10px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:9px;align-items:stretch}.preview-node{min-height:0;padding:20px 14px;border:1px solid rgba(255,255,255,.13);border-radius:17px;background:rgba(255,255,255,.07);display:flex;flex-direction:column;animation:nodeGlow 4.8s ease-in-out infinite}.preview-node:nth-child(2){animation-delay:-3.6s}.preview-node:nth-child(3){animation-delay:-2.4s}.preview-node:nth-child(4){animation-delay:-1.2s}@keyframes nodeGlow{0%,18%{background:rgba(242,189,85,.19);transform:translateY(-4px)}28%,100%{background:rgba(255,255,255,.07);transform:none}}.preview-node i{width:28px;height:28px;border-radius:10px;background:var(--sun);display:grid;place-items:center;color:var(--forest);font-style:normal;font-size:10px;font-weight:800}.preview-node b{margin-top:auto;font-size:10px}.preview-node span{min-height:28px;margin-top:10px;color:#a9c3b5;font-size:8.5px;line-height:1.45}
+
+
+  .reveal { opacity: 1; transform: none; }
+  /* Easy mode is a separate, deliberately plain interface for low-confidence users. */
+  html[data-mode="easy"] body{background:#fff;color:#111}
+  html[data-mode="easy"] .page{width:100%;margin:0;background:#fff}
+  html[data-mode="easy"] .nav-wrap{position:relative;top:0;width:100%;margin:0;padding:0;background:#fff;border-bottom:3px solid #176b45;box-shadow:none}
+  html[data-mode="easy"] nav{min-height:70px;border:0;border-radius:0;background:#fff;box-shadow:none;backdrop-filter:none}
+  html[data-mode="easy"] .brand-mark{border-radius:4px;box-shadow:none}
+  html[data-mode="easy"] .nav-links,html[data-mode="easy"] .menu-btn,html[data-mode="easy"] .mobile-nav-sheet{display:none}
+  html[data-mode="easy"] .nav-cta{border-radius:4px;box-shadow:none}
+  html[data-mode="easy"] .hero{min-height:auto;padding:64px 0 48px;border:0;border-radius:0;background:#fff;color:#111}
+  html[data-mode="easy"] .hero::before,html[data-mode="easy"] .hero::after,html[data-mode="easy"] .call-stage,html[data-mode="easy"] .language-ribbon{display:none}
+  html[data-mode="easy"] .hero-grid{display:block;max-width:850px}
+  html[data-mode="easy"] .eyebrow{color:#176b45;letter-spacing:0;text-transform:none;font-size:16px}
+  html[data-mode="easy"] .eyebrow-dot{border-radius:0;background:#176b45;box-shadow:none}
+  html[data-mode="easy"] h1{margin:18px 0;font-size:clamp(38px,6vw,62px);line-height:1.12;letter-spacing:-.025em;font-weight:700;color:#111}
+  html[data-mode="easy"] h1 .soft{color:#176b45}
+  html[data-mode="easy"] .hero-copy>p{max-width:780px;color:#222;font-size:19px;line-height:1.6}
+  html[data-mode="easy"] .button{min-height:58px;border-radius:4px;box-shadow:none;transform:none!important;font-size:16px}
+  html[data-mode="easy"] .button.light{background:#176b45;color:#fff}
+  html[data-mode="easy"] .button.outline{border:2px solid #176b45;background:#fff;color:#176b45}
+  html[data-mode="easy"] .hero-proof{color:#222;font-size:15px}
+  html[data-mode="easy"] .language-stack{display:none}
+  html[data-mode="easy"] .thesis-section,html[data-mode="easy"] .journey,html[data-mode="easy"] .moments,html[data-mode="easy"] .trust-section,html[data-mode="easy"] .field-panel,html[data-mode="easy"] .demo-portal,html[data-mode="easy"] .final-cta{display:none}
+  html[data-mode="easy"] .pathways{padding:48px 0 92px}
+  html[data-mode="easy"] .pathway-head{display:block;max-width:850px}
+  html[data-mode="easy"] .pathway-head .section-kicker{color:#176b45;font-size:14px;letter-spacing:0;text-transform:none}
+  html[data-mode="easy"] .pathway-head h2{font-size:34px;letter-spacing:-.02em;color:#111}
+  html[data-mode="easy"] .pathway-head p{font-size:17px;color:#222}
+  html[data-mode="easy"] .persona-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  html[data-mode="easy"] .persona-card{min-height:178px;border:2px solid #222;border-radius:4px;background:#fff;box-shadow:none;color:#111}
+  html[data-mode="easy"] .persona-card:hover,html[data-mode="easy"] .persona-card.active{transform:none;border-color:#176b45;background:#f1f8f4;box-shadow:inset 6px 0 0 #176b45}
+  html[data-mode="easy"] .persona-symbol{border-radius:3px;background:#176b45;color:#fff}
+  html[data-mode="easy"] .persona-card p{font-size:14px;color:#222}
+  html[data-mode="easy"] .site-footer{border-top:2px solid #222;background:#fff}
+  html[data-mode="easy"] .cost-section{padding-top:34px;background:var(--easy-surface-2)}html[data-mode="easy"] .cost-shell{border-radius:4px;box-shadow:none;background:var(--easy-surface)}html[data-mode="easy"] .cost-controls,html[data-mode="easy"] .cost-output{border-radius:4px}html[data-mode="easy"] .cost-total{border-radius:3px}
+  html[data-mode="easy"] .footer-copy,html[data-mode="easy"] .footer-links{display:none}
+  html[data-mode="easy"] .landing-mobile-prefs{border-radius:4px;box-shadow:none}
+  html[data-mode="easy"] body,html[data-mode="easy"] .page{background:var(--easy-bg);color:var(--easy-ink)}
+  html[data-mode="easy"] .nav-wrap,html[data-mode="easy"] nav{background:var(--easy-surface);border-color:var(--easy-border-strong)}
+  html[data-mode="easy"] .hero{background:var(--easy-bg);color:var(--easy-ink);padding-block:68px 54px}
+  html[data-mode="easy"] .eyebrow,html[data-mode="easy"] .pathway-head .section-kicker{color:var(--easy-muted)}
+  html[data-mode="easy"] .eyebrow-dot{background:var(--easy-active);border:1px solid var(--easy-border-strong)}
+  html[data-mode="easy"] h1,html[data-mode="easy"] .pathway-head h2{color:var(--easy-ink)}
+  html[data-mode="easy"] h1 .soft{color:var(--easy-ink);text-decoration:underline;text-decoration-color:var(--easy-active);text-decoration-thickness:.22em;text-underline-offset:.08em}
+  html[data-mode="easy"] .hero-copy>p,html[data-mode="easy"] .hero-proof,html[data-mode="easy"] .pathway-head p,html[data-mode="easy"] .persona-card p{color:var(--easy-muted)}
+  html[data-mode="easy"] .button.light,html[data-mode="easy"] .nav-cta{background:var(--easy-primary);color:#fff}
+  html[data-mode="easy"] .button.outline{border-color:var(--easy-border-strong);background:var(--easy-surface);color:var(--easy-ink)}
+  html[data-mode="easy"] .pathways{background:var(--easy-surface-2);border-top:1px solid var(--easy-border)}
+  html[data-mode="easy"] .persona-card{border:1px solid var(--easy-border);background:var(--easy-surface);color:var(--easy-ink);padding:24px}
+  html[data-mode="easy"] .persona-card:hover,html[data-mode="easy"] .persona-card.active{border:2px solid var(--easy-border-strong);background:var(--easy-active-soft);box-shadow:inset 7px 0 0 var(--easy-active)}
+  html[data-mode="easy"] .persona-symbol{background:var(--easy-surface-2);border:1px solid var(--easy-border);color:var(--easy-ink)}
+  html[data-mode="easy"] .persona-card.active .persona-symbol{background:var(--easy-active);border-color:var(--easy-border-strong)}
+  html[data-mode="easy"] .site-footer{background:var(--easy-surface);border-color:var(--easy-border-strong)}
+
+  /* The mode controls keep one physical anchor while the surrounding view changes. */
+  @media (min-width:981px){
+    nav{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center}
+    .nav-links{justify-self:center}
+    .landing-prefs{grid-column:3}
+    .nav-account-actions{grid-column:4}
+  }
+  html[data-mode="easy"] .nav-wrap{position:fixed;top:22px;left:50%;transform:translateX(-50%);width:min(1040px,calc(100% - 40px));margin:0;padding:0;background:transparent;border:0;box-shadow:none}
+  html[data-mode="easy"] nav{min-height:62px;padding:8px 9px 8px 16px;border:1px solid var(--easy-border);border-radius:999px;background:var(--easy-surface);box-shadow:0 14px 36px rgba(35,35,33,.08);backdrop-filter:none}
+  html[data-mode="easy"] nav .brand{min-height:35px}
+  html[data-mode="easy"] nav .nav-cta{min-height:44px;height:44px}
+  html[data-mode="easy"] .brand-mark{border-radius:50%}
+  html[data-mode="easy"] .hero{padding-block:132px 64px}
+  html[data-mode="easy"] .wrap{width:100%;max-width:none;padding-inline:max(24px,calc((100vw - 1280px)/2));box-sizing:border-box}
+  html[data-mode="easy"] .hero-actions{display:grid;grid-template-columns:1fr;width:min(100%,720px);gap:10px}
+  html[data-mode="easy"] .hero-actions .button{display:flex!important;width:100%;justify-content:center}
+
+  @media (max-width: 980px) {
+    .nav-links,.landing-prefs{display:none}.menu-btn{display:grid}.mobile-nav-sheet{display:grid}.landing-mobile-prefs{display:block}
+    .hero{min-height:auto;padding-top:132px}.hero-grid{grid-template-columns:1fr}.hero-copy{text-align:center}.hero-copy>p{margin-inline:auto}.hero-actions,.hero-proof{justify-content:center}.call-stage{min-height:560px}.call-card{margin-inline:auto}.language-ribbon{margin-top:35px}
+    .thesis-grid,.trust-grid,.field-panel,.final-cta,.cost-head,.cost-grid{grid-template-columns:1fr;gap:42px}.thesis-grid{gap:28px}.journey-grid{grid-template-columns:1fr 1fr}.journey-step:nth-child(2){border-right:0}.journey-step:nth-child(-n+2){border-bottom:1px solid var(--line)}
+    .moments-grid{grid-template-columns:1fr}.small-stories{grid-template-columns:1fr 1fr}.field-panel,.final-cta{padding:48px}.cta-art{order:-1}.pathway-head,.demo-portal{grid-template-columns:1fr}.persona-grid{grid-template-columns:repeat(3,1fr)}
+  }
+  @media (max-width: 680px) {
+    .page{width:100%;margin:0}.shell,.hero,.moments,.field-panel,.final-cta{border-radius:0}.wrap{width:min(100% - 30px,1180px)}.nav-wrap{top:12px;width:calc(100% - 22px)}nav{padding-left:13px}.brand span:last-child{font-size:14px}.nav-account-actions{display:none}
+    .hero{padding:116px 0 48px}.hero-grid{gap:25px}h1{font-size:48px}.hero-copy>p{font-size:16px}.call-stage{min-height:520px}.call-card{border-radius:23px}.call-content{grid-template-columns:1fr}.transcript-pane{border-right:0;border-bottom:1px solid var(--line);min-height:150px}.answer-pane{min-height:190px}.speaker-line{font-size:17px}.scenario-switcher .scenario:nth-child(n+4){display:none}.language-ribbon{font-size:11px}
+    .thesis-section{padding:82px 0 54px}.thesis-copy h2{font-size:42px}.thesis-copy p{font-size:16px}.section-head{align-items:start;flex-direction:column}.journey{padding-bottom:84px}.journey-grid{grid-template-columns:1fr}.journey-step{min-height:300px;border-right:0;border-bottom:1px solid var(--line)!important}.journey-step:last-child{border-bottom:0!important}.moments{padding:64px 0}.story-card{min-height:auto}.story-art{min-height:315px}.story-bubble{left:18px;top:24px;max-width:220px}.story-phone{right:42px}.story-copy{grid-template-columns:1fr}.story-tabs{justify-content:flex-start}.small-stories{grid-template-columns:1fr}.trust-section{padding:82px 0}.confidence-card{grid-template-columns:58px 1fr}.confidence-card .signal{display:none}.field-panel,.final-cta{padding:52px 22px}.cost-section{padding-top:82px}.cost-shell{padding:45px 22px;border-radius:0}.cost-totals{grid-template-columns:1fr}.cost-total{min-height:90px}.cost-total strong{margin-top:10px}.cost-line{grid-template-columns:92px 1fr 64px}.cost-notes{grid-template-columns:1fr}.cost-sources{justify-content:flex-start}.final-cta{margin-top:82px}.cta-disc{width:230px;height:230px}.cta-art{height:270px}.site-footer{grid-template-columns:1fr}.footer-links{justify-content:flex-start}.pathways{padding-top:82px}.pathway-head{gap:18px}.persona-grid{grid-template-columns:1fr 1fr}.persona-card{min-height:190px}.demo-portal{margin-top:60px;padding:12px;border-radius:0}.demo-portal-copy{padding:28px 13px}.headless-preview{min-height:420px}.preview-flow{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:680px){html[data-mode="easy"] .nav-wrap{top:12px;width:calc(100% - 22px)}html[data-mode="easy"] .wrap{padding-inline:18px}html[data-mode="easy"] .hero{padding:108px 0 42px}html[data-mode="easy"] .hero-copy{text-align:left}html[data-mode="easy"] .hero-actions,html[data-mode="easy"] .hero-proof{justify-content:flex-start}html[data-mode="easy"] .persona-grid{grid-template-columns:1fr}html[data-mode="easy"] .pathways{padding-top:42px}html[data-mode="easy"] .preference-dock{border-radius:4px}}
+  @media (prefers-reduced-motion: reduce) {
+    html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+<div class="nav-wrap">
+  <nav id="nav">
+    <a class="brand" href="#top" aria-label="Sahayak home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h2m2-5v10m4-13v16m4-11v6m4-4v2"/></svg>
+      </span>
+      <span>Sahayak</span>
+    </a>
+    <div class="nav-links">
+      <a href="#why">Why it matters</a>
+      <a href="#journey">How it works</a>
+      <a href="#moments">Who it helps</a>
+      <a href="#trust">Trust</a>
+      <a href="./about.html">About</a>
+      <a href="./integrations.html">Integrations</a>
+    </div>
+    <div class="landing-prefs" id="landing-preferences"></div>
+    <div class="nav-account-actions" aria-label="Account actions">
+      <a class="nav-signin" href="./signup.html?mode=signin">Sign in</a>
+      <a class="nav-cta" href="./signup.html?mode=signup">
+        <span>Create account</span>
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg>
+      </a>
+    </div>
+    <button class="menu-btn" id="menu-btn" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-nav">
+      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+    </button>
+  </nav>
+  <div class="mobile-nav-sheet" id="mobile-nav" aria-hidden="true">
+    <a href="#why"><span>Why it matters</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a href="#journey"><span>How it works</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a href="#moments"><span>Who it helps</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a href="#trust"><span>How trust works</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a href="./about.html"><span>About & architecture</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a href="./integrations.html"><span>Integrations</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a class="mobile-signin" href="./signup.html?mode=signin"><span>Sign in</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a class="mobile-open" href="./signup.html?mode=signup"><span>Create account</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a href="./index.html"><span>Continue as guest</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+  </div>
+</div>
+
+<div class="page shell" id="top">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div class="hero-copy reveal visible">
+          <div class="eyebrow"><span class="eyebrow-dot"></span><span data-landing="eyebrow">Public information, spoken back clearly</span></div>
+          <h1 id="hero-title" aria-label="Public help, in your language."><span aria-hidden="true"><span data-landing="heroLead">Public help,</span> <span class="soft" data-landing="heroSoft">in your language.</span><span class="type-caret"></span></span></h1>
+          <p data-landing="heroBody">Ask about schemes, public services, scholarships, pensions and government jobs. Get one sourced next step, spoken clearly.</p>
+          <div class="hero-actions">
+            <a class="button light" href="./index.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+              <span data-landing="ask">Ask in your language</span>
+            </a>
+            <a class="button outline" href="./demo.html">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 3.8v12.4L16 10 5 3.8z"/></svg>
+              <span data-landing="demo">Try the guided demo</span>
+            </a>
+            <a class="button outline simple-only" href="./integrations.html"><span data-landing="integrations">See integrations</span></a>
+          </div>
+          <div class="hero-proof">
+            <div class="language-stack" aria-label="Supported languages">
+              <span>हि</span><span>EN</span>
+            </div>
+            <span data-landing="proof">Hindi and English. Spoken answers. No form to decode.</span>
+          </div>
+        </div>
+
+        <div class="call-stage reveal visible" aria-label="Interactive Sahayak conversation preview">
+          <div class="call-card" id="call-card">
+            <div class="call-card-top">
+              <div class="live-label"><span></span> Sahayak is listening</div>
+              <div class="call-card-time" id="call-time">00:08</div>
+            </div>
+            <div class="call-content">
+              <div class="transcript-pane">
+                <div>
+                  <div class="pane-label">What Sahayak heard</div>
+                  <div class="speaker-line" id="scenario-question">माझ्या वडिलांना वृद्धापकाळ पेन्शन मिळेल का?</div>
+                </div>
+                <div class="speaker-meta"><span class="mini-avatar" id="scenario-avatar">म</span><span id="scenario-language">Marathi · voice</span></div>
+              </div>
+              <div class="answer-pane">
+                <div class="answer-title">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2.5 16 5v4.5c0 4-2.5 6.7-6 8-3.5-1.3-6-4-6-8V5z"/><path d="m7 10 2 2 4-4"/></svg>
+                  <span id="scenario-source">From official pension details</span>
+                </div>
+                <div class="answer-copy" id="scenario-answer">Check the age and income criteria first. Carry Aadhaar, a bank passbook and proof of age to the Gram Panchayat or block office.</div>
+                <div class="mini-checklist" id="scenario-checklist">
+                  <div class="mini-check"><i>✓</i> Aadhaar card</div>
+                  <div class="mini-check"><i>✓</i> Bank passbook</div>
+                  <div class="mini-check"><i>✓</i> Proof of age</div>
+                </div>
+              </div>
+            </div>
+            <div class="call-controls">
+              <div class="scenario-switcher" role="tablist" aria-label="Preview a use case">
+                <button class="scenario active" data-scenario="elder">Pension</button>
+                <button class="scenario" data-scenario="farmer">PM-KISAN</button>
+                <button class="scenario" data-scenario="student">Scholarship</button>
+                <button class="scenario" data-scenario="caregiver">Ayushman</button>
+              </div>
+              <button class="call-mic" id="preview-mic" aria-label="Replay preview">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="language-ribbon" aria-hidden="true">
+        <div class="language-ribbon-track">
+          <span>हिंदी में पूछें</span><span>ಕನ್ನಡದಲ್ಲಿ ಕೇಳಿ</span><span>தமிழில் கேளுங்கள்</span><span>বাংলায় জিজ্ঞাসা করুন</span><span>मराठीत विचारा</span><span>తెలుగులో అడగండి</span><span>Ask in English</span>
+          <span>हिंदी में पूछें</span><span>ಕನ್ನಡದಲ್ಲಿ ಕೇಳಿ</span><span>தமிழில் கேளுங்கள்</span><span>বাংলায় জিজ্ঞাসা করুন</span><span>मराठीत विचारा</span><span>తెలుగులో అడగండి</span><span>Ask in English</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main>
+    <section class="thesis-section" id="why">
+      <div class="wrap thesis-grid">
+        <div class="section-kicker reveal">The utility</div>
+        <div class="thesis-copy reveal">
+          <h2>The problem is often not eligibility. <em>It is the interface.</em></h2>
+          <p>Millions of useful opportunities are hidden inside English-heavy websites, long PDFs, unfamiliar forms and offices that are expensive to visit twice. Sahayak turns that maze into a conversation: one question in a person’s mother tongue, one sourced answer, and one concrete next step.</p>
+          <div class="thesis-note">Long-running voice agents can become an access layer for people who transact with the world through a phone and their mother tongue—not a replacement for the official office, but a far better way to arrive prepared.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="journey" id="journey">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-kicker">One question, made useful</div>
+            <h2>From voice to action.</h2>
+          </div>
+          <p>Designed around the exact moment somebody needs help—not around a chatbot window or a menu tree.</p>
+        </div>
+        <div class="journey-stage reveal">
+          <div class="journey-grid">
+            <article class="journey-step">
+              <div class="step-number">01 · SPEAK</div>
+              <div class="step-visual"><div class="voice-bars"><i></i><i></i><i></i><i></i><i></i></div></div>
+              <h3>Ask it normally</h3>
+              <p>Speak in the language and phrasing you use at home. No scheme name or perfect search term required.</p>
+            </article>
+            <article class="journey-step">
+              <div class="step-number">02 · CHECK</div>
+              <div class="step-visual"><div class="transcript-slip"><small>HEARD</small><i></i><i></i><i></i></div></div>
+              <h3>Correct what it heard</h3>
+              <p>The transcript is editable before it is sent, so a place name or family name can be fixed without re-recording.</p>
+            </article>
+            <article class="journey-step">
+              <div class="step-number">03 · VERIFY</div>
+              <div class="step-visual"><div class="source-stamp">OFFICIAL<br>DETAILS<br>FOUND</div></div>
+              <h3>Know where it came from</h3>
+              <p>The answer carries a source and an honest confidence state instead of pretending every response is certain.</p>
+            </article>
+            <article class="journey-step">
+              <div class="step-number">04 · ACT</div>
+              <div class="step-visual"><div class="check-card"><b>TAKE WITH YOU</b><span>Aadhaar</span><span>Bank details</span><span>Age proof</span></div></div>
+              <h3>Leave with a checklist</h3>
+              <p>Documents, office or helpline, and the next practical step are packaged to screenshot, share or hear again.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="moments" id="moments">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div>
+            <div class="section-kicker">Built for real moments</div>
+            <h2>Help that meets people where they are.</h2>
+          </div>
+          <p>At a hospital desk, before a bus to the block office, or while helping an entire village from one phone.</p>
+        </div>
+        <div class="moments-grid">
+          <article class="story-card reveal">
+            <div class="story-art">
+              <div class="story-bubble" id="story-quote">“माझा हप्ता अजून आला नाही. काय तपासू?”</div>
+              <div class="story-person"></div>
+              <div class="story-phone"></div>
+            </div>
+            <div class="story-copy">
+              <div>
+                <h3 id="story-title">A farmer, before the day begins.</h3>
+                <p id="story-description">At 6am, from a field, a farmer checks what may hold up a PM-KISAN installment and hears which land and bank records to verify—without reading a portal.</p>
+              </div>
+              <div class="story-tabs" role="tablist">
+                <button class="story-tab active" data-story="farmer">Farmer</button>
+                <button class="story-tab" data-story="patient">Patient</button>
+                <button class="story-tab" data-story="student">Student</button>
+              </div>
+            </div>
+          </article>
+          <div class="small-stories">
+            <article class="small-story reveal">
+              <div class="story-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3h8l4 4v14H6z"/><path d="M9 12h6M9 16h4M14 3v5h5"/></svg>
+              </div>
+              <div>
+                <h3>Frontline workers answer once, consistently.</h3>
+                <p>CSC operators, ASHA workers and NGO field staff can reuse a sourced answer and a screenshot-ready checklist.</p>
+                <div class="quote" id="worker-quote">“एक ही जानकारी, हर बार साफ़।”</div>
+              </div>
+            </article>
+            <article class="small-story reveal">
+              <div class="story-icon" style="background:#b7d7ed">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 18v-5a8 8 0 0 1 16 0v5"/><path d="M4 16H2v4h4v-4zm16 0h2v4h-4v-4z"/></svg>
+              </div>
+              <div>
+                <h3>People can listen, not just read.</h3>
+                <p>Every useful answer can be played again, paused and shared with the family member making the trip.</p>
+                <div class="quote" id="replay-quote">“फिर से सुनाओ।”</div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-section" id="trust">
+      <div class="wrap trust-grid">
+        <div class="trust-copy reveal">
+          <div class="section-kicker">Designed to be honest</div>
+          <h2>A calm voice should not sound more certain than the evidence.</h2>
+          <p>Sahayak separates what it found in the small prototype records from what is only general guidance. It does not declare someone eligible; it explains the published criteria and points to the source link.</p>
+          <div class="trust-rule">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 20 6v6c0 5-3.3 8-8 9-4.7-1-8-4-8-9V6z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg>
+            Every answer shows the quality of its match.
+          </div>
+        </div>
+        <div class="confidence-stack reveal">
+          <article class="confidence-card">
+            <div class="confidence-mark">01</div>
+            <div><h3>Matched to a prototype record</h3><p>Confirm important details at the source link shown in the answer.</p></div>
+            <div class="signal">Strong match</div>
+          </article>
+          <article class="confidence-card">
+            <div class="confidence-mark">02</div>
+            <div><h3>Partly covered—confirm the rest</h3><p>It answers the supported part, says what is missing and identifies who can confirm it.</p></div>
+            <div class="signal">Partial match</div>
+          </article>
+          <article class="confidence-card">
+            <div class="confidence-mark">03</div>
+            <div><h3>General guidance</h3><p>No direct record match, stated plainly, with the office or helpline that normally handles it.</p></div>
+            <div class="signal">No record match</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="wrap field-panel reveal">
+      <div>
+        <div class="section-kicker">A force multiplier</div>
+        <h2>One phone can become a village help desk.</h2>
+        <p>Sahayak is useful for the person asking—and for the person who helps fifty others ask. Bilingual labels, replayable answers, persistent history and shareable checklists keep the conversation usable across generations.</p>
+      </div>
+      <div class="field-list">
+        <div class="field-item"><span>Common Service Centre operators</span><span>Faster guidance</span></div>
+        <div class="field-item"><span>ASHA and Anganwadi workers</span><span>Clear referrals</span></div>
+        <div class="field-item"><span>NGO field teams</span><span>Consistent answers</span></div>
+        <div class="field-item"><span>Family members and caregivers</span><span>Shared context</span></div>
+      </div>
+    </section>
+
+    <section class="wrap pathways" id="pathways">
+      <div class="demo-portal reveal">
+        <div class="demo-portal-copy">
+          <div class="section-kicker">Interactive product tour</div>
+          <h2>See one question become a prepared visit.</h2>
+          <p>No microphone, API key or sign-in is needed. Choose a real-life scenario, watch the transcript and scheme record move through the system, then open the exact same flow in the working app.</p>
+          <a class="button" href="./demo.html"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 3.8v12.4L16 10 5 3.8z"/></svg>Open the interactive demo</a>
+        </div>
+        <div class="headless-preview" aria-hidden="true">
+          <div class="preview-bar"><div class="preview-live"><i></i>GUIDED FLOW RUNNING</div><div class="preview-live">NO MIC NEEDED</div></div>
+          <div class="preview-flow">
+            <div class="preview-node"><i>01</i><b>Voice</b><span>Speak as you normally would</span></div>
+            <div class="preview-node"><i>02</i><b>Transcript</b><span>Check the words before sending</span></div>
+            <div class="preview-node"><i>03</i><b>Evidence</b><span>Match prototype scheme records</span></div>
+            <div class="preview-node"><i>04</i><b>Next step</b><span>Carry the right documents</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final-cta">
+      <div>
+        <h2>Ask the question you were about to postpone.</h2>
+        <p>Try Sahayak without a form or a perfect search phrase. Speak naturally, review what it heard, and leave with the next step.</p>
+        <a class="button light" href="./index.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          Get started
+        </a>
+      </div>
+      <div class="cta-art" aria-hidden="true">
+        <div class="cta-disc">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          <span>Tap · Speak · Know</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap site-footer">
+    <div>
+      <div class="footer-brand">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h2m2-5v10m4-13v16m4-11v6m4-4v2"/></svg></span>
+        Sahayak
+      </div>
+      <div class="footer-copy">A voice access layer for public information. Always verify eligibility, deadlines and final decisions with the official office, website or helpline.</div>
+    </div>
+    <div class="footer-links"><a href="./signup.html?mode=signin">Sign in</a><a href="./signup.html?mode=signup">Create account</a><a href="./index.html">Open as guest</a><a href="./about.html">About & architecture</a><a href="./demo.html">Interactive demo</a><a href="./integrations.html">Integrations</a><a href="#trust">How confidence works</a></div>
+  </footer>
+</div>
+
+<div class="preference-dock landing-mobile-prefs" id="landing-mobile-preferences"></div>
+
+
+<script type="module">
+  import { LANGUAGES, mountPreferenceControls, getPreferences } from "./lib/preferences.js";
+  import { matchDemoResponse, localizeDemoResponse } from "./lib/demoFixtures.js";
+  const LANDING_COPY = {
+    en:{eyebrow:"Public information, spoken back clearly",heroLead:"Public help,",heroSoft:"in your language.",heroBody:"Ask about schemes, public services, scholarships, pensions and government jobs. Get one sourced next step, spoken clearly.",ask:"Ask in your language",demo:"Try the guided demo",integrations:"See integrations",start:"Get started",proof:"Hindi and English. Spoken answers. No form to decode.",pathKicker:"One product, different doorways",pathTitle:"Start from the life you are living.",pathBody:"Choose the view closest to what you need. Sahayak shows useful starting questions from the same prototype records."},
+    hi:{eyebrow:"सार्वजनिक जानकारी, आपकी भाषा में साफ़ जवाब",heroLead:"सरकारी मदद,",heroSoft:"आपकी भाषा में।",heroBody:"योजनाओं, सरकारी सेवाओं, छात्रवृत्तियों, पेंशन और सरकारी नौकरियों के बारे में पूछें। स्रोत सहित अगला कदम साफ़ सुनें।",ask:"अपनी भाषा में पूछें",demo:"आसान डेमो देखें",integrations:"इंटीग्रेशन देखें",start:"शुरू करें",proof:"हिंदी और English। बोलकर उत्तर। कोई लंबा फ़ॉर्म नहीं।",pathKicker:"एक ऐप, आपकी ज़रूरत का रास्ता",pathTitle:"अपनी ज़रूरत से शुरू करें।",pathBody:"अपने काम के सबसे पास वाला रूप चुनें। सहायक प्रोटोटाइप रिकॉर्ड से उपयोगी शुरुआती सवाल दिखाएगा।"},
+    mr:{eyebrow:"सार्वजनिक माहिती, तुमच्या भाषेत स्पष्ट उत्तर",heroLead:"एक मदत केंद्र जे",heroSoft:"तुमची भाषा बोलते.",heroBody:"योजना, शिष्यवृत्ती, पेन्शन आणि नोकरीबद्दल आवाजाने विचारा. सहायक अधिकृत माहिती शोधतो, सोप्या शब्दांत सांगतो आणि पुढचे पाऊल दाखवतो.",ask:"तुमच्या भाषेत विचारा",demo:"मार्गदर्शित डेमो पहा",integrations:"इंटिग्रेशन पहा",start:"सुरू करा",proof:"सात भाषा. बोललेली उत्तरे. लांब फॉर्म नाही.",pathKicker:"एक ॲप, तुमच्या गरजेचा मार्ग",pathTitle:"तुमच्या गरजेपासून सुरुवात करा.",pathBody:"तुमच्या कामाशी जुळणारे रूप निवडा. त्याच विश्वसनीय योजना नोंदींमधून सहायक उपयुक्त सुरुवातीचे प्रश्न दाखवेल."},
+    bn:{eyebrow:"সরকারি তথ্য, আপনার ভাষায় স্পষ্ট উত্তর",heroLead:"একটি সহায়তা ডেস্ক যা",heroSoft:"আপনার ভাষায় কথা বলে।",heroBody:"প্রকল্প, বৃত্তি, পেনশন ও কাজ সম্পর্কে মুখে প্রশ্ন করুন। সহায়ক সরকারি তথ্য খুঁজে সহজ করে বলে এবং পরের পদক্ষেপ জানায়।",ask:"আপনার ভাষায় জিজ্ঞাসা করুন",demo:"সহজ ডেমো দেখুন",integrations:"ইন্টিগ্রেশন দেখুন",start:"শুরু করুন",proof:"সাতটি ভাষা। কণ্ঠে উত্তর। কোনো লম্বা ফর্ম নেই।",pathKicker:"একটি অ্যাপ, আপনার প্রয়োজনের পথ",pathTitle:"আপনার প্রয়োজন থেকে শুরু করুন।",pathBody:"আপনার কাজের সঙ্গে সবচেয়ে কাছের ধরনটি বেছে নিন। একই বিশ্বস্ত প্রকল্পের নথি থেকে সহায়ক শুরুর প্রশ্ন দেখাবে।"},
+    ta:{eyebrow:"பொதுத் தகவல், உங்கள் மொழியில் தெளிவான பதில்",heroLead:"உங்கள் மொழியில் பேசும்",heroSoft:"ஒரு உதவி மையம்.",heroBody:"திட்டங்கள், கல்வி உதவித்தொகை, ஓய்வூதியம் மற்றும் வேலை பற்றி குரலில் கேளுங்கள். சஹாயக் அதிகாரப்பூர்வ தகவலைத் தேடி எளிதாக விளக்கி அடுத்த படியைச் சொல்கிறது.",ask:"உங்கள் மொழியில் கேளுங்கள்",demo:"வழிகாட்டிய செயல்விளக்கம்",integrations:"இணைப்புகளைப் பாருங்கள்",start:"தொடங்குங்கள்",proof:"ஏழு மொழிகள். குரல் பதில்கள். நீண்ட படிவம் இல்லை.",pathKicker:"ஒரே செயலி, உங்கள் தேவைக்கான பாதை",pathTitle:"உங்கள் தேவையிலிருந்து தொடங்குங்கள்.",pathBody:"உங்கள் வேலைக்கு அருகிலுள்ள தோற்றத்தைத் தேர்ந்தெடுங்கள். அதே நம்பகமான திட்டப் பதிவுகளில் இருந்து சஹாயக் தொடக்கக் கேள்விகளைக் காட்டும்."},
+    te:{eyebrow:"ప్రజా సమాచారం, మీ భాషలో స్పష్టమైన జవాబు",heroLead:"మీ భాష మాట్లాడే",heroSoft:"ఒక సహాయ కేంద్రం.",heroBody:"పథకాలు, స్కాలర్‌షిప్‌లు, పింఛన్లు, ఉద్యోగాల గురించి మాట్లాడి అడగండి. సహాయక్ అధికారిక సమాచారాన్ని కనుగొని సులభంగా వివరిస్తుంది.",ask:"మీ భాషలో అడగండి",demo:"మార్గదర్శక డెమో",integrations:"ఇంటిగ్రేషన్లు చూడండి",start:"ప్రారంభించండి",proof:"ఏడు భాషలు. వాయిస్ సమాధానాలు. పొడవైన ఫారం లేదు.",pathKicker:"ఒక యాప్, మీ అవసరానికి మార్గం",pathTitle:"మీ అవసరంతో ప్రారంభించండి.",pathBody:"మీ పనికి దగ్గరగా ఉన్న రూపాన్ని ఎంచుకోండి. అదే నమ్మకమైన పథక రికార్డుల నుంచి సహాయక్ ప్రారంభ ప్రశ్నలను చూపిస్తుంది."},
+    kn:{eyebrow:"ಸಾರ್ವಜನಿಕ ಮಾಹಿತಿ, ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಸ್ಪಷ್ಟ ಉತ್ತರ",heroLead:"ನಿಮ್ಮ ಭಾಷೆ ಮಾತನಾಡುವ",heroSoft:"ಒಂದು ಸಹಾಯ ಕೇಂದ್ರ.",heroBody:"ಯೋಜನೆಗಳು, ವಿದ್ಯಾರ್ಥಿವೇತನ, ಪಿಂಚಣಿ ಮತ್ತು ಉದ್ಯೋಗಗಳ ಬಗ್ಗೆ ಧ್ವನಿಯಲ್ಲಿ ಕೇಳಿ. ಸಹಾಯಕ್ ಅಧಿಕೃತ ಮಾಹಿತಿಯನ್ನು ಹುಡುಕಿ ಸರಳವಾಗಿ ವಿವರಿಸಿ ಮುಂದಿನ ಹೆಜ್ಜೆ ಹೇಳುತ್ತದೆ.",ask:"ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಕೇಳಿ",demo:"ಮಾರ್ಗದರ್ಶಿತ ಡೆಮೊ",integrations:"ಇಂಟಿಗ್ರೇಷನ್ ನೋಡಿ",start:"ಪ್ರಾರಂಭಿಸಿ",proof:"ಏಳು ಭಾಷೆಗಳು. ಧ್ವನಿ ಉತ್ತರಗಳು. ಉದ್ದವಾದ ಫಾರ್ಮ್ ಇಲ್ಲ.",pathKicker:"ಒಂದು ಆ್ಯಪ್, ನಿಮ್ಮ ಅಗತ್ಯದ ದಾರಿ",pathTitle:"ನಿಮ್ಮ ಅಗತ್ಯದಿಂದ ಪ್ರಾರಂಭಿಸಿ.",pathBody:"ನಿಮ್ಮ ಕೆಲಸಕ್ಕೆ ಹತ್ತಿರವಾದ ರೂಪವನ್ನು ಆಯ್ಕೆಮಾಡಿ. ಅದೇ ವಿಶ್ವಾಸಾರ್ಹ ಯೋಜನೆ ದಾಖಲೆಗಳಿಂದ ಸಹಾಯಕ್ ಆರಂಭದ ಪ್ರಶ್ನೆಗಳನ್ನು ತೋರಿಸುತ್ತದೆ."}
+  };
+  const SHORT_QUOTES = {
+    en:["One clear answer, every time.","Play it again."],
+    hi:["एक ही जानकारी, हर बार साफ़।","फिर से सुनाओ।"],
+    mr:["एकच माहिती, प्रत्येक वेळी स्पष्ट.","पुन्हा ऐकवा."],
+    bn:["প্রতিবার একই পরিষ্কার তথ্য।","আবার শুনিয়ে দিন।"],
+    ta:["ஒவ்வொரு முறையும் ஒரே தெளிவான தகவல்.","மீண்டும் கேட்கச் செய்யுங்கள்."],
+    te:["ప్రతిసారీ ఒకే స్పష్టమైన సమాచారం.","మళ్లీ వినిపించండి."],
+    kn:["ಪ್ರತಿ ಬಾರಿಯೂ ಒಂದೇ ಸ್ಪಷ್ಟ ಮಾಹಿತಿ.","ಮತ್ತೆ ಕೇಳಿಸಿ."]
+  };
+
+  mountPreferenceControls("#landing-preferences", { compact: true });
+  mountPreferenceControls("#landing-mobile-preferences", { compact: true });
+  let heroTypingGeneration = 0;
+  let lastTypedLanguage = "";
+  const graphemes = (value, language) => {
+    if (typeof Intl.Segmenter === "function") {
+      return [...new Intl.Segmenter(language, { granularity: "grapheme" }).segment(value)].map(({ segment }) => segment);
+    }
+    return Array.from(value);
+  };
+  const animateHeroTitle = (copy, language) => {
+    const title = document.getElementById("hero-title");
+    const lead = title?.querySelector('[data-landing="heroLead"]');
+    const soft = title?.querySelector('[data-landing="heroSoft"]');
+    if (!title || !lead || !soft) return;
+    title.setAttribute("aria-label", `${copy.heroLead} ${copy.heroSoft}`);
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (lastTypedLanguage === language || reducedMotion) {
+      heroTypingGeneration += 1;
+      lead.textContent = copy.heroLead;
+      soft.textContent = copy.heroSoft;
+      lastTypedLanguage = language;
+      title.classList.remove("is-typing", "typing-done");
+      return;
+    }
+    lastTypedLanguage = language;
+    const generation = ++heroTypingGeneration;
+    const parts = [graphemes(copy.heroLead, language), graphemes(copy.heroSoft, language)];
+    const nodes = [lead, soft];
+    let phrase = 0;
+    let index = 0;
+    lead.textContent = "";
+    soft.textContent = "";
+    title.classList.remove("typing-done");
+    title.classList.add("is-typing");
+    const typeNext = () => {
+      if (generation !== heroTypingGeneration) return;
+      if (index < parts[phrase].length) {
+        nodes[phrase].textContent += parts[phrase][index++];
+        window.setTimeout(typeNext, 38);
+        return;
+      }
+      if (phrase === 0) {
+        phrase = 1;
+        index = 0;
+        window.setTimeout(typeNext, 140);
+        return;
+      }
+      title.classList.remove("is-typing");
+      title.classList.add("typing-done");
+      window.setTimeout(() => {
+        if (generation === heroTypingGeneration) title.classList.remove("typing-done");
+      }, 800);
+    };
+    window.setTimeout(typeNext, 280);
+  };
+  const localizeLanding = () => {
+    const prefs = getPreferences();
+    const copy = LANDING_COPY[prefs.language] || LANDING_COPY.en;
+    const shortQuotes = SHORT_QUOTES[prefs.language] || SHORT_QUOTES.en;
+    document.querySelectorAll("[data-landing]").forEach((node) => { node.textContent = copy[node.dataset.landing] || node.textContent; });
+    document.getElementById("worker-quote").textContent = `“${shortQuotes[0]}”`;
+    document.getElementById("replay-quote").textContent = `“${shortQuotes[1]}”`;
+    animateHeroTitle(copy, prefs.language);
+  };
+  localizeLanding();
+  window.addEventListener("sahayak:preferences", localizeLanding);
+  const SCENARIO_QUESTIONS = {
+    en:{elder:"How many days of work can my family get under MGNREGA?",farmer:"Why has my PM-KISAN payment not arrived?",student:"How do I get a voter ID card?",caregiver:"What documents do I need for Ayushman Bharat?"},
+    hi:{elder:"MGNREGA में मेरे परिवार को कितने दिन काम मिलेगा?",farmer:"PM-KISAN का पैसा अभी तक क्यों नहीं आया?",student:"वोटर आईडी कैसे बनवाएँ?",caregiver:"आयुष्मान भारत के लिए कौन से दस्तावेज़ चाहिए?"},
+    mr:{elder:"MGNREGA मध्ये माझ्या कुटुंबाला किती दिवस काम मिळेल?",farmer:"PM-KISAN चा हप्ता अजून का आला नाही?",student:"मतदार ओळखपत्र कसे मिळेल?",caregiver:"आयुष्मान भारतसाठी कोणती कागदपत्रे लागतात?"},
+    bn:{elder:"MGNREGA-তে আমার পরিবার কত দিনের কাজ পাবে?",farmer:"PM-KISAN-এর টাকা এখনও কেন আসেনি?",student:"ভোটার আইডি কীভাবে পাব?",caregiver:"আয়ুষ্মান ভারতের জন্য কী নথি লাগবে?"},
+    ta:{elder:"MGNREGA-வில் என் குடும்பத்திற்கு எத்தனை நாள் வேலை கிடைக்கும்?",farmer:"PM-KISAN பணம் இன்னும் ஏன் வரவில்லை?",student:"வாக்காளர் அட்டை எப்படி பெறுவது?",caregiver:"ஆயுஷ்மான் பாரத்திற்கு என்ன ஆவணங்கள் வேண்டும்?"},
+    te:{elder:"MGNREGAలో నా కుటుంబానికి ఎన్ని రోజుల పని లభిస్తుంది?",farmer:"PM-KISAN చెల్లింపు ఇంకా ఎందుకు రాలేదు?",student:"ఓటరు గుర్తింపు కార్డు ఎలా పొందాలి?",caregiver:"ఆయుష్మాన్ భారత్‌కు ఏ పత్రాలు కావాలి?"},
+    kn:{elder:"MGNREGAಯಲ್ಲಿ ನನ್ನ ಕುಟುಂಬಕ್ಕೆ ಎಷ್ಟು ದಿನ ಕೆಲಸ ಸಿಗುತ್ತದೆ?",farmer:"PM-KISAN ಪಾವತಿ ಇನ್ನೂ ಏಕೆ ಬಂದಿಲ್ಲ?",student:"ಮತದಾರರ ಗುರುತಿನ ಚೀಟಿ ಹೇಗೆ ಪಡೆಯುವುದು?",caregiver:"ಆಯುಷ್ಮಾನ್ ಭಾರತ್‌ಗೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು?"}
+  };
+  const SCENARIO_LABELS = {
+    en:{elder:"MGNREGA",farmer:"PM-KISAN",student:"Voter ID",caregiver:"Ayushman"},
+    hi:{elder:"मनरेगा",farmer:"PM-KISAN",student:"वोटर आईडी",caregiver:"आयुष्मान"},
+    mr:{elder:"मनरेगा",farmer:"PM-KISAN",student:"मतदार ओळखपत्र",caregiver:"आयुष्मान"},
+    bn:{elder:"মনরেগা",farmer:"PM-KISAN",student:"ভোটার আইডি",caregiver:"আয়ুষ্মান"},
+    ta:{elder:"MGNREGA",farmer:"PM-KISAN",student:"வாக்காளர் அட்டை",caregiver:"ஆயுஷ்மான்"},
+    te:{elder:"MGNREGA",farmer:"PM-KISAN",student:"ఓటరు కార్డు",caregiver:"ఆయుష్మాన్"},
+    kn:{elder:"MGNREGA",farmer:"PM-KISAN",student:"ಮತದಾರರ ಚೀಟಿ",caregiver:"ಆಯುಷ್ಮಾನ್"}
+  };
+  const buildLandingScenarios = () => {
+    const prefs = getPreferences();
+    const questions = SCENARIO_QUESTIONS[prefs.language] || SCENARIO_QUESTIONS.en;
+    const language = LANGUAGES.find(item => item.code === prefs.language) || LANGUAGES[0];
+    return Object.fromEntries(Object.entries(questions).map(([key, question]) => {
+      const response = localizeDemoResponse(matchDemoResponse(question), prefs.language);
+      return [key, {question,avatar:language.short,language:language.label,source:response.tierLabel || "Sahayak",answer:response.answer,checks:response.documentsNeeded || []}];
+    }));
+  };
+
+  const getStoryData = () => {
+    const questions = SCENARIO_QUESTIONS[getPreferences().language] || SCENARIO_QUESTIONS.en;
+    return {
+      farmer: { quote: `“${questions.farmer}”`, title: "A farmer, before the day begins.", description: "A farmer checks what may hold up a PM-KISAN installment and which land and bank records to verify." },
+      patient: { quote: `“${questions.caregiver}”`, title: "A caregiver, at the admissions desk.", description: "A caregiver checks what Ayushman Bharat needs and which documents to show at the hospital." },
+      student: { quote: `“${questions.student}”`, title: "A citizen, before an application.", description: "A citizen hears the requirements and carries a short document list instead of decoding a portal alone." }
+    };
+  };
+
+  let activeScenarioKey = "farmer";
+  const setScenario = (key) => {
+    activeScenarioKey = key;
+    const scenarios = buildLandingScenarios();
+    const s = scenarios[key];
+    document.getElementById("scenario-question").textContent = s.question;
+    document.getElementById("scenario-avatar").textContent = s.avatar;
+    document.getElementById("scenario-language").textContent = s.language;
+    document.getElementById("scenario-source").textContent = s.source;
+    document.getElementById("scenario-answer").textContent = s.answer;
+    document.getElementById("scenario-checklist").innerHTML = s.checks.map(x => `<div class="mini-check"><i>✓</i>${x}</div>`).join("");
+    const labels = SCENARIO_LABELS[getPreferences().language] || SCENARIO_LABELS.en;
+    document.querySelectorAll(".scenario").forEach(btn => { btn.textContent = labels[btn.dataset.scenario]; btn.classList.toggle("active", btn.dataset.scenario === key); });
+  };
+  document.querySelectorAll(".scenario").forEach(btn => btn.addEventListener("click", () => setScenario(btn.dataset.scenario)));
+
+  document.getElementById("preview-mic").addEventListener("click", () => {
+    const active = document.querySelector(".scenario.active");
+    const keys = Object.keys(buildLandingScenarios());
+    setScenario(keys[(keys.indexOf(active.dataset.scenario) + 1) % keys.length]);
+  });
+  window.addEventListener("sahayak:preferences", () => setScenario(activeScenarioKey));
+  setScenario(activeScenarioKey);
+
+  let activeStoryKey = "farmer";
+  const setStory = (key) => {
+    activeStoryKey = key;
+    const s = getStoryData()[key];
+    document.getElementById("story-quote").textContent = s.quote;
+    document.getElementById("story-title").textContent = s.title;
+    document.getElementById("story-description").textContent = s.description;
+    document.querySelectorAll(".story-tab").forEach(x => x.classList.toggle("active", x.dataset.story === key));
+  };
+  document.querySelectorAll(".story-tab").forEach(btn => btn.addEventListener("click", () => setStory(btn.dataset.story)));
+  window.addEventListener("sahayak:preferences", () => setStory(activeStoryKey));
+  setStory(activeStoryKey);
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      if (!reduceMotion && !entry.target.classList.contains("visible")) {
+        entry.target.animate(
+          [{ opacity: .35, transform: "translateY(22px)" }, { opacity: 1, transform: "translateY(0)" }],
+          { duration: 620, easing: "cubic-bezier(.2,.75,.25,1)", fill: "both" }
+        );
+      }
+      entry.target.classList.add("visible");
+      observer.unobserve(entry.target);
+    });
+  }, { threshold: .12 });
+  document.querySelectorAll(".reveal:not(.visible)").forEach(el => observer.observe(el));
+
+  const nav = document.getElementById("nav");
+  window.addEventListener("scroll", () => nav.classList.toggle("scrolled", window.scrollY > 24), { passive: true });
+
+  const menuButton = document.getElementById("menu-btn");
+  const mobileNav = document.getElementById("mobile-nav");
+  const setMobileNav = (open) => {
+    menuButton.classList.toggle("open", open);
+    mobileNav.classList.toggle("open", open);
+    menuButton.setAttribute("aria-expanded", String(open));
+    menuButton.setAttribute("aria-label", open ? "Close navigation" : "Open navigation");
+    mobileNav.setAttribute("aria-hidden", String(!open));
+  };
+  menuButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    setMobileNav(!mobileNav.classList.contains("open"));
+  });
+  mobileNav.querySelectorAll("a").forEach(link => link.addEventListener("click", () => setMobileNav(false)));
+  document.addEventListener("click", (event) => {
+    if (!mobileNav.classList.contains("open")) return;
+    if (!mobileNav.contains(event.target) && !menuButton.contains(event.target)) setMobileNav(false);
+  });
+  window.addEventListener("keydown", (event) => { if (event.key === "Escape") setMobileNav(false); });
+</script>
+</body>
+</html>

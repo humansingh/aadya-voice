@@ -1,0 +1,178 @@
+{
+  "schema_version": "1.0",
+  "checked_on": "2026-08-09",
+  "records": [
+    {
+      "id": "pm-usp-csss-2026",
+      "kind": "scholarship",
+      "publication_status": "published",
+      "application_status": "deadline_not_published",
+      "title": "PM-USP Central Sector Scheme of Scholarship for College and University Students",
+      "aliases": ["CSSS", "Central Sector Scholarship for College and University Students"],
+      "summary": "A merit-cum-means scholarship for students pursuing regular higher education after Class 12.",
+      "description": "The Department of Higher Education provides financial assistance toward day-to-day expenses for meritorious students pursuing higher studies.",
+      "government_entity": {
+        "name": "Department of Higher Education",
+        "ministry": "Ministry of Education",
+        "level": "Central Government"
+      },
+      "geography": { "country": "India", "scope": "All India", "state": null, "district": null, "city": null, "pincode": null },
+      "eligibility_text": [
+        "Above the 80th percentile of successful candidates in the relevant Class 12 stream of the applicable board",
+        "Annual family income up to Rs 4.5 lakh for the 2025-26 fresh-application guidance",
+        "Pursuing a regular course in a recognised college or institution, not correspondence or distance mode",
+        "Not receiving another scholarship or fee-reimbursement scheme"
+      ],
+      "eligibility_rules": [
+        { "field": "class_12_percentile", "operator": "above", "value": 80, "unit": "percentile", "required": true },
+        { "field": "annual_family_income_inr", "operator": "lte", "value": 450000, "unit": "INR/year", "required": true },
+        { "field": "course_mode", "operator": "eq", "value": "regular", "required": true },
+        { "field": "other_scholarship", "operator": "eq", "value": false, "required": true }
+      ],
+      "benefits": ["Financial assistance toward day-to-day expenses while pursuing higher education"],
+      "scholarship_details": { "academic_year": "2025-26 guidance", "course_level": "College and university", "award_amount": null, "duration": null, "family_income_cap_inr": 450000 },
+      "expectations": ["Renewal and award conditions must be checked for the applicable academic year"],
+      "documents_required": ["National Scholarship Portal One-Time Registration", "Class 12 marksheet", "Family income certificate", "Aadhaar or permitted alternative identifier", "Student bank account details", "Institution verification"],
+      "application": {
+        "method": "Online through the National Scholarship Portal",
+        "website": "https://scholarships.gov.in/",
+        "application_url": "https://scholarships.gov.in/",
+        "opens_on": null,
+        "deadline": null,
+        "deadline_note": "The portal publishes a separate schedule for each academic year; no current deadline was stated in the reviewed scheme FAQ."
+      },
+      "contacts": [{ "name": null, "job_title": "National Scholarship Portal helpdesk", "phone": "0120-6619540", "email": null, "address": null, "city": null, "state": null, "pincode": null }],
+      "sources": [
+        { "url": "https://www.education.gov.in/sites/upload_files/mhrd/files/upload_document/FAQs_PM_USP_CSSS_scheme_AY_2025_26.pdf", "title": "PM-USP CSSS Frequently Asked Questions 2025-26", "publisher": "Ministry of Education", "checked_on": "2026-08-09", "primary": true },
+        { "url": "https://rules.myscheme.gov.in/en/check-eligibility/csss-cus?source=myscheme", "title": "myScheme eligibility check", "publisher": "myScheme", "checked_on": "2026-08-09", "primary": false }
+      ]
+    },
+    {
+      "id": "top-class-sc-2026-27",
+      "kind": "scholarship",
+      "publication_status": "published",
+      "application_status": "deadline_not_published",
+      "title": "Central Sector Scholarship of Top Class Education for Scheduled Caste Students",
+      "aliases": ["Top Class Education for SC Students", "Top Class SC Scholarship"],
+      "summary": "Financial support for Scheduled Caste students pursuing full-time studies beyond Class 12 in notified institutions.",
+      "description": "The scheme promotes quality higher education for Scheduled Caste students through financial support in institutions notified by the Department of Social Justice and Empowerment.",
+      "government_entity": { "name": "Department of Social Justice and Empowerment", "ministry": "Ministry of Social Justice and Empowerment", "level": "Central Government" },
+      "geography": { "country": "India", "scope": "All India", "state": null, "district": null, "city": null, "pincode": null },
+      "eligibility_text": [
+        "Applicant belongs to a Scheduled Caste",
+        "Admission to a full-time prescribed course beyond Class 12 in a notified institution",
+        "Total annual family income from all sources up to Rs 8 lakh",
+        "Award is subject to institution-wise scholarship slots and inter-se merit when demand exceeds slots"
+      ],
+      "eligibility_rules": [
+        { "field": "social_category", "operator": "eq", "value": "Scheduled Caste", "required": true },
+        { "field": "annual_family_income_inr", "operator": "lte", "value": 800000, "unit": "INR/year", "required": true },
+        { "field": "course_level", "operator": "post", "value": "Class 12", "required": true },
+        { "field": "institution_notified", "operator": "eq", "value": true, "required": true }
+      ],
+      "benefits": ["Financial support under the scheme guidelines for study in a notified institution"],
+      "scholarship_details": { "academic_year": "2026-27", "course_level": "Beyond Class 12", "award_amount": null, "duration": null, "family_income_cap_inr": 800000 },
+      "expectations": ["Maintain satisfactory academic performance", "Meet institution and National Scholarship Portal verification requirements"],
+      "documents_required": ["Scheduled Caste certificate", "Family income certificate", "Admission proof", "Previous qualification marksheets", "Aadhaar", "Student bank details"],
+      "application": { "method": "Online through the National Scholarship Portal", "website": "https://scholarships.gov.in/", "application_url": "https://scholarships.gov.in/", "opens_on": null, "deadline": null, "deadline_note": "Check the National Scholarship Portal schedule for the applicable academic year." },
+      "contacts": [{ "name": null, "job_title": "Department scheme contact", "phone": null, "email": null, "address": "Shastri Bhawan", "city": "New Delhi", "state": "Delhi", "pincode": "110001" }],
+      "sources": [{ "url": "https://socialjustice.gov.in/schemes/27", "title": "Central Sector Scholarship of Top Class Education for SC Students", "publisher": "Department of Social Justice and Empowerment", "checked_on": "2026-08-09", "primary": true }]
+    },
+    {
+      "id": "aicte-pragati-degree",
+      "kind": "scholarship",
+      "publication_status": "published",
+      "application_status": "deadline_not_published",
+      "title": "AICTE Pragati Scholarship Scheme for Girl Students — Technical Degree",
+      "aliases": ["Pragati Scholarship", "AICTE Pragati Degree"],
+      "summary": "A scholarship for eligible girl students entering an AICTE-approved degree-level technical course.",
+      "description": "The Pragati scheme supports eligible girl students admitted to the first year of a technical degree course or the second year through lateral entry.",
+      "government_entity": { "name": "All India Council for Technical Education", "ministry": "Ministry of Education", "level": "Central Government" },
+      "geography": { "country": "India", "scope": "All India", "state": null, "district": null, "city": null, "pincode": null },
+      "eligibility_text": [
+        "Applicant identifies as female",
+        "Studying in the first year of a degree-level course or second year through lateral entry",
+        "Institution is approved by the All India Council for Technical Education",
+        "Annual family income from all sources up to Rs 8 lakh",
+        "Not receiving another Central, State or AICTE scholarship or other financial assistance during the course",
+        "No more than two siblings have already received this scholarship"
+      ],
+      "eligibility_rules": [
+        { "field": "gender", "operator": "eq", "value": "female", "required": true },
+        { "field": "annual_family_income_inr", "operator": "lte", "value": 800000, "unit": "INR/year", "required": true },
+        { "field": "institution_aicte_approved", "operator": "eq", "value": true, "required": true },
+        { "field": "other_financial_assistance", "operator": "eq", "value": false, "required": true }
+      ],
+      "benefits": ["Scholarship assistance under the applicable AICTE Pragati guidelines"],
+      "scholarship_details": { "academic_year": null, "course_level": "Technical degree", "award_amount": null, "duration": null, "family_income_cap_inr": 800000 },
+      "expectations": ["Institution and course must remain eligible under the current academic-year notice"],
+      "documents_required": ["Admission proof", "Family income certificate", "Previous qualification marksheet", "Aadhaar", "Student bank details", "Institution verification"],
+      "application": { "method": "Online through the National Scholarship Portal when the academic-year window opens", "website": "https://scholarships.gov.in/", "application_url": "https://scholarships.gov.in/", "opens_on": null, "deadline": null, "deadline_note": "The reviewed eligibility engine did not state the current application deadline." },
+      "contacts": [{ "name": null, "job_title": "AICTE student development schemes", "phone": null, "email": null, "address": null, "city": "New Delhi", "state": "Delhi", "pincode": null }],
+      "sources": [{ "url": "https://rules.myscheme.gov.in/en/check-eligibility/psgs-deg?source=myscheme&theme=light", "title": "Pragati Scholarship eligibility check", "publisher": "myScheme", "checked_on": "2026-08-09", "primary": true }]
+    },
+    {
+      "id": "upsc-principal-delhi-26075101725",
+      "kind": "job",
+      "publication_status": "published",
+      "application_status": "open",
+      "title": "Principal — Education Department, Government of NCT of Delhi",
+      "aliases": ["UPSC Principal 2026", "Vacancy 26075101725"],
+      "summary": "Union Public Service Commission recruitment for 124 permanent Principal posts in Delhi's Education Department.",
+      "description": "The Head of School is responsible for administrative, academic and financial work and coordinates school activities.",
+      "job_description": "Plan, organise and coordinate the administrative, academic and financial work of a recognised school as Head of School.",
+      "government_entity": { "name": "Education Department, Government of NCT of Delhi", "ministry": null, "level": "State/Union Territory Government", "recruiting_body": "Union Public Service Commission" },
+      "geography": { "country": "India", "scope": "Delhi", "state": "Delhi", "district": null, "city": "New Delhi", "pincode": "110054" },
+      "eligibility_text": [
+        "Master's degree from a recognised university or institute",
+        "Bachelor of Education from a recognised university or institute",
+        "Ten years of teaching experience as Vice Principal, Post Graduate Teacher or Trained Graduate Teacher in a recognised school or college",
+        "Maximum age 50 for unreserved/economically weaker section, 53 for Other Backward Class and 55 for Scheduled Caste/Scheduled Tribe, with applicable disability relaxation"
+      ],
+      "eligibility_rules": [
+        { "field": "education_masters", "operator": "eq", "value": true, "required": true },
+        { "field": "education_bed", "operator": "eq", "value": true, "required": true },
+        { "field": "teaching_experience_years", "operator": "gte", "value": 10, "unit": "years", "required": true }
+      ],
+      "benefits": ["Pay Level 12 under the Seventh Central Pay Commission", "Permanent General Central Service Group A Gazetted, Non-Ministerial post"],
+      "job_details": { "advertisement_number": "51/2026", "vacancy_number": "26075101725", "post_count": 124, "employment_type": "Permanent", "pay_level": "Level 12", "selection_process": "Combined recruitment test followed by interview", "probation": "One year" },
+      "expectations": ["One-year probation", "Combined recruitment test followed by interview as specified in the notice"],
+      "documents_required": ["Date-of-birth proof", "Degree and Bachelor of Education certificates", "Experience certificates", "Category or disability certificate where applicable", "Uploaded photograph and live photograph", "Signature in the prescribed upload format"],
+      "application": { "method": "Union Public Service Commission Online Recruitment Application", "website": "https://upsconline.nic.in/ora/", "application_url": "https://upsconline.nic.in/ora/", "opens_on": "2026-07-25", "deadline": "2026-08-14T18:00:00+05:30", "deadline_note": "Online application closes at 18:00 Indian Standard Time on 14 August 2026." },
+      "contacts": [{ "name": null, "job_title": "Union Public Service Commission helpdesk", "phone": "011-24041001 / 011-40303444", "email": null, "address": "Dholpur House, Shahjahan Road", "city": "New Delhi", "state": "Delhi", "pincode": "110069" }],
+      "sources": [{ "url": "https://www.upsc.gov.in/sites/default/files/AdvtNo-51-2026-Special-Engl-240726.pdf", "title": "UPSC Special Advertisement No. 51/2026", "publisher": "Union Public Service Commission", "checked_on": "2026-08-09", "primary": true }]
+    },
+    {
+      "id": "upsc-vice-principal-delhi-26075102725",
+      "kind": "job",
+      "publication_status": "published",
+      "application_status": "open",
+      "title": "Vice Principal — Education Department, Government of NCT of Delhi",
+      "aliases": ["UPSC Vice Principal 2026", "Vacancy 26075102725"],
+      "summary": "Union Public Service Commission recruitment for 704 permanent Vice Principal posts in Delhi's Education Department.",
+      "description": "The Vice Principal assists the Principal with administrative, academic and financial responsibilities and coordinates school activities.",
+      "job_description": "Assist the Principal in planning, organising and coordinating administrative, academic and financial school responsibilities.",
+      "government_entity": { "name": "Education Department, Government of NCT of Delhi", "ministry": null, "level": "State/Union Territory Government", "recruiting_body": "Union Public Service Commission" },
+      "geography": { "country": "India", "scope": "Delhi", "state": "Delhi", "district": null, "city": "New Delhi", "pincode": "110054" },
+      "eligibility_text": [
+        "Master's degree from a recognised university or institute",
+        "Bachelor of Education from a recognised university",
+        "Two years of experience as Post Graduate Teacher or three years as Trained Graduate Teacher",
+        "Maximum age 35 for unreserved/economically weaker section, 38 for Other Backward Class and 40 for Scheduled Caste/Scheduled Tribe, with applicable disability relaxation"
+      ],
+      "eligibility_rules": [
+        { "field": "education_masters", "operator": "eq", "value": true, "required": true },
+        { "field": "education_bed", "operator": "eq", "value": true, "required": true },
+        { "field": "post_graduate_teacher_experience_years", "operator": "gte", "value": 2, "unit": "years", "required": false },
+        { "field": "trained_graduate_teacher_experience_years", "operator": "gte", "value": 3, "unit": "years", "required": false }
+      ],
+      "benefits": ["Pay Level 10 under the Seventh Central Pay Commission", "Permanent General Central Service Group A Gazetted, Non-Ministerial post"],
+      "job_details": { "advertisement_number": "51/2026", "vacancy_number": "26075102725", "post_count": 704, "employment_type": "Permanent", "pay_level": "Level 10", "selection_process": "Combined recruitment test followed by interview", "probation": "One year" },
+      "expectations": ["One-year probation", "Combined recruitment test followed by interview as specified in the notice"],
+      "documents_required": ["Date-of-birth proof", "Degree and Bachelor of Education certificates", "Experience certificates", "Category or disability certificate where applicable", "Uploaded photograph and live photograph", "Signature in the prescribed upload format"],
+      "application": { "method": "Union Public Service Commission Online Recruitment Application", "website": "https://upsconline.nic.in/ora/", "application_url": "https://upsconline.nic.in/ora/", "opens_on": "2026-07-25", "deadline": "2026-08-14T18:00:00+05:30", "deadline_note": "Online application closes at 18:00 Indian Standard Time on 14 August 2026." },
+      "contacts": [{ "name": null, "job_title": "Union Public Service Commission helpdesk", "phone": "011-24041001 / 011-40303444", "email": null, "address": "Dholpur House, Shahjahan Road", "city": "New Delhi", "state": "Delhi", "pincode": "110069" }],
+      "sources": [{ "url": "https://www.upsc.gov.in/sites/default/files/AdvtNo-51-2026-Special-Engl-240726.pdf", "title": "UPSC Special Advertisement No. 51/2026", "publisher": "Union Public Service Commission", "checked_on": "2026-08-09", "primary": true }]
+    }
+  ]
+}

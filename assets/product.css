@@ -1,0 +1,189 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap");
+
+:root {
+  --sahayak-font: "DM Sans", system-ui, sans-serif;
+  --sahayak-display: "Manrope", "DM Sans", system-ui, sans-serif;
+}
+
+html[data-language="hi"], html[data-language="mr"] { --sahayak-font: "Noto Sans Devanagari", "DM Sans", sans-serif; --sahayak-display: "Noto Sans Devanagari", "Manrope", sans-serif; }
+html[data-language="bn"] { --sahayak-font: "Noto Sans Bengali", "DM Sans", sans-serif; --sahayak-display: "Noto Sans Bengali", "Manrope", sans-serif; }
+html[data-language="ta"] { --sahayak-font: "Noto Sans Tamil", "DM Sans", sans-serif; --sahayak-display: "Noto Sans Tamil", "Manrope", sans-serif; }
+html[data-language="te"] { --sahayak-font: "Noto Sans Telugu", "DM Sans", sans-serif; --sahayak-display: "Noto Sans Telugu", "Manrope", sans-serif; }
+html[data-language="kn"] { --sahayak-font: "Noto Sans Kannada", "DM Sans", sans-serif; --sahayak-display: "Noto Sans Kannada", "Manrope", sans-serif; }
+
+html[data-mode="easy"] {
+  --easy-bg: #f7f6f2;
+  --easy-surface: #ffffff;
+  --easy-surface-2: #ecebe7;
+  --easy-ink: #232321;
+  --easy-muted: #64635e;
+  --easy-border: #c5c2ba;
+  --easy-border-strong: #343431;
+  --easy-active: #f4d778;
+  --easy-active-soft: #fff3c8;
+  --easy-primary: #176b45;
+  --easy-primary-dark: #105235;
+}
+
+body { font-family: var(--sahayak-font); }
+button, input, select, textarea { font-family: inherit; }
+.preference-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #17352d;
+}
+.preference-controls label,
+.experience-control {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 5px 4px 10px;
+  border: 1px solid rgba(23, 53, 45, .14);
+  border-radius: 999px;
+  background: rgba(255, 253, 248, .92);
+}
+.preference-controls label > span,
+.experience-label {
+  color: #6a7871;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.preference-controls select {
+  min-height: 34px;
+  width: 112px;
+  max-width: 112px;
+  padding: 0 24px 0 9px;
+  border: 0;
+  border-radius: 999px;
+  outline: 0;
+  background: #f0ede4;
+  color: #17352d;
+  font-size: 11px;
+  font-weight: 800;
+}
+.experience-toggle {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 999px;
+  background: #ebe8df;
+}
+.experience-toggle button {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #68756f;
+  font-size: 10px;
+  font-weight: 800;
+}
+.experience-toggle button.active {
+  background: #123d31;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(18, 61, 49, .18);
+}
+.preference-controls.compact label,
+.preference-controls.compact .experience-control { min-height: 40px; height: 40px; }
+.preference-controls.compact label > span,
+.preference-controls.compact .experience-label { display: none; }
+.preference-controls.compact select { min-height: 30px; height: 30px; }
+.preference-controls.compact .experience-toggle { height: 32px; }
+.preference-controls.compact .experience-toggle button { min-height: 28px; height: 28px; }
+
+.preference-dock {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 90;
+  padding: 7px;
+  border: 1px solid rgba(255,255,255,.72);
+  border-radius: 999px;
+  background: rgba(255,253,248,.82);
+  box-shadow: 0 14px 38px rgba(23,53,45,.16);
+  backdrop-filter: blur(20px) saturate(140%);
+}
+
+.simple-only { display: none !important; }
+html[data-mode="easy"] .simple-only { display: revert !important; }
+html[data-mode="easy"] .detailed-only { display: none !important; }
+html[data-mode="easy"] body { font-size: 106%; }
+html[data-mode="easy"] button,
+html[data-mode="easy"] a,
+html[data-mode="easy"] input,
+html[data-mode="easy"] select { min-height: 48px; }
+html[data-mode="easy"] .preference-controls label,
+html[data-mode="easy"] .preference-controls .experience-control {
+  min-height: 40px;
+  height: 40px;
+  border-color: var(--easy-border);
+  background: var(--easy-surface);
+}
+html[data-mode="easy"] .preference-controls select {
+  min-height: 30px;
+  height: 30px;
+  background: var(--easy-surface-2);
+  color: var(--easy-ink);
+}
+html[data-mode="easy"] .experience-toggle {
+  height: 32px;
+  background: var(--easy-surface-2);
+}
+html[data-mode="easy"] .experience-toggle button {
+  min-height: 28px;
+  height: 28px;
+  color: var(--easy-muted);
+  box-shadow: none;
+}
+html[data-mode="easy"] .experience-toggle button.active {
+  background: var(--easy-active);
+  color: var(--easy-ink);
+  box-shadow: inset 0 0 0 1px rgba(35,35,33,.2);
+}
+
+/* Voice workspace: turn the expert shell into a calm, one-task surface. */
+html[data-mode="easy"] .sidebar { display: none !important; }
+html[data-mode="easy"] .sidebar-backdrop { display: none !important; }
+html[data-mode="easy"] #hamburger-btn { display: none !important; }
+html[data-mode="easy"] .main-column { width: 100%; }
+html[data-mode="easy"] .wordmark-sub,
+html[data-mode="easy"] .network-pill { display: none !important; }
+html[data-mode="easy"] .voice-welcome { grid-template-columns: 1fr; }
+html[data-mode="easy"] .welcome-orb-wrap { display: none; }
+html[data-mode="easy"] .welcome-copy { max-width: 720px; }
+html[data-mode="easy"] .empty-mic-launch { min-height: 76px; font-size: 15px; }
+html[data-mode="easy"] .empty-chip-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+html[data-mode="easy"] .chip { font-size: 13px; line-height: 1.35; }
+html[data-mode="easy"] .answer-text { font-size: 15px; line-height: 1.75; }
+html[data-mode="easy"] .en-gloss-line,
+html[data-mode="easy"] .en-gloss { display: none !important; }
+
+:focus-visible {
+  outline: 3px solid #f2bd55 !important;
+  outline-offset: 3px;
+}
+
+@media (max-width: 840px) {
+  .preference-controls { gap: 5px; }
+  .preference-controls label > span,
+  .experience-label { display: none; }
+  .preference-controls label,
+  .experience-control { padding-left: 4px; }
+  html[data-mode="easy"] .empty-chip-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .preference-controls select { width: 90px; max-width: 90px; }
+  .experience-toggle button { padding: 0 8px; }
+  .preference-dock { left: 10px; right: 10px; bottom: 10px; border-radius: 22px; }
+  .preference-dock .preference-controls { justify-content: space-between; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}

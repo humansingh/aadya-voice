@@ -1,0 +1,22 @@
+node_modules/
+.env
+.env.local
+.vercel
+*.log
+firebase-service-account/
+
+# macOS
+.DS_Store
+
+# Testing/audit/benchmark evidence and generated reports — not needed at
+# runtime, regenerable from the model-audit tooling and build scripts.
+audit-evidence/
+outputs/
+audit.html
+scripts/model-stack-audit.mjs
+scripts/stt-audit.py
+
+# Copy-paste prompts for external tools (UI generators, research runs),
+# not documentation of the shipped product.
+docs/UI_BUILD_PROMPT.md
+docs/RESEARCH_HANDOFF_PROMPT.md

@@ -1,0 +1,130 @@
+[
+  {
+    "id": "pm-kisan",
+    "name": "Pradhan Mantri Kisan Samman Nidhi (PM-KISAN)",
+    "description_en": "A central government scheme that pays Rs 6,000 per year in three equal instalments to eligible landholding farmer families, subject to the published exclusions.",
+    "eligibility": [
+      "A farmer family means husband, wife and minor children who own cultivable land according to the State or Union Territory land records",
+      "The scheme covers landholding farmer families, not only small and marginal farmers",
+      "Exclusions include institutional landholders; present or former constitutional office holders, ministers and specified elected office holders; most serving or retired government and public-sector employees; pensioners receiving Rs 10,000 or more per month; people who paid income tax in the last assessment year; and practising registered doctors, engineers, lawyers, chartered accountants and architects"
+    ],
+    "documents_required": ["Aadhaar card for mandatory electronic Know Your Customer (e-KYC)", "Land ownership record", "Bank account details"],
+    "where_to_apply": "PM-KISAN portal, a Common Service Centre, or the local revenue office",
+    "official_url": "https://pmkisan.gov.in/Documents/RevisedPM-KISANOperationalGuidelines%28English%29.pdf",
+    "helpline": "155261 / 1800-115-526",
+    "reviewed_on": "2026-08-09"
+  },
+  {
+    "id": "ayushman-bharat",
+    "name": "Ayushman Bharat Pradhan Mantri Jan Arogya Yojana (PM-JAY)",
+    "description_en": "A public health-assurance scheme providing cashless hospital treatment cover of up to Rs 5 lakh per family per year; all people aged 70 or above can enrol regardless of income or economic status.",
+    "eligibility": [
+      "Existing eligibility routes cover families identified through the Socio-Economic and Caste Census 2011 deprivation or occupation criteria and any state-specific expansion",
+      "Every senior citizen aged 70 or above is eligible regardless of socio-economic status; age is determined from Aadhaar",
+      "For families already covered, members aged 70 or above receive a separate additional cover of up to Rs 5 lakh per year for themselves"
+    ],
+    "documents_required": ["For the age-70-and-above route: Aadhaar is the only enrolment document and Aadhaar-based electronic Know Your Customer is mandatory"],
+    "where_to_apply": "Ayushman App, beneficiary.nha.gov.in, a Common Service Centre, or an empanelled hospital help desk",
+    "official_url": "https://nha.gov.in/img/resources/English_FAQs_related_to_the_benefits_for_senior_citizens.pdf",
+    "helpline": "14555",
+    "reviewed_on": "2026-08-09"
+  },
+  {
+    "id": "pmay-g",
+    "name": "Pradhan Mantri Awaas Yojana - Gramin (PMAY-G)",
+    "description_en": "A rural housing scheme giving financial assistance to build a pucca house to families in the government's housing-deprived list.",
+    "eligibility": [
+      "Household must be listed as houseless or living in a kutcha house in the Awaas+ / Socio-Economic and Caste Census (SECC) housing deprivation data",
+      "Household should not already own a pucca house anywhere in India"
+    ],
+    "exclusions": [
+      "A household member owns a motorised three-wheeler or four-wheeler",
+      "A household member owns mechanised three-wheeler or four-wheeler agricultural equipment",
+      "The household has a Kisan Credit Card with a credit limit of Rs 50,000 or more",
+      "A household member is a government employee",
+      "The household has a non-agricultural enterprise registered with the government",
+      "A household member earns more than Rs 15,000 per month",
+      "A household member pays income tax or professional tax",
+      "The household owns 2.5 acres or more of irrigated land",
+      "The household owns 5 acres or more of unirrigated land",
+      "The house has more than two rooms"
+    ],
+    "documents_required": ["Aadhaar card", "Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA) job card if available", "Bank account linked to Aadhaar", "Swachh Bharat Mission toilet linkage"],
+    "where_to_apply": "Gram Panchayat office or Block Development Office",
+    "official_url": "https://pmayg.nic.in/netiayHome/questions.html",
+    "helpline": "1800-11-6446",
+    "reviewed_on": "2026-08-09"
+  },
+  {
+    "id": "mgnrega",
+    "name": "Mahatma Gandhi National Rural Employment Guarantee Act (MGNREGA) Job Card",
+    "description_en": "A law that guarantees at least 100 days of paid unskilled manual work in a financial year to every rural household whose adult members demand work.",
+    "eligibility": [
+      "Household must be resident in a rural area",
+      "Adult member(s) willing to do unskilled manual work"
+    ],
+    "documents_required": ["Aadhaar card", "Passport-size photo", "Address proof"],
+    "where_to_apply": "Gram Panchayat office",
+    "official_url": "https://rural.gov.in/sites/default/files/MGNREGA_FAQ_ENGLISH.pdf",
+    "helpline": "1800-11-0707",
+    "reviewed_on": "2026-08-09"
+  },
+  {
+    "id": "nsp-scholarship",
+    "name": "National Scholarship Portal (NSP)",
+    "description_en": "A common application portal for many different scholarships. It cannot provide one scheme-specific deadline: opening, closing and verification dates are published separately for each scholarship and academic year.",
+    "eligibility": [
+      "Must be enrolled in a recognised school or institution",
+      "Family income must be below the scheme-specific income ceiling",
+      "Category-specific criteria vary by scholarship; check the selected scheme notice for the full category names and rules"
+    ],
+    "documents_required": ["Aadhaar card", "Income certificate", "Caste certificate (if applicable)", "Bank passbook", "Previous year mark sheet", "Institution ID / bonafide certificate"],
+    "where_to_apply": "Online at the National Scholarship Portal, verified by the institution and district nodal officer",
+    "official_url": "https://scholarships.gov.in",
+    "helpline": "0120-6619540",
+    "reviewed_on": "2026-08-09"
+  },
+  {
+    "id": "sukanya-samriddhi",
+    "name": "Sukanya Samriddhi Yojana",
+    "description_en": "A small-savings account for a girl child. The government-notified interest rate can change, and the account matures 21 years from the date it was opened.",
+    "eligibility": [
+      "Account can be opened for a girl child below 10 years of age",
+      "Maximum two accounts per family (three in case of twins/triplets on second birth)"
+    ],
+    "documents_required": ["Girl child's birth certificate", "Aadhaar card of parent/guardian", "Address proof"],
+    "where_to_apply": "Post office or authorised bank branch",
+    "official_url": "https://www.nsiindia.gov.in/InternalPage.aspx?Id_Pk=171",
+    "helpline": "1800-266-6868",
+    "reviewed_on": "2026-08-09"
+  },
+  {
+    "id": "ujjwala",
+    "name": "Pradhan Mantri Ujjwala Yojana",
+    "description_en": "Provides an eligible adult woman from a poor household with a deposit-free liquefied petroleum gas connection, a free first refill and a free two-burner stove.",
+    "eligibility": [
+      "Applicant must be a woman aged 18 or older from a poor household, based on the prescribed deprivation declaration",
+      "No family member in the household composition document may already have a liquefied petroleum gas connection from an Oil Marketing Company"
+    ],
+    "documents_required": ["Know Your Customer application form", "Family-composition document", "Aadhaar of the applicant and adult family members", "Address proof if the current address differs from Aadhaar", "Bank account number and Indian Financial System Code", "Signed deprivation declaration"],
+    "where_to_apply": "Nearest liquefied petroleum gas distributor or the Pradhan Mantri Ujjwala Yojana online application page",
+    "official_url": "https://www.pmuy.gov.in/faq.html",
+    "helpline": "1800-266-6696",
+    "reviewed_on": "2026-08-09"
+  },
+  {
+    "id": "nsap-old-age-pension",
+    "name": "National Social Assistance Programme (NSAP) — Indira Gandhi National Old Age Pension Scheme (IGNOAPS)",
+    "description_en": "Central old-age pension assistance for people aged 60 or above in below-poverty-line households. States and Union Territories may add their own top-up, so the total monthly payment varies by state.",
+    "eligibility": [
+      "Applicant must be 60 years or older",
+      "Must belong to a household below the poverty line under the scheme criteria",
+      "The central share is Rs 200 per month for ages 60 to 79 and Rs 500 per month from age 80; state or Union Territory top-ups vary and must be checked locally"
+    ],
+    "documents_required": ["Aadhaar card", "Age proof", "below poverty line (BPL) certificate / ration card", "Bank passbook"],
+    "where_to_apply": "Gram Panchayat or Block/Taluk Social Welfare office",
+    "official_url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2226202&lang=1",
+    "helpline": "1800-11-0001",
+    "reviewed_on": "2026-08-09"
+  }
+]

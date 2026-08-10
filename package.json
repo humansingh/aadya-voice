@@ -1,0 +1,18 @@
+{
+  "name": "sahayak-voice-agent",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local-language voice utility agent for Indian government scheme information.",
+  "scripts": {
+    "dev": "node scripts/dev-server.js",
+    "dev:vercel": "vercel dev",
+    "test": "node --experimental-vm-modules scripts/test-product.js",
+    "data:sync:myscheme": "node scripts/sync-myscheme-index.js",
+    "data:import:firestore": "node scripts/import-opportunities-firestore.js",
+    "data:import:browse": "node scripts/import-discovery-browse-firestore.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.2.0",
+    "groq-sdk": "^0.7.0"
+  }
+}
