@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="theme-color" content="#123d31" />
-<title>Sahayak — A public-service desk that speaks your language</title>
+<title>Aadya — A public-service desk that speaks your language</title>
 <meta name="description" content="Ask about government schemes, scholarships, pensions and jobs by voice—in the language you already speak." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -227,9 +227,18 @@
   .language-ribbon-track { display:flex;gap:34px;min-width:max-content; }
   .language-ribbon span::before { content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--sun);margin:0 10px 2px 0; }
 
+  /* Language marquee */
+  .language-band { overflow: hidden; padding: 28px 0 4px; }
+  .language-track { display: flex; width: max-content; animation: marquee 34s linear infinite; }
+  .language-set { display: flex; align-items: center; gap: 42px; padding-right: 42px; color: rgba(16,41,37,.36); font-size: clamp(21px, 3vw, 40px); font-weight: 700; letter-spacing: -.035em; white-space: nowrap; }
+  .language-set span::after { content: "•"; margin-left: 42px; color: rgba(8,116,98,.3); }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+
   /* Thesis */
   .thesis-section { padding: 120px 0 80px; }
   .thesis-grid { display:grid;grid-template-columns:.72fr 1.28fr;gap:62px;align-items:start; }
+  .thesis-visual { display:flex;flex-direction:column; }
+  .thesis-image { margin-top:24px;width:100%;height:400px;object-fit:cover;border-radius:var(--radius-lg);box-shadow:var(--shadow); }
   .section-kicker { font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--leaf);display:flex;align-items:center;gap:9px; }
   .section-kicker::before{content:"";width:22px;height:1px;background:currentColor;}
   .thesis-copy h2 { margin:0;font-family:"Manrope",sans-serif;font-size:clamp(38px,5.4vw,72px);line-height:1.05;letter-spacing:-.055em;font-weight:600;text-wrap:balance; }
@@ -309,7 +318,27 @@
   /* Product pathways */
   .landing-prefs{display:flex;align-items:center}.landing-prefs .preference-controls label>span,.landing-prefs .experience-label{display:none}.landing-prefs .preference-controls label,.landing-prefs .experience-control{min-height:40px;height:40px;padding-left:4px}.landing-prefs .preference-controls select{width:88px;max-width:88px}.landing-mobile-prefs{display:none}
   .pathways{padding:116px 0 14px}.pathway-head{display:grid;grid-template-columns:.8fr 1.2fr;gap:54px;align-items:end;margin-bottom:31px}.pathway-head h2{margin:0;font-family:"Manrope",sans-serif;font-size:clamp(38px,5vw,67px);line-height:1.04;letter-spacing:-.057em;font-weight:600}.pathway-head p{margin:0;color:var(--muted);font-size:15px;line-height:1.7;max-width:650px}.persona-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.persona-card{min-height:226px;padding:20px;border:1px solid var(--line);border-radius:23px;background:var(--surface);color:var(--ink);text-align:left;display:flex;flex-direction:column;transition:.22s ease}.persona-card:hover,.persona-card.active{transform:translateY(-4px);border-color:rgba(47,132,94,.36);box-shadow:0 18px 42px rgba(23,53,45,.09);background:var(--mint-2)}.persona-symbol{width:42px;height:42px;border-radius:14px;background:var(--mint);display:grid;place-items:center;color:var(--forest);font-size:18px}.persona-card h3{margin:auto 0 7px;font-family:"Manrope",sans-serif;font-size:17px;letter-spacing:-.03em}.persona-card p{margin:0;color:var(--muted);font-size:11px;line-height:1.55}.persona-card span:last-child{margin-top:16px;color:var(--leaf);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.09em}
-  .demo-portal{margin-top:92px;padding:26px;border-radius:34px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);display:grid;grid-template-columns:.72fr 1.28fr;gap:25px;align-items:stretch}.demo-portal-copy{padding:33px 30px}.demo-portal-copy h2{font-family:"Manrope",sans-serif;font-size:clamp(34px,4.3vw,54px);line-height:1.04;letter-spacing:-.052em;margin:14px 0 17px;font-weight:600}.demo-portal-copy p{margin:0 0 25px;color:var(--muted);font-size:14px;line-height:1.65}.demo-portal-copy .button{background:var(--forest);color:#fff}.headless-preview{min-height:370px;padding:18px;border-radius:25px;background:#0b3026;color:#fff;position:relative;overflow:hidden;display:grid;grid-template-rows:38px minmax(0,1fr)}.headless-preview::before{content:"";position:absolute;inset:0;opacity:.14;background-image:linear-gradient(rgba(255,255,255,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.22) 1px,transparent 1px);background-size:31px 31px}.preview-bar{height:38px;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2}.preview-live{display:flex;align-items:center;gap:7px;color:#b9d4c4;font-size:9px;font-weight:800;letter-spacing:.1em}.preview-live i{width:7px;height:7px;border-radius:50%;background:#53c184;box-shadow:0 0 0 5px rgba(83,193,132,.12)}.preview-flow{position:relative;z-index:2;min-height:0;height:100%;padding:20px 10px 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:9px;align-items:stretch}.preview-node{min-height:0;padding:20px 14px;border:1px solid rgba(255,255,255,.13);border-radius:17px;background:rgba(255,255,255,.07);display:flex;flex-direction:column;animation:nodeGlow 4.8s ease-in-out infinite}.preview-node:nth-child(2){animation-delay:-3.6s}.preview-node:nth-child(3){animation-delay:-2.4s}.preview-node:nth-child(4){animation-delay:-1.2s}@keyframes nodeGlow{0%,18%{background:rgba(242,189,85,.19);transform:translateY(-4px)}28%,100%{background:rgba(255,255,255,.07);transform:none}}.preview-node i{width:28px;height:28px;border-radius:10px;background:var(--sun);display:grid;place-items:center;color:var(--forest);font-style:normal;font-size:10px;font-weight:800}.preview-node b{margin-top:auto;font-size:10px}.preview-node span{min-height:28px;margin-top:10px;color:#a9c3b5;font-size:8.5px;line-height:1.45}
+  .tour-bento{margin-top:38px;display:grid;grid-template-columns:1.15fr 1fr;grid-template-rows:auto auto;gap:12px}
+  .tour-card{position:relative;display:flex;flex-direction:column;padding:22px;border:1px solid var(--line);border-radius:24px;background:var(--surface);box-shadow:0 14px 34px rgba(23,53,45,.06);transition:transform .2s ease,border-color .2s ease}
+  .tour-card:hover{transform:translateY(-4px);border-color:rgba(47,132,94,.36)}
+  .tour-n{position:relative;z-index:1;width:44px;height:44px;flex-shrink:0;border-radius:15px;display:grid;place-items:center;color:#fff;background:var(--forest);font-size:11px;font-weight:800;box-shadow:0 14px 28px -18px rgba(18,61,49,.9)}
+  .tour-card h3{margin:26px 0 8px;font-family:"Manrope",sans-serif;font-size:18px;letter-spacing:-.03em}
+  .tour-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
+  .tour-output{margin-top:auto;padding-top:18px;color:var(--leaf);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+  .tour-large{grid-row:1 / 3;min-height:300px;justify-content:flex-end;background:var(--forest);border-color:var(--forest)}
+  .tour-large .tour-n{background:rgba(255,255,255,.16);box-shadow:none}
+  .tour-large h3{color:#fff;font-size:24px}
+  .tour-large p{color:#c9dcd2;font-size:14px}
+  .tour-large .tour-output{color:#a9d9c0}
+  .tour-small{min-height:144px}
+  .tour-small.blue .tour-n{background:var(--blue)}
+  .tour-small.coral .tour-n{background:var(--coral)}
+  .tour-wide{grid-column:1 / -1;flex-direction:row;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .tour-wide-copy{display:flex;align-items:center;gap:18px}
+  .tour-wide-copy .tour-n{background:var(--leaf)}
+  .tour-wide-copy h3{margin:0;font-size:18px}
+  .tour-wide-copy p{margin:4px 0 0}
+  .tour-cta{margin:0;flex-shrink:0;background:var(--forest);color:#fff}
 
 
   .reveal { opacity: 1; transform: none; }
@@ -334,7 +363,7 @@
   html[data-mode="easy"] .button.outline{border:2px solid #176b45;background:#fff;color:#176b45}
   html[data-mode="easy"] .hero-proof{color:#222;font-size:15px}
   html[data-mode="easy"] .language-stack{display:none}
-  html[data-mode="easy"] .thesis-section,html[data-mode="easy"] .journey,html[data-mode="easy"] .moments,html[data-mode="easy"] .trust-section,html[data-mode="easy"] .field-panel,html[data-mode="easy"] .demo-portal,html[data-mode="easy"] .final-cta{display:none}
+  html[data-mode="easy"] .thesis-section,html[data-mode="easy"] .journey,html[data-mode="easy"] .moments,html[data-mode="easy"] .trust-section,html[data-mode="easy"] .field-panel,html[data-mode="easy"] .pathways,html[data-mode="easy"] .final-cta{display:none}
   html[data-mode="easy"] .pathways{padding:48px 0 92px}
   html[data-mode="easy"] .pathway-head{display:block;max-width:850px}
   html[data-mode="easy"] .pathway-head .section-kicker{color:#176b45;font-size:14px;letter-spacing:0;text-transform:none}
@@ -368,7 +397,7 @@
 
   /* The mode controls keep one physical anchor while the surrounding view changes. */
   @media (min-width:981px){
-    nav{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center}
+    nav{display:grid;grid-template-columns:auto minmax(min-content,1fr) auto auto;align-items:center}
     .nav-links{justify-self:center}
     .landing-prefs{grid-column:3}
     .nav-account-actions{grid-column:4}
@@ -387,12 +416,12 @@
     .nav-links,.landing-prefs{display:none}.menu-btn{display:grid}.mobile-nav-sheet{display:grid}.landing-mobile-prefs{display:block}
     .hero{min-height:auto;padding-top:132px}.hero-grid{grid-template-columns:1fr}.hero-copy{text-align:center}.hero-copy>p{margin-inline:auto}.hero-actions,.hero-proof{justify-content:center}.call-stage{min-height:560px}.call-card{margin-inline:auto}.language-ribbon{margin-top:35px}
     .thesis-grid,.trust-grid,.field-panel,.final-cta,.cost-head,.cost-grid{grid-template-columns:1fr;gap:42px}.thesis-grid{gap:28px}.journey-grid{grid-template-columns:1fr 1fr}.journey-step:nth-child(2){border-right:0}.journey-step:nth-child(-n+2){border-bottom:1px solid var(--line)}
-    .moments-grid{grid-template-columns:1fr}.small-stories{grid-template-columns:1fr 1fr}.field-panel,.final-cta{padding:48px}.cta-art{order:-1}.pathway-head,.demo-portal{grid-template-columns:1fr}.persona-grid{grid-template-columns:repeat(3,1fr)}
+    .moments-grid{grid-template-columns:1fr}.small-stories{grid-template-columns:1fr 1fr}.field-panel,.final-cta{padding:48px}.cta-art{order:-1}.pathway-head{grid-template-columns:1fr}.tour-bento{grid-template-columns:1fr 1fr}.persona-grid{grid-template-columns:repeat(3,1fr)}
   }
   @media (max-width: 680px) {
-    .page{width:100%;margin:0}.shell,.hero,.moments,.field-panel,.final-cta{border-radius:0}.wrap{width:min(100% - 30px,1180px)}.nav-wrap{top:12px;width:calc(100% - 22px)}nav{padding-left:13px}.brand span:last-child{font-size:14px}.nav-account-actions{display:none}
+    .page{width:100%;margin:0}.shell,.hero,.moments,.field-panel,.final-cta{border-radius:0}.wrap{width:min(100% - 30px,1180px)}.nav-wrap{top:12px;width:calc(100% - 22px)}nav{padding-left:13px}.brand span:last-child{font-size:14px}.nav-signin,.menu-btn,.mobile-nav-sheet,.landing-mobile-prefs{display:none!important}.landing-prefs{display:flex!important}
     .hero{padding:116px 0 48px}.hero-grid{gap:25px}h1{font-size:48px}.hero-copy>p{font-size:16px}.call-stage{min-height:520px}.call-card{border-radius:23px}.call-content{grid-template-columns:1fr}.transcript-pane{border-right:0;border-bottom:1px solid var(--line);min-height:150px}.answer-pane{min-height:190px}.speaker-line{font-size:17px}.scenario-switcher .scenario:nth-child(n+4){display:none}.language-ribbon{font-size:11px}
-    .thesis-section{padding:82px 0 54px}.thesis-copy h2{font-size:42px}.thesis-copy p{font-size:16px}.section-head{align-items:start;flex-direction:column}.journey{padding-bottom:84px}.journey-grid{grid-template-columns:1fr}.journey-step{min-height:300px;border-right:0;border-bottom:1px solid var(--line)!important}.journey-step:last-child{border-bottom:0!important}.moments{padding:64px 0}.story-card{min-height:auto}.story-art{min-height:315px}.story-bubble{left:18px;top:24px;max-width:220px}.story-phone{right:42px}.story-copy{grid-template-columns:1fr}.story-tabs{justify-content:flex-start}.small-stories{grid-template-columns:1fr}.trust-section{padding:82px 0}.confidence-card{grid-template-columns:58px 1fr}.confidence-card .signal{display:none}.field-panel,.final-cta{padding:52px 22px}.cost-section{padding-top:82px}.cost-shell{padding:45px 22px;border-radius:0}.cost-totals{grid-template-columns:1fr}.cost-total{min-height:90px}.cost-total strong{margin-top:10px}.cost-line{grid-template-columns:92px 1fr 64px}.cost-notes{grid-template-columns:1fr}.cost-sources{justify-content:flex-start}.final-cta{margin-top:82px}.cta-disc{width:230px;height:230px}.cta-art{height:270px}.site-footer{grid-template-columns:1fr}.footer-links{justify-content:flex-start}.pathways{padding-top:82px}.pathway-head{gap:18px}.persona-grid{grid-template-columns:1fr 1fr}.persona-card{min-height:190px}.demo-portal{margin-top:60px;padding:12px;border-radius:0}.demo-portal-copy{padding:28px 13px}.headless-preview{min-height:420px}.preview-flow{grid-template-columns:1fr 1fr}
+    .thesis-section{padding:82px 0 54px}.thesis-copy h2{font-size:42px}.thesis-copy p{font-size:16px}.section-head{align-items:start;flex-direction:column}.journey{padding-bottom:84px}.journey-grid{grid-template-columns:1fr}.journey-step{min-height:300px;border-right:0;border-bottom:1px solid var(--line)!important}.journey-step:last-child{border-bottom:0!important}.moments{padding:64px 0}.story-card{min-height:auto}.story-art{min-height:315px}.story-bubble{left:18px;top:24px;max-width:220px}.story-phone{right:42px}.story-copy{grid-template-columns:1fr}.story-tabs{justify-content:flex-start}.small-stories{grid-template-columns:1fr}.trust-section{padding:82px 0}.confidence-card{grid-template-columns:58px 1fr}.confidence-card .signal{display:none}.field-panel,.final-cta{padding:52px 22px}.cost-section{padding-top:82px}.cost-shell{padding:45px 22px;border-radius:0}.cost-totals{grid-template-columns:1fr}.cost-total{min-height:90px}.cost-total strong{margin-top:10px}.cost-line{grid-template-columns:92px 1fr 64px}.cost-notes{grid-template-columns:1fr}.cost-sources{justify-content:flex-start}.final-cta{margin-top:82px}.cta-disc{width:230px;height:230px}.cta-art{height:270px}.site-footer{grid-template-columns:1fr}.footer-links{justify-content:flex-start}.pathways{padding-top:82px}.pathway-head{gap:18px}.persona-grid{grid-template-columns:1fr 1fr}.persona-card{min-height:190px}.tour-bento{grid-template-columns:1fr}.tour-large{grid-row:auto;min-height:220px}.tour-wide{flex-direction:column;align-items:flex-start}.tour-cta{width:100%;justify-content:center}
   }
   @media(max-width:680px){html[data-mode="easy"] .nav-wrap{top:12px;width:calc(100% - 22px)}html[data-mode="easy"] .wrap{padding-inline:18px}html[data-mode="easy"] .hero{padding:108px 0 42px}html[data-mode="easy"] .hero-copy{text-align:left}html[data-mode="easy"] .hero-actions,html[data-mode="easy"] .hero-proof{justify-content:flex-start}html[data-mode="easy"] .persona-grid{grid-template-columns:1fr}html[data-mode="easy"] .pathways{padding-top:42px}html[data-mode="easy"] .preference-dock{border-radius:4px}}
   @media (prefers-reduced-motion: reduce) {
@@ -403,11 +432,11 @@
 <body>
 <div class="nav-wrap">
   <nav id="nav">
-    <a class="brand" href="#top" aria-label="Sahayak home">
+    <a class="brand" href="#top" aria-label="Aadya home">
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h2m2-5v10m4-13v16m4-11v6m4-4v2"/></svg>
       </span>
-      <span>Sahayak</span>
+      <span>Aadya</span>
     </a>
     <div class="nav-links">
       <a href="#why">Why it matters</a>
@@ -415,13 +444,12 @@
       <a href="#moments">Who it helps</a>
       <a href="#trust">Trust</a>
       <a href="./about.html">About</a>
-      <a href="./integrations.html">Integrations</a>
     </div>
     <div class="landing-prefs" id="landing-preferences"></div>
     <div class="nav-account-actions" aria-label="Account actions">
       <a class="nav-signin" href="./signup.html?mode=signin">Sign in</a>
-      <a class="nav-cta" href="./signup.html?mode=signup">
-        <span>Create account</span>
+      <a class="nav-cta" href="./index.html">
+        <span>Try Aadya</span>
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg>
       </a>
     </div>
@@ -435,10 +463,8 @@
     <a href="#moments"><span>Who it helps</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
     <a href="#trust"><span>How trust works</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
     <a href="./about.html"><span>About & architecture</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
-    <a href="./integrations.html"><span>Integrations</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
     <a class="mobile-signin" href="./signup.html?mode=signin"><span>Sign in</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
-    <a class="mobile-open" href="./signup.html?mode=signup"><span>Create account</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
-    <a href="./index.html"><span>Continue as guest</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a class="mobile-open" href="./index.html"><span>Try Aadya</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
   </div>
 </div>
 
@@ -469,16 +495,16 @@
           </div>
         </div>
 
-        <div class="call-stage reveal visible" aria-label="Interactive Sahayak conversation preview">
+        <div class="call-stage reveal visible" aria-label="Interactive Aadya conversation preview">
           <div class="call-card" id="call-card">
             <div class="call-card-top">
-              <div class="live-label"><span></span> Sahayak is listening</div>
+              <div class="live-label"><span></span> Aadya is listening</div>
               <div class="call-card-time" id="call-time">00:08</div>
             </div>
             <div class="call-content">
               <div class="transcript-pane">
                 <div>
-                  <div class="pane-label">What Sahayak heard</div>
+                  <div class="pane-label">What Aadya heard</div>
                   <div class="speaker-line" id="scenario-question">माझ्या वडिलांना वृद्धापकाळ पेन्शन मिळेल का?</div>
                 </div>
                 <div class="speaker-meta"><span class="mini-avatar" id="scenario-avatar">म</span><span id="scenario-language">Marathi · voice</span></div>
@@ -520,13 +546,23 @@
     </div>
   </section>
 
+  <section class="language-band" aria-label="Supported languages">
+    <div class="language-track" aria-hidden="true">
+      <div class="language-set"><span>हिंदी</span><span>ಕನ್ನಡ</span><span>தமிழ்</span><span>বাংলা</span><span>मराठी</span><span>తెలుగు</span><span>English</span></div>
+      <div class="language-set"><span>हिंदी</span><span>ಕನ್ನಡ</span><span>தமிழ்</span><span>বাংলা</span><span>मराठी</span><span>తెలుగు</span><span>English</span></div>
+    </div>
+  </section>
+
   <main>
     <section class="thesis-section" id="why">
       <div class="wrap thesis-grid">
-        <div class="section-kicker reveal">The utility</div>
+        <div class="thesis-visual reveal">
+          <div class="section-kicker">The utility</div>
+          <img class="thesis-image" src="./assets/landing_s2_cover.jpg" alt="Two farmers reviewing a phone together beside a rice field" />
+        </div>
         <div class="thesis-copy reveal">
           <h2>The problem is often not eligibility. <em>It is the interface.</em></h2>
-          <p>Millions of useful opportunities are hidden inside English-heavy websites, long PDFs, unfamiliar forms and offices that are expensive to visit twice. Sahayak turns that maze into a conversation: one question in a person’s mother tongue, one sourced answer, and one concrete next step.</p>
+          <p>Millions of useful opportunities are hidden inside English-heavy websites, long PDFs, unfamiliar forms and offices that are expensive to visit twice. Aadya turns that maze into a conversation: one question in a person’s mother tongue, one sourced answer, and one concrete next step.</p>
           <div class="thesis-note">Long-running voice agents can become an access layer for people who transact with the world through a phone and their mother tongue—not a replacement for the official office, but a far better way to arrive prepared.</div>
         </div>
       </div>
@@ -631,7 +667,7 @@
         <div class="trust-copy reveal">
           <div class="section-kicker">Designed to be honest</div>
           <h2>A calm voice should not sound more certain than the evidence.</h2>
-          <p>Sahayak separates what it found in the small prototype records from what is only general guidance. It does not declare someone eligible; it explains the published criteria and points to the source link.</p>
+          <p>Aadya separates what it found in the small prototype records from what is only general guidance. It does not declare someone eligible; it explains the published criteria and points to the source link.</p>
           <div class="trust-rule">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 20 6v6c0 5-3.3 8-8 9-4.7-1-8-4-8-9V6z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg>
             Every answer shows the quality of its match.
@@ -661,7 +697,7 @@
       <div>
         <div class="section-kicker">A force multiplier</div>
         <h2>One phone can become a village help desk.</h2>
-        <p>Sahayak is useful for the person asking—and for the person who helps fifty others ask. Bilingual labels, replayable answers, persistent history and shareable checklists keep the conversation usable across generations.</p>
+        <p>Aadya is useful for the person asking—and for the person who helps fifty others ask. Bilingual labels, replayable answers, persistent history and shareable checklists keep the conversation usable across generations.</p>
       </div>
       <div class="field-list">
         <div class="field-item"><span>Common Service Centre operators</span><span>Faster guidance</span></div>
@@ -672,29 +708,28 @@
     </section>
 
     <section class="wrap pathways" id="pathways">
-      <div class="demo-portal reveal">
-        <div class="demo-portal-copy">
+      <div class="pathway-head reveal">
+        <div>
           <div class="section-kicker">Interactive product tour</div>
           <h2>See one question become a prepared visit.</h2>
-          <p>No microphone, API key or sign-in is needed. Choose a real-life scenario, watch the transcript and scheme record move through the system, then open the exact same flow in the working app.</p>
-          <a class="button" href="./demo.html"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 3.8v12.4L16 10 5 3.8z"/></svg>Open the interactive demo</a>
         </div>
-        <div class="headless-preview" aria-hidden="true">
-          <div class="preview-bar"><div class="preview-live"><i></i>GUIDED FLOW RUNNING</div><div class="preview-live">NO MIC NEEDED</div></div>
-          <div class="preview-flow">
-            <div class="preview-node"><i>01</i><b>Voice</b><span>Speak as you normally would</span></div>
-            <div class="preview-node"><i>02</i><b>Transcript</b><span>Check the words before sending</span></div>
-            <div class="preview-node"><i>03</i><b>Evidence</b><span>Match prototype scheme records</span></div>
-            <div class="preview-node"><i>04</i><b>Next step</b><span>Carry the right documents</span></div>
-          </div>
-        </div>
+        <p>No microphone, API key or sign-in is needed. Choose a real-life scenario, watch the transcript and scheme record move through the system, then open the exact same flow in the working app.</p>
+      </div>
+      <div class="tour-bento reveal">
+        <article class="tour-card tour-large"><div class="tour-n">01</div><h3>Voice</h3><p>Speak as you normally would, in your own language.</p><div class="tour-output">Output · audio</div></article>
+        <article class="tour-card tour-small blue"><div class="tour-n">02</div><h3>Transcript</h3><p>Check the words before sending.</p><div class="tour-output">Output · confirmed text</div></article>
+        <article class="tour-card tour-small coral"><div class="tour-n">03</div><h3>Evidence</h3><p>Match prototype scheme records.</p><div class="tour-output">Output · sourced answer</div></article>
+        <article class="tour-card tour-wide">
+          <div class="tour-wide-copy"><div class="tour-n">04</div><div><h3>Next step</h3><p>Carry the right documents, action checklist included.</p></div></div>
+          <a class="button tour-cta" href="./demo.html"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 3.8v12.4L16 10 5 3.8z"/></svg>Open the interactive demo</a>
+        </article>
       </div>
     </section>
 
     <section class="final-cta">
       <div>
         <h2>Ask the question you were about to postpone.</h2>
-        <p>Try Sahayak without a form or a perfect search phrase. Speak naturally, review what it heard, and leave with the next step.</p>
+        <p>Try Aadya without a form or a perfect search phrase. Speak naturally, review what it heard, and leave with the next step.</p>
         <a class="button light" href="./index.html">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
           Get started
@@ -713,7 +748,7 @@
     <div>
       <div class="footer-brand">
         <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h2m2-5v10m4-13v16m4-11v6m4-4v2"/></svg></span>
-        Sahayak
+        Aadya
       </div>
       <div class="footer-copy">A voice access layer for public information. Always verify eligibility, deadlines and final decisions with the official office, website or helpline.</div>
     </div>
@@ -728,7 +763,7 @@
   import { LANGUAGES, mountPreferenceControls, getPreferences } from "./lib/preferences.js";
   import { matchDemoResponse, localizeDemoResponse } from "./lib/demoFixtures.js";
   const LANDING_COPY = {
-    en:{eyebrow:"Public information, spoken back clearly",heroLead:"Public help,",heroSoft:"in your language.",heroBody:"Ask about schemes, public services, scholarships, pensions and government jobs. Get one sourced next step, spoken clearly.",ask:"Ask in your language",demo:"Try the guided demo",integrations:"See integrations",start:"Get started",proof:"Hindi and English. Spoken answers. No form to decode.",pathKicker:"One product, different doorways",pathTitle:"Start from the life you are living.",pathBody:"Choose the view closest to what you need. Sahayak shows useful starting questions from the same prototype records."},
+    en:{eyebrow:"Public information, spoken back clearly",heroLead:"Public help,",heroSoft:"in your language.",heroBody:"Ask about schemes, public services, scholarships, pensions and government jobs. Get one sourced next step, spoken clearly.",ask:"Ask in your language",demo:"Try the guided demo",integrations:"See integrations",start:"Get started",proof:"Hindi and English. Spoken answers. No form to decode.",pathKicker:"One product, different doorways",pathTitle:"Start from the life you are living.",pathBody:"Choose the view closest to what you need. Aadya shows useful starting questions from the same prototype records."},
     hi:{eyebrow:"सार्वजनिक जानकारी, आपकी भाषा में साफ़ जवाब",heroLead:"सरकारी मदद,",heroSoft:"आपकी भाषा में।",heroBody:"योजनाओं, सरकारी सेवाओं, छात्रवृत्तियों, पेंशन और सरकारी नौकरियों के बारे में पूछें। स्रोत सहित अगला कदम साफ़ सुनें।",ask:"अपनी भाषा में पूछें",demo:"आसान डेमो देखें",integrations:"इंटीग्रेशन देखें",start:"शुरू करें",proof:"हिंदी और English। बोलकर उत्तर। कोई लंबा फ़ॉर्म नहीं।",pathKicker:"एक ऐप, आपकी ज़रूरत का रास्ता",pathTitle:"अपनी ज़रूरत से शुरू करें।",pathBody:"अपने काम के सबसे पास वाला रूप चुनें। सहायक प्रोटोटाइप रिकॉर्ड से उपयोगी शुरुआती सवाल दिखाएगा।"},
     mr:{eyebrow:"सार्वजनिक माहिती, तुमच्या भाषेत स्पष्ट उत्तर",heroLead:"एक मदत केंद्र जे",heroSoft:"तुमची भाषा बोलते.",heroBody:"योजना, शिष्यवृत्ती, पेन्शन आणि नोकरीबद्दल आवाजाने विचारा. सहायक अधिकृत माहिती शोधतो, सोप्या शब्दांत सांगतो आणि पुढचे पाऊल दाखवतो.",ask:"तुमच्या भाषेत विचारा",demo:"मार्गदर्शित डेमो पहा",integrations:"इंटिग्रेशन पहा",start:"सुरू करा",proof:"सात भाषा. बोललेली उत्तरे. लांब फॉर्म नाही.",pathKicker:"एक ॲप, तुमच्या गरजेचा मार्ग",pathTitle:"तुमच्या गरजेपासून सुरुवात करा.",pathBody:"तुमच्या कामाशी जुळणारे रूप निवडा. त्याच विश्वसनीय योजना नोंदींमधून सहायक उपयुक्त सुरुवातीचे प्रश्न दाखवेल."},
     bn:{eyebrow:"সরকারি তথ্য, আপনার ভাষায় স্পষ্ট উত্তর",heroLead:"একটি সহায়তা ডেস্ক যা",heroSoft:"আপনার ভাষায় কথা বলে।",heroBody:"প্রকল্প, বৃত্তি, পেনশন ও কাজ সম্পর্কে মুখে প্রশ্ন করুন। সহায়ক সরকারি তথ্য খুঁজে সহজ করে বলে এবং পরের পদক্ষেপ জানায়।",ask:"আপনার ভাষায় জিজ্ঞাসা করুন",demo:"সহজ ডেমো দেখুন",integrations:"ইন্টিগ্রেশন দেখুন",start:"শুরু করুন",proof:"সাতটি ভাষা। কণ্ঠে উত্তর। কোনো লম্বা ফর্ম নেই।",pathKicker:"একটি অ্যাপ, আপনার প্রয়োজনের পথ",pathTitle:"আপনার প্রয়োজন থেকে শুরু করুন।",pathBody:"আপনার কাজের সঙ্গে সবচেয়ে কাছের ধরনটি বেছে নিন। একই বিশ্বস্ত প্রকল্পের নথি থেকে সহায়ক শুরুর প্রশ্ন দেখাবে।"},
@@ -812,7 +847,7 @@
     animateHeroTitle(copy, prefs.language);
   };
   localizeLanding();
-  window.addEventListener("sahayak:preferences", localizeLanding);
+  window.addEventListener("aadya:preferences", localizeLanding);
   const SCENARIO_QUESTIONS = {
     en:{elder:"How many days of work can my family get under MGNREGA?",farmer:"Why has my PM-KISAN payment not arrived?",student:"How do I get a voter ID card?",caregiver:"What documents do I need for Ayushman Bharat?"},
     hi:{elder:"MGNREGA में मेरे परिवार को कितने दिन काम मिलेगा?",farmer:"PM-KISAN का पैसा अभी तक क्यों नहीं आया?",student:"वोटर आईडी कैसे बनवाएँ?",caregiver:"आयुष्मान भारत के लिए कौन से दस्तावेज़ चाहिए?"},
@@ -837,7 +872,7 @@
     const language = LANGUAGES.find(item => item.code === prefs.language) || LANGUAGES[0];
     return Object.fromEntries(Object.entries(questions).map(([key, question]) => {
       const response = localizeDemoResponse(matchDemoResponse(question), prefs.language);
-      return [key, {question,avatar:language.short,language:language.label,source:response.tierLabel || "Sahayak",answer:response.answer,checks:response.documentsNeeded || []}];
+      return [key, {question,avatar:language.short,language:language.label,source:response.tierLabel || "Aadya",answer:response.answer,checks:response.documentsNeeded || []}];
     }));
   };
 
@@ -871,7 +906,7 @@
     const keys = Object.keys(buildLandingScenarios());
     setScenario(keys[(keys.indexOf(active.dataset.scenario) + 1) % keys.length]);
   });
-  window.addEventListener("sahayak:preferences", () => setScenario(activeScenarioKey));
+  window.addEventListener("aadya:preferences", () => setScenario(activeScenarioKey));
   setScenario(activeScenarioKey);
 
   let activeStoryKey = "farmer";
@@ -884,7 +919,7 @@
     document.querySelectorAll(".story-tab").forEach(x => x.classList.toggle("active", x.dataset.story === key));
   };
   document.querySelectorAll(".story-tab").forEach(btn => btn.addEventListener("click", () => setStory(btn.dataset.story)));
-  window.addEventListener("sahayak:preferences", () => setStory(activeStoryKey));
+  window.addEventListener("aadya:preferences", () => setStory(activeStoryKey));
   setStory(activeStoryKey);
 
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

@@ -10,7 +10,7 @@ const ALLOWED_KINDS = new Set(['application', 'checklist']);
 const RESPONSE_FORMAT = {
   type: 'json_schema',
   json_schema: {
-    name: 'sahayak_artifact',
+    name: 'aadya_artifact',
     strict: true,
     schema: {
       type: 'object',
@@ -113,7 +113,7 @@ module.exports = async (req, res) => {
       response_format: RESPONSE_FORMAT,
       messages: [
         { role: 'system', content: `You prepare careful public-service application aids for India. You never submit anything, determine eligibility, or invent personal facts, deadlines, rules, document requirements, contact details or URLs. ${task} Use only the supplied answer, source list, existing checklist and readable attachment text. An attachment without extracted text is not evidence. Put every missing personal or scheme-specific fact in missingInformation. Keep official URLs verbatim. Write in ${language === 'hi' ? 'simple Hindi in Devanagari' : 'simple English'}. The caveat must say this is a preparation draft, not a submitted application, and that every detail must be confirmed at the official source. Return only the required JSON.` },
-        { role: 'user', content: `QUESTION\n${question}\n\nSAHAYAK ANSWER\n${answer}\n\nOFFICIAL SOURCES\n${sourceContext}\n\nEXISTING DOCUMENT CHECKLIST\n${existingChecklist.join('\n') || '(none)'}\n\nTRANSIENT ATTACHMENTS\n${attachmentContext}` },
+        { role: 'user', content: `QUESTION\n${question}\n\nAADYA ANSWER\n${answer}\n\nOFFICIAL SOURCES\n${sourceContext}\n\nEXISTING DOCUMENT CHECKLIST\n${existingChecklist.join('\n') || '(none)'}\n\nTRANSIENT ATTACHMENTS\n${attachmentContext}` },
       ],
     }, { signal }));
     const raw = completion.choices?.[0]?.message?.content || '';

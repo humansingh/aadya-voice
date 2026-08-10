@@ -10,7 +10,7 @@
       "title": "myScheme government scheme discovery",
       "aliases": ["myScheme", "government scheme finder"],
       "summary": "myScheme is an official Government of India platform for discovering Central and State or Union Territory schemes and checking published eligibility information.",
-      "description": "Use myScheme to discover schemes when the Sahayak repository does not yet contain a source-checked record. A directory result is a lead, not a final eligibility decision; confirm against the scheme detail and originating department source.",
+      "description": "Use myScheme to discover schemes when the Aadya repository does not yet contain a source-checked record. A directory result is a lead, not a final eligibility decision; confirm against the scheme detail and originating department source.",
       "government_entity": { "name": "Digital India Corporation", "ministry": "Ministry of Electronics and Information Technology", "level": "Central Government" },
       "geography": { "country": "India", "scope": "All India", "state": null, "district": null, "city": null, "pincode": null },
       "eligibility_text": [],

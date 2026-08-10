@@ -1,15 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&family=Noto+Sans+Bengali:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Noto+Sans+Kannada:wght@400;500;600;700&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Sans+Telugu:wght@400;500;600;700&display=swap");
 
 :root {
-  --sahayak-font: "DM Sans", system-ui, sans-serif;
-  --sahayak-display: "Manrope", "DM Sans", system-ui, sans-serif;
+  --aadya-font: "DM Sans", system-ui, sans-serif;
+  --aadya-display: "Manrope", "DM Sans", system-ui, sans-serif;
 }
 
-html[data-language="hi"], html[data-language="mr"] { --sahayak-font: "Noto Sans Devanagari", "DM Sans", sans-serif; --sahayak-display: "Noto Sans Devanagari", "Manrope", sans-serif; }
-html[data-language="bn"] { --sahayak-font: "Noto Sans Bengali", "DM Sans", sans-serif; --sahayak-display: "Noto Sans Bengali", "Manrope", sans-serif; }
-html[data-language="ta"] { --sahayak-font: "Noto Sans Tamil", "DM Sans", sans-serif; --sahayak-display: "Noto Sans Tamil", "Manrope", sans-serif; }
-html[data-language="te"] { --sahayak-font: "Noto Sans Telugu", "DM Sans", sans-serif; --sahayak-display: "Noto Sans Telugu", "Manrope", sans-serif; }
-html[data-language="kn"] { --sahayak-font: "Noto Sans Kannada", "DM Sans", sans-serif; --sahayak-display: "Noto Sans Kannada", "Manrope", sans-serif; }
+html[data-language="hi"], html[data-language="mr"] { --aadya-font: "Noto Sans Devanagari", "DM Sans", sans-serif; --aadya-display: "Noto Sans Devanagari", "Manrope", sans-serif; }
+html[data-language="bn"] { --aadya-font: "Noto Sans Bengali", "DM Sans", sans-serif; --aadya-display: "Noto Sans Bengali", "Manrope", sans-serif; }
+html[data-language="ta"] { --aadya-font: "Noto Sans Tamil", "DM Sans", sans-serif; --aadya-display: "Noto Sans Tamil", "Manrope", sans-serif; }
+html[data-language="te"] { --aadya-font: "Noto Sans Telugu", "DM Sans", sans-serif; --aadya-display: "Noto Sans Telugu", "Manrope", sans-serif; }
+html[data-language="kn"] { --aadya-font: "Noto Sans Kannada", "DM Sans", sans-serif; --aadya-display: "Noto Sans Kannada", "Manrope", sans-serif; }
 
 html[data-mode="easy"] {
   --easy-bg: #f7f6f2;
@@ -25,7 +25,7 @@ html[data-mode="easy"] {
   --easy-primary-dark: #105235;
 }
 
-body { font-family: var(--sahayak-font); }
+body { font-family: var(--aadya-font); }
 button, input, select, textarea { font-family: inherit; }
 .preference-controls {
   display: flex;

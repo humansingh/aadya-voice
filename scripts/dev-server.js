@@ -42,7 +42,7 @@ const MIME = {
 
 function serveStatic(req, res) {
   let filePath = req.url.split('?')[0];
-  if (filePath === '/') filePath = '/index.html';
+  if (filePath === '/') filePath = '/landing.html';
   let decodedPath;
   try { decodedPath = decodeURIComponent(filePath); }
   catch (error) { res.writeHead(400); return res.end('Bad request'); }
@@ -126,7 +126,7 @@ server.headersTimeout = 10_000;
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '0.0.0.0';
 server.listen(PORT, HOST, () => {
-  console.log(`Sahayak local dev server running at http://localhost:${PORT}`);
+  console.log(`Aadya local dev server running at http://localhost:${PORT}`);
   console.log(`Listening on all network interfaces (${HOST})`);
   console.log(`GROQ_API_KEY loaded: ${process.env.GROQ_API_KEY ? 'yes' : 'NO — missing!'}`);
 });

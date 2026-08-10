@@ -4,7 +4,7 @@ const path = require('path');
 const vm = require('vm');
 
 const ROOT = path.join(__dirname, '..');
-const ACTIVE_PAGES = ['landing.html', 'demo.html', 'index.html', 'integrations.html', 'audit.html', 'signup.html', 'about.html'];
+const ACTIVE_PAGES = ['landing.html', 'demo.html', 'index.html', 'integrations.html', 'signup.html', 'about.html'];
 const read = (file) => fs.readFileSync(path.join(ROOT, file), 'utf8');
 
 async function main() {
@@ -28,7 +28,7 @@ async function main() {
 
   assert(!fs.existsSync(path.join(ROOT, 'get-started.html')), 'setup wizard must be deleted');
   assert(!fs.existsSync(path.join(ROOT, 'old-copy')), 'old-copy must be deleted');
-  assert(!landing.includes('signup-nudge') && !landing.includes('SAHAYAK_SIGNUP_NUDGE_DELAY_MS'), 'signup nudge must be deleted');
+  assert(!landing.includes('signup-nudge') && !landing.includes('AADYA_SIGNUP_NUDGE_DELAY_MS'), 'signup nudge must be deleted');
   assert(landing.includes('href="./signup.html?mode=signin">Sign in</a>') && landing.includes('href="./signup.html?mode=signup">Create account</a>'), 'landing sign-in and create-account links missing');
   assert(!landing.includes('id="cost-controls"') && about.includes('id="cost-controls"') && about.includes('updateCostView') && about.includes('Pricing checked 9 August 2026'), 'live cost view must live on About, not the landing hero');
   assert(about.includes('https://groq.com/pricing') && about.includes('https://cloud.google.com/text-to-speech/pricing'), 'cost assumptions must link official pricing');
@@ -67,7 +67,7 @@ async function main() {
   assert(!index.includes('offlineQueue') && !index.includes('queueOfflineRecording'), 'broken offline audio queue must be removed');
   assert(!index.includes('rawTranscript') && !index.includes('modelOutput'), 'audit must not store transcript or generated text');
   assert(index.includes('menuRow("menu-worker"') && index.includes('Report a wrong answer') && index.includes('WhatsApp-ready'), 'worker mode tools missing');
-  assert(index.includes('questionFingerprint') && index.includes('sahayak-unanswered-summary.csv'), 'anonymous unanswered aggregate/export missing');
+  assert(index.includes('questionFingerprint') && index.includes('aadya-unanswered-summary.csv'), 'anonymous unanswered aggregate/export missing');
   assert(index.includes('questionNeedsState') && index.includes('beneficiaryAge'), 'state and beneficiary session context missing');
   assert(index.includes('class="sidebar-scroll"') && index.includes('class="sidebar-account"'), 'scrollable sidebar and fixed account region missing');
   assert(index.includes('id="sidebar-settings"') && !index.includes('class="sidebar-account-email"') && !index.includes('class="sidebar-account-title"'), 'sidebar footer must contain settings without duplicated profile identity');

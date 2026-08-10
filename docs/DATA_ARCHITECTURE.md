@@ -1,4 +1,4 @@
-# Sahayak master repository and retrieval architecture
+# Aadya master repository and retrieval architecture
 
 ## What exists now
 

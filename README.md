@@ -1,20 +1,28 @@
-# Sahayak — local-language voice utility agent
+# Aadya
 
-Sahayak is a local-first voice help desk for Indian public schemes and services. It accepts natural questions, checks a small prototype scheme repository, explains the supported result, speaks it back in the selected language, and turns it into a practical document-and-office checklist.
+Aadya listens first. A voice assistant that helps people ask about government schemes and entitlements in their own language, and get an answer they can trust and act on.
 
-The conversation opens directly on a large microphone with guest access. English and Hindi are the only supported languages; other languages remain out of the interface until their voice paths pass a representative evaluation. Language and accessibility preferences are stored locally. The “For me” / “For someone else” choice is session-only and is never stored on a shared device.
+## Try it
+
+- Live deployment: not linked here yet, ask for the current Vercel URL before sharing this repo further.
+- Guided demo (no microphone, no model calls, safe to present live): `/demo.html`
+- Full app with a scripted mic queue: `/index.html?demo=1`
+- Source: [github.com/humansingh/aadya-voice](https://github.com/humansingh/aadya-voice)
+
+## What this is
+
+Aadya accepts a spoken or typed question in Hindi or English, checks it against a small, source-checked repository of Indian government schemes, scholarships, jobs and services, speaks back a grounded answer, and turns that answer into a document-and-office checklist a person can carry. It does not decide eligibility and does not represent any government body. Every answer states the published criteria and points to the official source and office to confirm in person.
 
 ## Product surfaces
 
 | Page | Purpose |
 | --- | --- |
-| `landing.html` | Product story, headless demo preview and interactive provider-cost estimate |
+| `landing.html` | Product story, headless demo preview and interactive provider-cost estimate. Served at `/`, the default entry point |
 | `signup.html` | Full-page Firebase account creation, sign-in, password reset and guest continuation |
 | `about.html` | Product boundaries, end-to-end architecture diagram and current stack |
 | `demo.html` | Deterministic, animated voice-to-evidence product tour with no microphone or model calls |
 | `index.html` | Sign-in and the full voice workspace; add `?demo=1` for scripted local responses |
 | `integrations.html` | Three integration patterns plus a clear can/cannot capability matrix |
-| `audit.html` | Admin-facing evidence and turn audit view |
 
 ## Run locally
 
@@ -26,50 +34,59 @@ cp .env.example .env
 npm run dev
 ```
 
-Open [http://localhost:3000/](http://localhost:3000/). The local server serves both static files and the handlers in `api/`; no deployment CLI is required.
+Open [http://localhost:3000/](http://localhost:3000/). The local server serves both the static pages and the handlers in `api/`, so no deployment CLI is required.
 
 Useful local URLs:
 
-- Guided tour: [http://localhost:3000/demo.html](http://localhost:3000/demo.html)
-- Full scripted app: [http://localhost:3000/index.html?demo=1](http://localhost:3000/index.html?demo=1)
-- Create an account: [http://localhost:3000/signup.html](http://localhost:3000/signup.html)
-- Architecture: [http://localhost:3000/about.html](http://localhost:3000/about.html)
-- Integrations: [http://localhost:3000/integrations.html](http://localhost:3000/integrations.html)
+```
+http://localhost:3000/demo.html               guided tour, no mic or model calls
+http://localhost:3000/index.html?demo=1        full app, scripted responses
+http://localhost:3000/signup.html              create an account
+http://localhost:3000/about.html               architecture and current stack
+http://localhost:3000/integrations.html        integration patterns
+```
 
-Authentication is real Firebase email/password or an anonymous Firebase guest. There is no mock credential path. Demo mode bypasses Groq and microphone capture, so it is suitable for deterministic walkthroughs and screen recordings.
+Authentication is real Firebase email/password or an anonymous Firebase guest. There is no mock credential path. Demo mode (`?demo=1`) bypasses every provider call and the microphone, so it is deterministic and safe for screen recordings.
 
 ## Environment
 
-Copy `.env.example` to `.env` and replace only the values you intend to exercise:
+Keys live in Vercel project settings for the deployed app, never in this repository. `.env.example` lists every variable with a placeholder; copy it to `.env` for local development.
 
-```dotenv
-GROQ_API_KEY=REPLACE_ME
-GOOGLE_TTS_API_KEY=REPLACE_ME
-FIREBASE_PROJECT_ID=REPLACE_ME
-FIREBASE_SERVICE_ACCOUNT_JSON=REPLACE_WITH_ONE_LINE_JSON
-```
+| Variable | Purpose |
+| --- | --- |
+| `GROQ_API_KEY` | Transcription, translation and answer/artifact generation (current provider, mid-migration to OpenAI; see Request flow below) |
+| `GOOGLE_TTS_API_KEY` | Google Cloud Text-to-Speech, used by `api/speak.js` |
+| `OPENAI_API_KEY` | Output moderation (`omni-moderation-latest`), blocking gate in `api/answer.js` |
+| `MODERATION_FAIL_MODE` | `open` (default) or `closed`; what happens if the moderation call itself fails |
+| `FIREBASE_PROJECT_ID` | Firebase project id, used for ID-token verification |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | Server-side Firebase Admin credential, one-line JSON |
+| `OPPORTUNITY_SOURCE` | `local` or `firestore`; which repository the API reads from |
+| `API_RATE_LIMIT_PER_MINUTE` | Per-user request ceiling, enforced in Firestore in production |
+| `PROVIDER_TIMEOUT_MS` | Hard timeout on every outbound provider call |
 
-- `GROQ_API_KEY` supports transcription, input guarding and grounded answers.
-- `GOOGLE_TTS_API_KEY` enables server-rendered speech. The header voice selector offers live-validated Google Chirp 3 HD and Neural2 choices for Hindi and Indian English; Chirp 3 HD is the default. Device/browser speech synthesis is not used, and Google failures remain visible while the answer stays readable.
-- Production API authentication and the shared per-user rate limiter require Firebase Admin credentials through `FIREBASE_SERVICE_ACCOUNT_JSON` (or Application Default Credentials) and `FIREBASE_PROJECT_ID`.
-
-Restrict the Google key to the Cloud Text-to-Speech API. Keep both keys server-side and out of committed files. If a real key has ever appeared in a chat, recording, shared screen or repository history, rotate it before using the live pipeline.
+`GOOGLE_APPLICATION_CREDENTIALS` (a path to a service-account key file) is an accepted alternative to `FIREBASE_SERVICE_ACCOUNT_JSON` for local development; see `lib/serverSecurity.js`.
 
 ## Request flow
 
-```text
-Voice or typed question
-  -> /api/transcribe (Groq Whisper, when audio is used)
-  -> /api/guard-input (prompt guard)
-  -> lib/opportunityRepository.js (published-only repository gate)
-  -> lib/retrieval.js (weighted retrieval across schemes, scholarships and jobs)
-  -> /api/answer (grounded answer + output safeguard)
-  -> confidence, sources, checklist and next office
-  -> /api/speak (Google Cloud TTS)
-  -> Google Cloud MP3 playback only
-```
+This section describes the current code and needs updating once the OpenAI-platform migration (transcription, embeddings, reasoning and lightweight tasks moving off Groq) lands.
 
-All provider calls are made by server handlers. The browser never receives the API keys.
+1. The browser records or types a question and calls `POST /api/transcribe` (Firebase-authenticated) if it was spoken. Groq Whisper Large V3 Turbo returns the transcript.
+2. The client calls `POST /api/guard-input` as a pre-flight UX check: a deterministic keyword floor, then a Groq jailbreak/injection classifier.
+3. The client calls `POST /api/answer`. The same deterministic safety check runs again server-side, so a direct call to this endpoint cannot skip it. The question is translated to English if needed, matched against the local retrieval corpus, and sent to Groq for a tiered, structured-JSON answer. The generated answer is then passed through a blocking OpenAI `omni-moderation-latest` check before it is returned; a flagged answer is replaced with a redirect, never sent to the user.
+4. The client calls `POST /api/speak` to synthesize the answer with Google Cloud Text-to-Speech.
+5. Optionally, `POST /api/artifact` turns a question and answer into an application draft or document checklist, gated by the same deterministic safety check.
+6. `GET /api/opportunities` serves the browse/directory catalogue directly from Firestore or the local repository; no model call is involved.
+
+See `about.html` for the full visual diagram of this flow, including identity and storage.
+
+## Data status
+
+Two different counts describe two different things:
+
+- **19 records** in the retrieval corpus that grounds answers: 13 source-checked opportunities (schemes, scholarships, jobs) plus 6 general-context records used for Tier 3 guidance. This is what `lib/retrieval.js` searches.
+- **173 records** in the browse/directory catalogue served by `GET /api/opportunities`: the same 13 opportunities plus 160 myScheme discovery-only listings. Discovery-only listings are titles and links only; they are never sent to the answer model as evidence, see [`docs/DATA_ARCHITECTURE.md`](docs/DATA_ARCHITECTURE.md).
+
+The full myScheme index behind the discovery layer holds 4,339 records, gated as `discovery_only` until a record passes a source check. Ingestion sources and their refresh cadence are catalogued in [`data/master/source-registry.json`](data/master/source-registry.json).
 
 ## Verification
 
@@ -77,63 +94,34 @@ All provider calls are made by server handlers. The browser never receives the A
 npm test
 ```
 
-The product check parses every active page module and checks the supported language options, shared controls, demo routes, scroll stability, publication gate and scheme/scholarship/job retrieval.
+Runs `scripts/test-product.js`: source-level assertions across every active page and API handler (module scripts parse, authenticated endpoints require identity, deleted code paths stay deleted, record counts match the data files). It does not call any model provider.
 
-## Master repository and Firestore
+`scripts/test-tiers.js` is a manual, live smoke test that sends a mix of English and Hindi questions to a running instance and reports which retrieval tier each one lands in. It is not part of `npm test`; run it with `node scripts/test-tiers.js` against a server pointed to by its `SAHAYAK_URL` environment variable.
 
-The editable workbook at `outputs/sahayak-master-repository/sahayak_government_opportunities_master.xlsx` contains a flat master view, normalized eligibility/documents/contacts/sources, a source registry, field dictionary, formula-driven quality checks and a 4,339-title official myScheme discovery queue. The answer API currently uses 13 source-checked published records: eight schemes, three scholarships and two government jobs. Discovery-only rows are deliberately excluded from answers until they are enriched and source checked.
+## Structure
 
-Refresh the official discovery index with:
-
-```bash
-npm run data:sync:myscheme
+```
+api/            Vercel serverless functions (transcription, guard, answer, artifact, speak, opportunities)
+lib/            Shared server and client logic: retrieval, safety, i18n, Firebase, preferences
+data/           Source-checked opportunity records and the myScheme discovery index
+docs/           Architecture notes
+scripts/        Local dev server, data import/sync tooling, tests
+*.html          Static pages: app, landing, about, demo, integrations, signup
 ```
 
-Preview the Firestore import without writing:
+## Known limitations
 
-```bash
-npm run data:import:firestore
-```
+This is a hackathon prototype, not a launched product. [`PRODUCTION_READINESS.md`](PRODUCTION_READINESS.md) is not approved for a public launch and lists the open gates: content ownership and refresh, admin access provisioning, load testing, incident response and more.
 
-After choosing the intended Firebase project and providing Firebase Admin credentials, import with `npm run data:import:firestore -- --apply`, deploy `firestore.rules` and `firestore.indexes.json`, then set `OPPORTUNITY_SOURCE=firestore` on the server. See `docs/DATA_ARCHITECTURE.md` for the collections, indexes, versioning and publication workflow. See `docs/RESEARCH_HANDOFF_PROMPT.md` for the state-by-state research prompt.
+The scheme dataset is a small, hand-checked prototype set, not a complete or continuously synced picture of Indian government schemes. Aadya does not make a final eligibility decision for anyone; it states the published criteria and tells the user what to confirm, and where, in person.
 
-## Firebase and audit access
+## Built with
 
-Live authentication and persistent history use the configuration in `lib/firebaseClient.js`. For a live Firebase setup:
-
-1. Enable Anonymous and Email/Password authentication.
-2. Enable Firestore and add the web configuration to `lib/firebaseClient.js`.
-3. Issue the Firebase custom claim `admin: true` from a trusted server for audit users.
-4. Apply `firestore.rules` through the Firebase console or CLI and test deny/allow cases.
-
-Audit authorization uses a Firebase custom claim and server-enforced Firestore rules. Claim provisioning and rule deployment still need release evidence.
-
-The complete 10,000-user release gate audit is in [`PRODUCTION_READINESS.md`](./PRODUCTION_READINESS.md). The repository should not be treated as approved for public launch until every P0 gate there has evidence and an owner.
-
-## Trust and data status
-
-The source-checked runtime corpus currently contains eight prototype scheme records plus three scholarship and two government-job records. PM-KISAN, Ayushman Bharat PM-JAY, PMAY-G, MGNREGA, National Scholarship Portal, Sukanya Samriddhi, Ujjwala and NSAP old-age pension remain the scheme seed.
-
-The records are a small prototype dataset reviewed against the source URLs stored with each record. Amounts, deadlines, documents and eligibility rules can change; users must confirm important details at the linked source before relying on an answer.
-
-Sahayak intentionally separates three answer states: strong record match, partial match that needs confirmation, and general guidance outside the repository. It does not make final eligibility decisions.
-
-## Main structure
-
-```text
-api/                    local server handlers
-assets/product.css      shared fonts, preferences and Easy-mode behavior
-data/schemes.json       prototype scheme seed repository
-data/master/            rich opportunity seed, source registry and discovery index
-lib/opportunityRepository.js  normalized local/Firestore repository adapter
-lib/retrieval.js        published-only weighted retrieval
-lib/preferences.js      language and accessibility preferences only
-lib/demoFixtures.js     deterministic full-app demo responses
-scripts/dev-server.js   dependency-light local server
-scripts/test-product.js cross-page product checks
-scripts/import-opportunities-firestore.js  dry-run-first Firestore importer
-docs/DATA_ARCHITECTURE.md scalable data and retrieval design
-PRODUCTION_READINESS.md launch blockers, acceptance targets and persona checks
-```
-
-`npm run dev:vercel` remains available only as an optional compatibility path. Local testing and product development use `npm run dev`.
+- [Vercel](https://vercel.com) (hosting)
+- [GitHub](https://github.com) (source)
+- [Firebase](https://firebase.google.com) Auth and Firestore (authentication, history, opportunity store)
+- [Google Cloud Text-to-Speech](https://cloud.google.com/text-to-speech) (speech output)
+- [OpenAI Platform](https://platform.openai.com) (transcription, embeddings, reasoning, moderation)
+- [Groq](https://groq.com) (previous provider for transcription and reasoning; see `docs/PROVIDER-HISTORY.md` once the migration commit lands)
+- Claude Code (development)
+- Codex (development)

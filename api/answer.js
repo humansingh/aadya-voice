@@ -30,7 +30,7 @@ const TIER2_THRESHOLD = 0.12; // some overlap — answer partially, name the gap
 const ANSWER_RESPONSE_FORMAT = {
   type: 'json_schema',
   json_schema: {
-    name: 'sahayak_answer',
+    name: 'aadya_answer',
     strict: true,
     schema: {
       type: 'object',

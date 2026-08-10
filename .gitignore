@@ -20,3 +20,6 @@ scripts/stt-audit.py
 # not documentation of the shipped product.
 docs/UI_BUILD_PROMPT.md
 docs/RESEARCH_HANDOFF_PROMPT.md
+
+# In-progress draft, not ready to ship.
+landingalt.html

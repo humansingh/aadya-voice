@@ -1,4 +1,4 @@
-# Sahayak production readiness audit
+# Aadya production readiness audit
 
 Status: **not yet approved for a 10,000-user public launch**.
 
@@ -45,6 +45,6 @@ Choose the actual concurrency model from expected usage before running the test.
 
 ## Persona release checks
 
-Test at minimum: independent citizen, farmer, student, senior with low digital confidence, family caregiver, CSC operator, ASHA/Anganwadi worker, and NGO field worker. Each test should cover first setup, changing language, one successful record match, one partial match, one general-guidance answer, correcting a transcript, replaying audio, finding saved guidance, and recognizing that Sahayak has not made an eligibility decision.
+Test at minimum: independent citizen, farmer, student, senior with low digital confidence, family caregiver, CSC operator, ASHA/Anganwadi worker, and NGO field worker. Each test should cover first setup, changing language, one successful record match, one partial match, one general-guidance answer, correcting a transcript, replaying audio, finding saved guidance, and recognizing that Aadya has not made an eligibility decision.
 
 Launch approval should be recorded only after every P0 gate has an owner, evidence link and sign-off date.

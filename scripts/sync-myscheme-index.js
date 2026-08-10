@@ -13,7 +13,7 @@ function classify(title) {
 }
 
 async function main() {
-  const response = await fetch(INDEX_URL, { headers: { 'User-Agent': 'SahayakSourceIndexer/1.0' } });
+  const response = await fetch(INDEX_URL, { headers: { 'User-Agent': 'AadyaSourceIndexer/1.0' } });
   if (!response.ok) throw new Error(`myScheme index returned ${response.status}`);
   const html = await response.text();
   const match = html.match(/<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/);
