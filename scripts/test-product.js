@@ -41,9 +41,15 @@ async function main() {
   assert(preferences.includes('normalizePreferences') && !demo.includes('setPreferences({persona'), 'legacy persona values must be ignored and purged');
 
   new vm.SourceTextModule(preferences, { identifier: 'lib/preferences.js' });
-  for (const language of ['en', 'hi']) assert(preferences.includes(`code: "${language}"`), `missing ${language}`);
-  for (const language of ['mr', 'bn', 'ta', 'te', 'kn']) assert(!preferences.includes(`code: "${language}"`), `${language} must not be selectable`);
-  assert(read('lib/apiValidation.js').includes("new Set(['en', 'hi'])"), 'API must accept only Hindi and English');
+
+  // lib/preferences.js is client-side and cannot require() config/ai.js, so
+  // it keeps a manual mirror of the verified language list. This asserts
+  // the mirror hasn't drifted, rather than trusting it stays in sync by hand.
+  const configLanguages = require('../config/ai').LANGUAGES;
+  const verifiedCodes = configLanguages.filter((lang) => lang.verified).map((lang) => lang.code).sort();
+  const mirroredCodes = [...preferences.matchAll(/code:\s*"([a-z]{2})"/g)].map((match) => match[1]).sort();
+  assert.deepStrictEqual(mirroredCodes, verifiedCodes, `lib/preferences.js LANGUAGES (${mirroredCodes.join(',')}) has drifted from config/ai.js's verified languages (${verifiedCodes.join(',')})`);
+  assert(read('lib/apiValidation.js').includes("require('../config/ai')"), 'API language allowlist must read from config/ai.js, not a hardcoded set');
 
   assert(index.includes('class="first-mic-button"'), 'conversation must open on the large microphone');
   assert(index.includes('const micFirst = state.view === "conversation" && !hasAnswered') && index.includes('${micFirst ? "" : buildSidebarHtml()}'), 'first answer must precede navigation and guest account prompts');
@@ -150,7 +156,7 @@ async function main() {
     assert.strictEqual(body.error, 'authentication_required');
   }
 
-  console.log(`Product checks passed: ${ACTIVE_PAGES.length} active pages, ${authenticatedApiNames.length} authenticated APIs, 2 supported languages, 13 answer records, 160 browse listings, and ${discovery.records.length} gated discoveries.`);
+  console.log(`Product checks passed: ${ACTIVE_PAGES.length} active pages, ${authenticatedApiNames.length} authenticated APIs, ${verifiedCodes.length} supported languages, 13 answer records, 160 browse listings, and ${discovery.records.length} gated discoveries.`);
 }
 
 main().catch((error) => { console.error(error); process.exit(1); });

@@ -1,9 +1,8 @@
 // Google Cloud Text-to-Speech (REST). Voice choices are intersected with the
 // provider's live inventory so a renamed or withdrawn voice disappears from
 // the selector instead of breaking synthesis.
-const LANG_TO_BCP47 = {
-  hi: 'hi-IN', en: 'en-IN',
-};
+const { LANGUAGES } = require('../config/ai');
+const LANG_TO_BCP47 = Object.fromEntries(LANGUAGES.map((lang) => [lang.code, lang.ttsLanguageCode]));
 const { cleanText, cleanLanguage } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
 const { withProviderTimeout } = require('../lib/providerTimeout');
