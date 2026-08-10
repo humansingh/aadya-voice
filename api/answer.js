@@ -1,10 +1,12 @@
 const Groq = require('groq-sdk');
+const OpenAI = require('openai');
 const { retrieve } = require('../lib/retrieval');
 const { translateToEnglish } = require('../lib/translate');
 const { getStrings } = require('../lib/i18n');
 const { cleanText, cleanLanguage } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
 const { withProviderTimeout } = require('../lib/providerTimeout');
+const { checkDeterministicSafety } = require('../lib/safety');
 
 const MAIN_MODEL = 'openai/gpt-oss-120b';
 // Keep the existing retry path unchanged during the emergency model swap.
@@ -12,7 +14,14 @@ const MAIN_MODEL = 'openai/gpt-oss-120b';
 // replacement, so a 429 retry uses the same model rather than silently
 // lowering answer quality.
 const FALLBACK_MODEL = 'openai/gpt-oss-120b';
-const OUTPUT_GUARD_MODEL = 'openai/gpt-oss-safeguard-20b';
+// Hardcoded here as a temporary bridge — both move into config/ai.js's
+// `moderation` task group once that module lands.
+const MODERATION_MODEL = 'omni-moderation-latest';
+// open: a moderation-call failure serves the answer anyway, logs it, and
+// flags moderation_skipped on the response — a transient OpenAI blip
+// shouldn't take the app down during a public trial or live demo.
+// closed: a moderation-call failure blocks the response (503).
+const MODERATION_FAIL_MODE = (process.env.MODERATION_FAIL_MODE || 'open').toLowerCase() === 'closed' ? 'closed' : 'open';
 
 // Retrieval-score cutoffs that decide the base tier before generation.
 // Tuned against data/schemes.json's keyword-overlap scoring (0-1 range).
@@ -62,6 +71,9 @@ module.exports = async (req, res) => {
   if (!process.env.GROQ_API_KEY) {
     return res.status(500).json({ error: 'GROQ_API_KEY not set on server' });
   }
+  if (!process.env.OPENAI_API_KEY) {
+    return res.status(500).json({ error: 'OPENAI_API_KEY not set on server' });
+  }
 
   const t0 = Date.now();
   try {
@@ -73,7 +85,30 @@ module.exports = async (req, res) => {
     const userState = cleanText(rawState, 80);
     const beneficiaryAge = Number.isInteger(Number(rawBeneficiaryAge)) && Number(rawBeneficiaryAge) >= 0 && Number(rawBeneficiaryAge) <= 120 ? Number(rawBeneficiaryAge) : null;
     const strings = getStrings(lang);
+
+    // Deterministic, auditable floor — runs server-side before any model
+    // call reaches this endpoint. /api/guard-input runs the same check
+    // (plus a model classifier) as a client-side pre-flight for UX, but a
+    // direct POST here must not be able to skip it.
+    const deterministic = checkDeterministicSafety(question);
+    if (deterministic.flagged) {
+      console.warn(`[answer] blocked by deterministic safety check: ${deterministic.category}`);
+      return res.status(200).json({
+        answer: strings.redirect,
+        sourceIds: [],
+        tier: 'refuse',
+        tierLabel: null,
+        confidence: 0,
+        gap: null,
+        chips: strings.redirectChips,
+        retrievedDocIds: [],
+        disclaimer: strings.disclaimer,
+        timings: { translateMs: 0, retrieveMs: 0, generateMs: 0 },
+      });
+    }
+
     const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+    const openai = new OpenAI();
 
     // --- Translate + retrieve ---
     const englishQuery = await translateToEnglish(groq, question, lang);
@@ -164,27 +199,33 @@ module.exports = async (req, res) => {
       });
     }
 
-    // --- Output guard: logged for audit/telemetry, NOT used to gate the
-    // tier or block the answer. It was found to be unreliable — both
-    // over-triggering false positives on clearly safe answers, and
-    // intermittently truncating to empty content — so treating its verdict
-    // as authoritative was silently converting good answers into refusals.
-    // The main model's own hard rules + "refuse" flag are the real gate.
-    const guardResult = await withProviderTimeout((signal) => groq.chat.completions.create({
-      model: OUTPUT_GUARD_MODEL,
-      temperature: 0,
-      max_completion_tokens: 150,
-      reasoning_effort: 'low',
-      messages: [
-        { role: 'system', content: 'You are a safety classifier. Reply with only SAFE or UNSAFE for the assistant message that follows, judging whether it makes a definitive eligibility/legal claim, gives false/unverified information, or is otherwise unsafe to speak to a user seeking government scheme information.' },
-        { role: 'user', content: parsed.answer || '' },
-      ],
-    }, { signal })).catch((err) => {
-      console.error('output guard error (non-blocking)', err);
-      return null;
-    });
+    // --- Output moderation: BLOCKING gate by default. Replaces the
+    // previous telemetry-only classifier, which logged a verdict but never
+    // withheld an answer. A flagged answer here is never returned to the
+    // user — it is swapped for the same redirect used for input-side
+    // refusals. On a moderation-call failure, behavior follows
+    // MODERATION_FAIL_MODE (open by default): fail open serves the answer
+    // with moderation_skipped: true logged and flagged on the response;
+    // fail closed returns 503 rather than silently serving an unmoderated
+    // answer.
+    let moderationResult = null;
+    let moderationSkipped = false;
+    try {
+      moderationResult = await withProviderTimeout((signal) => openai.moderations.create({
+        model: MODERATION_MODEL,
+        input: parsed.answer || '',
+      }, { signal }));
+    } catch (err) {
+      console.error('output moderation error', err);
+      if (MODERATION_FAIL_MODE === 'closed') {
+        return res.status(503).json({ error: 'moderation_unavailable' });
+      }
+      moderationSkipped = true;
+    }
     const tGuard = Date.now();
-    const guardVerdict = guardResult ? (guardResult.choices[0].message.content || '').trim().toUpperCase() : null;
+    const moderation = moderationResult?.results?.[0];
+    const flaggedCategories = moderation ? Object.entries(moderation.categories || {}).filter(([, isFlagged]) => isFlagged).map(([name]) => name) : [];
+    const guardVerdict = moderationSkipped ? 'SKIPPED:moderation_error' : (moderation?.flagged ? `FLAGGED:${flaggedCategories.join(',') || 'unspecified'}` : 'SAFE');
 
     const timings = {
       translateMs: tTranslate - t0,
@@ -192,6 +233,24 @@ module.exports = async (req, res) => {
       generateMs: tGenerate - tRetrieve,
       guardMs: tGuard - tGenerate,
     };
+
+    if (moderation?.flagged) {
+      console.warn(`[answer] output blocked by moderation: ${guardVerdict}`);
+      return res.status(200).json({
+        answer: strings.redirect,
+        sourceIds: [],
+        tier: 'refuse',
+        tierLabel: null,
+        confidence: topScore,
+        gap: null,
+        chips: strings.redirectChips,
+        retrievedDocIds: matches.map((m) => m.doc.id),
+        disclaimer: strings.disclaimer,
+        guardVerdict,
+        moderation_skipped: false,
+        timings,
+      });
+    }
 
     const tier = baseTier;
     const tierLabel = tier === 1 ? strings.tier1Label : tier === 2 ? strings.tier2Label : strings.tier3Label;
@@ -231,6 +290,7 @@ module.exports = async (req, res) => {
       })),
       disclaimer: strings.disclaimer,
       guardVerdict,
+      moderation_skipped: moderationSkipped,
       modelUsed,
       timings,
     });

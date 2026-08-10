@@ -3,6 +3,7 @@ const Groq = require('groq-sdk');
 const { cleanText, cleanLanguage } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
 const { withProviderTimeout } = require('../lib/providerTimeout');
+const { checkDeterministicSafety } = require('../lib/safety');
 
 const MODEL = 'openai/gpt-oss-120b';
 const ALLOWED_KINDS = new Set(['application', 'checklist']);
@@ -74,6 +75,16 @@ module.exports = async (req, res) => {
     const question = cleanText(body.question, 1200);
     const answer = cleanText(body.answer, 5000);
     if (!kind || !question || !answer) return res.status(400).json({ error: 'invalid_artifact_request' });
+
+    // This endpoint has no client-side pre-flight equivalent to
+    // /api/guard-input, so the deterministic floor runs here directly,
+    // before any model call, on both the original question and the answer
+    // text being carried into the draft.
+    const deterministic = checkDeterministicSafety(`${question}\n${answer}`);
+    if (deterministic.flagged) {
+      console.warn(`[artifact] blocked by deterministic safety check: ${deterministic.category}`);
+      return res.status(400).json({ error: 'content_flagged' });
+    }
 
     const sources = Array.isArray(body.sources) ? body.sources.slice(0, 8).map((source) => ({
       name: safeString(source?.name, 180),
