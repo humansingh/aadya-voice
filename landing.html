@@ -318,27 +318,93 @@
   /* Product pathways */
   .landing-prefs{display:flex;align-items:center}.landing-prefs .preference-controls label>span,.landing-prefs .experience-label{display:none}.landing-prefs .preference-controls label,.landing-prefs .experience-control{min-height:40px;height:40px;padding-left:4px}.landing-prefs .preference-controls select{width:88px;max-width:88px}.landing-mobile-prefs{display:none}
   .pathways{padding:116px 0 14px}.pathway-head{display:grid;grid-template-columns:.8fr 1.2fr;gap:54px;align-items:end;margin-bottom:31px}.pathway-head h2{margin:0;font-family:"Manrope",sans-serif;font-size:clamp(38px,5vw,67px);line-height:1.04;letter-spacing:-.057em;font-weight:600}.pathway-head p{margin:0;color:var(--muted);font-size:15px;line-height:1.7;max-width:650px}.persona-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.persona-card{min-height:226px;padding:20px;border:1px solid var(--line);border-radius:23px;background:var(--surface);color:var(--ink);text-align:left;display:flex;flex-direction:column;transition:.22s ease}.persona-card:hover,.persona-card.active{transform:translateY(-4px);border-color:rgba(47,132,94,.36);box-shadow:0 18px 42px rgba(23,53,45,.09);background:var(--mint-2)}.persona-symbol{width:42px;height:42px;border-radius:14px;background:var(--mint);display:grid;place-items:center;color:var(--forest);font-size:18px}.persona-card h3{margin:auto 0 7px;font-family:"Manrope",sans-serif;font-size:17px;letter-spacing:-.03em}.persona-card p{margin:0;color:var(--muted);font-size:11px;line-height:1.55}.persona-card span:last-child{margin-top:16px;color:var(--leaf);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.09em}
-  .tour-bento{margin-top:38px;display:grid;grid-template-columns:1.15fr 1fr;grid-template-rows:auto auto;gap:12px}
-  .tour-card{position:relative;display:flex;flex-direction:column;padding:22px;border:1px solid var(--line);border-radius:24px;background:var(--surface);box-shadow:0 14px 34px rgba(23,53,45,.06);transition:transform .2s ease,border-color .2s ease}
-  .tour-card:hover{transform:translateY(-4px);border-color:rgba(47,132,94,.36)}
-  .tour-n{position:relative;z-index:1;width:44px;height:44px;flex-shrink:0;border-radius:15px;display:grid;place-items:center;color:#fff;background:var(--forest);font-size:11px;font-weight:800;box-shadow:0 14px 28px -18px rgba(18,61,49,.9)}
-  .tour-card h3{margin:26px 0 8px;font-family:"Manrope",sans-serif;font-size:18px;letter-spacing:-.03em}
-  .tour-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.6}
-  .tour-output{margin-top:auto;padding-top:18px;color:var(--leaf);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-  .tour-large{grid-row:1 / 3;min-height:300px;justify-content:flex-end;background:var(--forest);border-color:var(--forest)}
-  .tour-large .tour-n{background:rgba(255,255,255,.16);box-shadow:none}
-  .tour-large h3{color:#fff;font-size:24px}
-  .tour-large p{color:#c9dcd2;font-size:14px}
-  .tour-large .tour-output{color:#a9d9c0}
-  .tour-small{min-height:144px}
-  .tour-small.blue .tour-n{background:var(--blue)}
-  .tour-small.coral .tour-n{background:var(--coral)}
-  .tour-wide{grid-column:1 / -1;flex-direction:row;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
-  .tour-wide-copy{display:flex;align-items:center;gap:18px}
-  .tour-wide-copy .tour-n{background:var(--leaf)}
-  .tour-wide-copy h3{margin:0;font-size:18px}
-  .tour-wide-copy p{margin:4px 0 0}
-  .tour-cta{margin:0;flex-shrink:0;background:var(--forest);color:#fff}
+  #pathways{--pill:#e7e5dd;--pill-ink:#9aa09b;--ease:cubic-bezier(.22,.61,.36,1)}
+  .cta{min-height:48px;padding:0 18px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:9px;border:0;background:var(--forest);color:#fff;font-size:12px;font-weight:800;transition:.2s ease}
+  .cta:hover{transform:translateY(-2px);background:var(--forest-2)}
+  .cta svg{width:15px;height:15px}
+  .micro{font-size:9px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--muted)}
+
+  /* role selector */
+  .role-options{position:relative;z-index:20;display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 0}
+  .role-btn{min-height:46px;padding:0 26px;border:0;border-radius:999px;background:var(--pill);color:var(--pill-ink);font-family:"Manrope","DM Sans",sans-serif;font-size:15px;font-weight:700;letter-spacing:-.01em;transition:background .22s ease,color .22s ease,transform .22s ease,box-shadow .22s ease}
+  .role-btn:hover{background:#dedcd3;color:var(--forest);transform:translateY(-1px)}
+  .role-btn.active{background:var(--forest);color:#fff}
+  .role-btn:focus-visible{outline:2px solid var(--forest);outline-offset:3px}
+  .role-options.awaiting .role-btn{animation:pillWait 2.4s var(--ease) infinite}
+  .role-options.awaiting .role-btn:nth-child(2){animation-delay:.12s}
+  .role-options.awaiting .role-btn:nth-child(3){animation-delay:.24s}
+  .role-options.awaiting .role-btn:nth-child(4){animation-delay:.36s}
+  @keyframes pillWait{0%,100%{box-shadow:0 0 0 0 rgba(18,61,49,0)}45%{box-shadow:0 0 0 6px rgba(18,61,49,.05)}}
+
+  /* desk / enclosure */
+  .desk{position:relative;margin-top:38px;border-radius:38px;padding:18px;background:#dbe9dc;overflow:hidden;box-shadow:var(--shadow)}
+  .desk::before{content:"";position:absolute;width:500px;height:500px;border-radius:50%;right:-250px;bottom:-300px;border:1px solid rgba(18,61,49,.11);box-shadow:0 0 0 65px rgba(18,61,49,.025),0 0 0 130px rgba(18,61,49,.014)}
+  .desk-grid{position:relative;z-index:2;display:grid;grid-template-columns:210px minmax(0,1fr) 0px;gap:10px;height:570px;overflow:hidden;transition:grid-template-columns .75s var(--ease),gap .75s var(--ease),filter .6s var(--ease),opacity .6s var(--ease),transform .6s var(--ease)}
+  .desk-grid.expanded{grid-template-columns:210px minmax(0,1fr) 300px}
+  .desk.idle .desk-grid{filter:blur(7px) saturate(.55);opacity:.42;transform:scale(.985);pointer-events:none}
+  .desk-veil{position:absolute;left:0;right:0;bottom:0;z-index:4;display:grid;place-items:center;padding-bottom:26px;opacity:0;visibility:hidden;transition:opacity .5s var(--ease),visibility .5s}
+  .desk.idle .desk-veil{opacity:1;visibility:visible}
+  .veil-timer{width:132px;height:3px;border-radius:99px;background:rgba(18,61,49,.16);overflow:hidden}
+  .veil-timer i{display:block;height:100%;width:100%;background:var(--forest);transform-origin:left;transform:scaleX(0)}
+  .desk.idle .veil-timer i{animation:veilFill 3s linear forwards}
+  @keyframes veilFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+  /* left rail */
+  .folder-nav{border-radius:27px;background:var(--forest);padding:17px;color:#fff;display:flex;flex-direction:column}
+  .folder-steps{display:grid;gap:6px}
+  .folder-step{position:relative;border:0;border-radius:16px;background:transparent;min-height:56px;padding:14px 16px;display:flex;align-items:center;justify-content:center;transition:background .3s var(--ease),opacity .45s var(--ease),transform .45s var(--ease)}
+  .folder-step[data-locked="true"]{opacity:.36;transform:translateY(3px)}
+  .folder-step:hover,.folder-step.active{background:rgba(255,255,255,.10)}
+  .folder-step i{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-style:normal;font-family:"Manrope",sans-serif;font-size:16px;font-weight:800;letter-spacing:.02em;color:var(--sun)}
+  .folder-step b{font-family:"Manrope",sans-serif;font-size:16px;font-weight:700;letter-spacing:-.02em;color:#fff}
+  .folder-note{margin-top:auto;padding:13px;border-top:1px solid rgba(255,255,255,.11);color:#8fac9d;font-size:9px;line-height:1.55}
+  .rail-progress{height:2px;margin:14px 4px 0;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden}
+  .rail-progress i{display:block;height:100%;width:0;background:var(--sun);transition:width .55s var(--ease)}
+
+  /* case sheet */
+  .case-sheet{position:relative;border-radius:27px;background:#fffdf8;border:1px solid rgba(23,53,45,.10);box-shadow:0 24px 55px rgba(23,53,45,.11);overflow:hidden}
+  .case-sheet::before{content:"AADYA / CASE 0247";position:absolute;right:22px;top:26px;color:#9ba49f;font:800 8px "Manrope",sans-serif;letter-spacing:.14em}
+  .sheet-top{padding:28px 28px 22px;border-bottom:1px solid var(--line)}
+  .sheet-top h3{margin:0;font:600 30px/1.08 "Manrope",sans-serif;letter-spacing:-.045em;max-width:560px}
+  .sheet-body{padding:24px 28px 28px}
+  .sheet-row{display:grid;grid-template-columns:130px minmax(0,1fr);gap:24px;padding:17px 0;border-bottom:1px solid var(--line);opacity:0;transform:translateY(10px);filter:blur(2px);transition:opacity .55s var(--ease),transform .55s var(--ease),filter .55s var(--ease)}
+  .sheet-row:last-child{border-bottom:0}
+  .sheet-row.revealed{opacity:1;transform:none;filter:none}
+  .sheet-key{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#819088}
+  .sheet-val{font-size:13px;line-height:1.58;color:#395249;max-width:62ch}
+  .sheet-val.native{font:500 17px/1.5 "Manrope","Noto Sans Devanagari",sans-serif;letter-spacing:-.02em;color:var(--ink)}
+  .source-line{display:flex;align-items:center;gap:8px}
+  .source-line i{width:7px;height:7px;border-radius:50%;background:#4c996f;box-shadow:0 0 0 5px rgba(76,153,111,.10)}
+  .sheet-row.revealed .source-line i{animation:sourcePing 1.6s var(--ease) 2}
+  @keyframes sourcePing{0%,100%{box-shadow:0 0 0 5px rgba(76,153,111,.10)}50%{box-shadow:0 0 0 9px rgba(76,153,111,.05)}}
+  .swap{animation:swapIn .5s var(--ease)}
+  @keyframes swapIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  /* right column */
+  .prepare-card{display:flex;flex-direction:column;gap:10px;min-width:0;max-height:0;opacity:0;visibility:hidden;overflow:hidden;transform:translateX(18px);transition:opacity .55s var(--ease) .18s,transform .6s var(--ease) .18s,visibility .6s,max-height .6s var(--ease)}
+  .prepare-card.revealed{max-height:900px;opacity:1;visibility:visible;overflow:visible;transform:none}
+  .ticket,.office-card{opacity:0;transform:translateY(14px);transition:opacity .6s var(--ease),transform .6s var(--ease)}
+  .prepare-card.revealed .ticket{opacity:1;transform:none;transition-delay:.22s}
+  .prepare-card.revealed .office-card{opacity:1;transform:none;transition-delay:.34s}
+  .ticket{border-radius:26px;background:#f8edcf;border:1px solid rgba(142,99,29,.14);padding:22px;position:relative;overflow:hidden}
+  .ticket::after{content:"";position:absolute;right:-38px;top:-38px;width:110px;height:110px;border-radius:50%;border:1px solid rgba(142,99,29,.12);box-shadow:0 0 0 18px rgba(142,99,29,.035)}
+  .ticket .micro{color:#94691d}
+  .ticket h3{margin:13px 0 10px;font:600 25px/1.06 "Manrope",sans-serif;letter-spacing:-.04em}
+  .ticket p{margin:0;color:#6d6047;font-size:12px;line-height:1.55}
+  .ticket-list{display:grid;gap:7px;margin-top:19px}
+  .ticket-item{display:flex;gap:8px;align-items:center;padding:9px 10px;border-radius:12px;background:rgba(255,255,255,.55);font-size:10px;font-weight:700;opacity:0;transform:translateX(8px);transition:opacity .45s var(--ease),transform .45s var(--ease)}
+  .prepare-card.revealed .ticket-item{opacity:1;transform:none}
+  .prepare-card.revealed .ticket-item:nth-child(1){transition-delay:.40s}
+  .prepare-card.revealed .ticket-item:nth-child(2){transition-delay:.48s}
+  .prepare-card.revealed .ticket-item:nth-child(3){transition-delay:.56s}
+  .prepare-card.revealed .ticket-item:nth-child(4){transition-delay:.64s}
+  .ticket-item i{font-style:normal;width:17px;height:17px;border-radius:50%;display:grid;place-items:center;background:var(--forest);color:#fff;font-size:8px}
+  .office-card{flex:1;border-radius:26px;background:#fffdf8;border:1px solid var(--line);padding:22px;display:flex;flex-direction:column}
+  .office-pin{width:48px;height:48px;border-radius:17px;background:var(--mint);display:grid;place-items:center;color:var(--forest)}
+  .office-pin svg{width:21px}
+  .office-card h4{margin:18px 0 7px;font:600 18px "Manrope",sans-serif;letter-spacing:-.03em}
+  .office-card p{margin:0;color:var(--muted);font-size:11px;line-height:1.55}
+  .office-card .cta{margin-top:auto;width:100%}
 
 
   .reveal { opacity: 1; transform: none; }
@@ -416,16 +482,111 @@
     .nav-links,.landing-prefs{display:none}.menu-btn{display:grid}.mobile-nav-sheet{display:grid}.landing-mobile-prefs{display:block}
     .hero{min-height:auto;padding-top:132px}.hero-grid{grid-template-columns:1fr}.hero-copy{text-align:center}.hero-copy>p{margin-inline:auto}.hero-actions,.hero-proof{justify-content:center}.call-stage{min-height:560px}.call-card{margin-inline:auto}.language-ribbon{margin-top:35px}
     .thesis-grid,.trust-grid,.field-panel,.final-cta,.cost-head,.cost-grid{grid-template-columns:1fr;gap:42px}.thesis-grid{gap:28px}.journey-grid{grid-template-columns:1fr 1fr}.journey-step:nth-child(2){border-right:0}.journey-step:nth-child(-n+2){border-bottom:1px solid var(--line)}
-    .moments-grid{grid-template-columns:1fr}.small-stories{grid-template-columns:1fr 1fr}.field-panel,.final-cta{padding:48px}.cta-art{order:-1}.pathway-head{grid-template-columns:1fr}.tour-bento{grid-template-columns:1fr 1fr}.persona-grid{grid-template-columns:repeat(3,1fr)}
+    .moments-grid{grid-template-columns:1fr}.small-stories{grid-template-columns:1fr 1fr}.field-panel,.final-cta{padding:48px}.cta-art{order:-1}.pathway-head{grid-template-columns:1fr}.persona-grid{grid-template-columns:repeat(3,1fr)}
+    .desk-grid,.desk-grid.expanded{grid-template-columns:180px minmax(0,1fr)}.prepare-card{grid-column:1/-1;flex-direction:row;max-height:0;overflow:hidden}.prepare-card.revealed{max-height:900px;overflow:visible}.prepare-card>*{flex:1}.office-card{min-height:260px}
   }
   @media (max-width: 680px) {
     .page{width:100%;margin:0}.shell,.hero,.moments,.field-panel,.final-cta{border-radius:0}.wrap{width:min(100% - 30px,1180px)}.nav-wrap{top:12px;width:calc(100% - 22px)}nav{padding-left:13px}.brand span:last-child{font-size:14px}.nav-signin,.menu-btn,.mobile-nav-sheet,.landing-mobile-prefs{display:none!important}.landing-prefs{display:flex!important}
     .hero{padding:116px 0 48px}.hero-grid{gap:25px}h1{font-size:48px}.hero-copy>p{font-size:16px}.call-stage{min-height:520px}.call-card{border-radius:23px}.call-content{grid-template-columns:1fr}.transcript-pane{border-right:0;border-bottom:1px solid var(--line);min-height:150px}.answer-pane{min-height:190px}.speaker-line{font-size:17px}.scenario-switcher .scenario:nth-child(n+4){display:none}.language-ribbon{font-size:11px}
-    .thesis-section{padding:82px 0 54px}.thesis-copy h2{font-size:42px}.thesis-copy p{font-size:16px}.section-head{align-items:start;flex-direction:column}.journey{padding-bottom:84px}.journey-grid{grid-template-columns:1fr}.journey-step{min-height:300px;border-right:0;border-bottom:1px solid var(--line)!important}.journey-step:last-child{border-bottom:0!important}.moments{padding:64px 0}.story-card{min-height:auto}.story-art{min-height:315px}.story-bubble{left:18px;top:24px;max-width:220px}.story-phone{right:42px}.story-copy{grid-template-columns:1fr}.story-tabs{justify-content:flex-start}.small-stories{grid-template-columns:1fr}.trust-section{padding:82px 0}.confidence-card{grid-template-columns:58px 1fr}.confidence-card .signal{display:none}.field-panel,.final-cta{padding:52px 22px}.cost-section{padding-top:82px}.cost-shell{padding:45px 22px;border-radius:0}.cost-totals{grid-template-columns:1fr}.cost-total{min-height:90px}.cost-total strong{margin-top:10px}.cost-line{grid-template-columns:92px 1fr 64px}.cost-notes{grid-template-columns:1fr}.cost-sources{justify-content:flex-start}.final-cta{margin-top:82px}.cta-disc{width:230px;height:230px}.cta-art{height:270px}.site-footer{grid-template-columns:1fr}.footer-links{justify-content:flex-start}.pathways{padding-top:82px}.pathway-head{gap:18px}.persona-grid{grid-template-columns:1fr 1fr}.persona-card{min-height:190px}.tour-bento{grid-template-columns:1fr}.tour-large{grid-row:auto;min-height:220px}.tour-wide{flex-direction:column;align-items:flex-start}.tour-cta{width:100%;justify-content:center}
+    .thesis-section{padding:82px 0 54px}.thesis-copy h2{font-size:42px}.thesis-copy p{font-size:16px}.section-head{align-items:start;flex-direction:column}.journey{padding-bottom:84px}.journey-grid{grid-template-columns:1fr}.journey-step{min-height:300px;border-right:0;border-bottom:1px solid var(--line)!important}.journey-step:last-child{border-bottom:0!important}.moments{padding:64px 0}.story-card{min-height:auto}.story-art{min-height:315px}.story-bubble{left:18px;top:24px;max-width:220px}.story-phone{right:42px}.story-copy{grid-template-columns:1fr}.story-tabs{justify-content:flex-start}.small-stories{grid-template-columns:1fr}.trust-section{padding:82px 0}.confidence-card{grid-template-columns:58px 1fr}.confidence-card .signal{display:none}.field-panel,.final-cta{padding:52px 22px}.cost-section{padding-top:82px}.cost-shell{padding:45px 22px;border-radius:0}.cost-totals{grid-template-columns:1fr}.cost-total{min-height:90px}.cost-total strong{margin-top:10px}.cost-line{grid-template-columns:92px 1fr 64px}.cost-notes{grid-template-columns:1fr}.cost-sources{justify-content:flex-start}.final-cta{margin-top:82px}.cta-disc{width:230px;height:230px}.cta-art{height:270px}.site-footer{grid-template-columns:1fr}.footer-links{justify-content:flex-start}.pathways{padding-top:82px}.pathway-head{gap:18px}.persona-grid{grid-template-columns:1fr 1fr}.persona-card{min-height:190px}
+    .role-options{gap:7px}.role-btn{min-height:38px;padding:0 16px;font-size:13px}.desk{border-radius:28px;padding:10px}.desk-grid,.desk-grid.expanded{grid-template-columns:minmax(0,1fr)}.folder-nav{min-height:auto}.folder-steps{grid-template-columns:1fr 1fr}.folder-step{padding:12px 8px}.folder-step b{font-size:13px}.folder-note{display:none}.prepare-card{flex-direction:column}.sheet-row{grid-template-columns:1fr;gap:6px}.sheet-top h3{font-size:24px}.case-sheet::before{display:none}
   }
   @media(max-width:680px){html[data-mode="easy"] .nav-wrap{top:12px;width:calc(100% - 22px)}html[data-mode="easy"] .wrap{padding-inline:18px}html[data-mode="easy"] .hero{padding:108px 0 42px}html[data-mode="easy"] .hero-copy{text-align:left}html[data-mode="easy"] .hero-actions,html[data-mode="easy"] .hero-proof{justify-content:flex-start}html[data-mode="easy"] .persona-grid{grid-template-columns:1fr}html[data-mode="easy"] .pathways{padding-top:42px}html[data-mode="easy"] .preference-dock{border-radius:4px}}
+
+  /* ── Mobile hero device: same call card, phone enclosure ───────────── */
+  .device-frame { display: contents; }
+  .device-halo, .floating-note, .device-state { display: none; }
+
+  @media (max-width: 980px) {
+    .call-stage { min-height: auto; padding-top: 6px; place-items: center; }
+
+    .device-halo {
+      display: block; position: absolute; z-index: 1;
+      width: min(430px, 88vw); aspect-ratio: 1; border-radius: 50%;
+      background: radial-gradient(circle, rgba(204,235,216,.26), transparent 66%);
+      filter: blur(2px); animation: haloBreathe 6.5s ease-in-out infinite;
+    }
+    @keyframes haloBreathe { 0%,100%{transform:scale(.94);opacity:.72} 50%{transform:scale(1.06);opacity:1} }
+
+    .device-frame {
+      display: block; position: relative; z-index: 3;
+      width: min(352px, calc(100vw - 74px));
+      margin: 0 auto; padding: 12px 12px 13px;
+      border-radius: 40px;
+      border: 1px solid rgba(255,255,255,.32);
+      background: rgba(251,255,252,.13);
+      box-shadow: 0 48px 110px -52px rgba(0,0,0,.72), inset 0 1px 0 rgba(255,255,255,.34);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      transform: rotate(1.4deg);
+    }
+    .device-frame::before {
+      content: ""; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
+      width: 74px; height: 18px; border-radius: 0 0 14px 14px; background: rgba(255,255,255,.16);
+    }
+
+    .call-card {
+      width: 100%; margin: 0; border: 0; border-radius: 30px;
+      background: linear-gradient(180deg, #fffdf7, #f2f9f4);
+      box-shadow: 0 18px 42px -34px rgba(5,42,36,.7);
+    }
+    .call-card-top { min-height: 56px; padding: 6px 16px 0; }
+    .call-content { grid-template-columns: 1fr; min-height: 0; }
+    .transcript-pane { border-right: 0; border-bottom: 1px solid rgba(23,53,45,.09); padding: 17px 16px; min-height: 0; gap: 13px; }
+    .answer-pane { padding: 17px 16px; min-height: 0; }
+    .speaker-line { font-size: 17px; }
+    .answer-copy { font-size: 13.5px; }
+    .call-controls { padding: 11px 12px; }
+    .scenario { padding: 7px 10px; font-size: 10.5px; }
+    .call-mic { width: 38px; height: 38px; }
+
+    .device-state {
+      display: flex; align-items: center; gap: 9px; margin-top: 11px;
+      padding: 9px 11px; border-radius: 17px;
+      border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.11);
+      color: #e9f6ee;
+    }
+    .device-orb {
+      width: 28px; height: 28px; flex: none; border-radius: 50%; display: grid; place-items: center;
+      color: #fff; background: radial-gradient(circle at 32% 25%, #65d9b8, var(--leaf) 58%, var(--forest-2));
+      box-shadow: 0 0 0 6px rgba(47,132,94,.14);
+    }
+    .device-orb svg { width: 13px; height: 13px; }
+    .device-state-copy { flex: 1; min-width: 0; font-size: 10.5px; font-weight: 800; letter-spacing: -.01em; }
+    .device-wave { display: flex; align-items: center; gap: 2px; height: 18px; }
+    .device-wave i { width: 2px; border-radius: 999px; background: var(--sun); animation: deviceWave 1s ease-in-out infinite; }
+    .device-wave i:nth-child(1){height:32%}
+    .device-wave i:nth-child(2){height:70%;animation-delay:.1s}
+    .device-wave i:nth-child(3){height:100%;animation-delay:.2s}
+    .device-wave i:nth-child(4){height:56%;animation-delay:.3s}
+    .device-wave i:nth-child(5){height:84%;animation-delay:.4s}
+    @keyframes deviceWave { 0%,100%{transform:scaleY(.48);opacity:.55} 50%{transform:scaleY(1);opacity:1} }
+
+    .floating-note {
+      display: block; position: absolute; z-index: 4; max-width: 168px;
+      padding: 9px 12px; border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.42);
+      background: rgba(255,253,248,.95); color: var(--forest);
+      font-size: 10px; font-weight: 800; letter-spacing: -.01em; line-height: 1.3;
+      box-shadow: 0 20px 44px -28px rgba(0,0,0,.85);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    }
+    .floating-note::before {
+      content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--sun); margin-right: 7px; vertical-align: 1px;
+    }
+    .note-one { top: 58px; right: -17px; transform: rotate(2.5deg); }
+    .note-two { left: -19px; bottom: 112px; transform: rotate(-3deg); }
+  }
+
+  @media (max-width: 380px) {
+    .device-frame { width: min(330px, calc(100vw - 40px)); padding: 9px; border-radius: 33px; transform: rotate(1deg); }
+    .call-card { border-radius: 25px; }
+    .note-one { right: -8px; } .note-two { left: -8px; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}
+    .sheet-row{opacity:1;transform:none;filter:none}.ticket,.office-card,.ticket-item{opacity:1;transform:none}
   }
 </style>
 </head>
@@ -496,43 +657,58 @@
         </div>
 
         <div class="call-stage reveal visible" aria-label="Interactive Aadya conversation preview">
-          <div class="call-card" id="call-card">
-            <div class="call-card-top">
-              <div class="live-label"><span></span> Aadya is listening</div>
-              <div class="call-card-time" id="call-time">00:08</div>
+          <div class="device-halo" aria-hidden="true"></div>
+
+          <div class="device-frame">
+            <div class="call-card" id="call-card">
+              <div class="call-card-top">
+                <div class="live-label"><span></span> Aadya is listening</div>
+                <div class="call-card-time" id="call-time">00:08</div>
+              </div>
+              <div class="call-content">
+                <div class="transcript-pane">
+                  <div>
+                    <div class="pane-label">What Aadya heard</div>
+                    <div class="speaker-line" id="scenario-question">माझ्या वडिलांना वृद्धापकाळ पेन्शन मिळेल का?</div>
+                  </div>
+                  <div class="speaker-meta"><span class="mini-avatar" id="scenario-avatar">म</span><span id="scenario-language">Marathi · voice</span></div>
+                </div>
+                <div class="answer-pane">
+                  <div class="answer-title">
+                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2.5 16 5v4.5c0 4-2.5 6.7-6 8-3.5-1.3-6-4-6-8V5z"/><path d="m7 10 2 2 4-4"/></svg>
+                    <span id="scenario-source">From official pension details</span>
+                  </div>
+                  <div class="answer-copy" id="scenario-answer">Check the age and income criteria first. Carry Aadhaar, a bank passbook and proof of age to the Gram Panchayat or block office.</div>
+                  <div class="mini-checklist" id="scenario-checklist">
+                    <div class="mini-check"><i>✓</i> Aadhaar card</div>
+                    <div class="mini-check"><i>✓</i> Bank passbook</div>
+                    <div class="mini-check"><i>✓</i> Proof of age</div>
+                  </div>
+                </div>
+              </div>
+              <div class="call-controls">
+                <div class="scenario-switcher" role="tablist" aria-label="Preview a use case">
+                  <button class="scenario active" data-scenario="elder">Pension</button>
+                  <button class="scenario" data-scenario="farmer">PM-KISAN</button>
+                  <button class="scenario" data-scenario="student">Scholarship</button>
+                  <button class="scenario" data-scenario="caregiver">Ayushman</button>
+                </div>
+                <button class="call-mic" id="preview-mic" aria-label="Replay preview">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+                </button>
+              </div>
             </div>
-            <div class="call-content">
-              <div class="transcript-pane">
-                <div>
-                  <div class="pane-label">What Aadya heard</div>
-                  <div class="speaker-line" id="scenario-question">माझ्या वडिलांना वृद्धापकाळ पेन्शन मिळेल का?</div>
-                </div>
-                <div class="speaker-meta"><span class="mini-avatar" id="scenario-avatar">म</span><span id="scenario-language">Marathi · voice</span></div>
-              </div>
-              <div class="answer-pane">
-                <div class="answer-title">
-                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2.5 16 5v4.5c0 4-2.5 6.7-6 8-3.5-1.3-6-4-6-8V5z"/><path d="m7 10 2 2 4-4"/></svg>
-                  <span id="scenario-source">From official pension details</span>
-                </div>
-                <div class="answer-copy" id="scenario-answer">Check the age and income criteria first. Carry Aadhaar, a bank passbook and proof of age to the Gram Panchayat or block office.</div>
-                <div class="mini-checklist" id="scenario-checklist">
-                  <div class="mini-check"><i>✓</i> Aadhaar card</div>
-                  <div class="mini-check"><i>✓</i> Bank passbook</div>
-                  <div class="mini-check"><i>✓</i> Proof of age</div>
-                </div>
-              </div>
-            </div>
-            <div class="call-controls">
-              <div class="scenario-switcher" role="tablist" aria-label="Preview a use case">
-                <button class="scenario active" data-scenario="elder">Pension</button>
-                <button class="scenario" data-scenario="farmer">PM-KISAN</button>
-                <button class="scenario" data-scenario="student">Scholarship</button>
-                <button class="scenario" data-scenario="caregiver">Ayushman</button>
-              </div>
-              <button class="call-mic" id="preview-mic" aria-label="Replay preview">
+
+            <div class="device-state" aria-hidden="true">
+              <span class="device-orb">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
-              </button>
+              </span>
+              <span class="device-state-copy" data-landing="ask">Ask in your language</span>
+              <span class="device-wave"><i></i><i></i><i></i><i></i><i></i></span>
             </div>
+
+            <div class="floating-note note-one" data-note="0">Editable transcript</div>
+            <div class="floating-note note-two" data-note="1">Sourced answer</div>
           </div>
         </div>
       </div>
@@ -708,23 +884,255 @@
     </section>
 
     <section class="wrap pathways" id="pathways">
-      <div class="pathway-head reveal">
+      <div class="pathway-head">
         <div>
-          <div class="section-kicker">Interactive product tour</div>
+          <div class="section-kicker">How it works</div>
           <h2>See one question become a prepared visit.</h2>
         </div>
-        <p>No microphone, API key or sign-in is needed. Choose a real-life scenario, watch the transcript and scheme record move through the system, then open the exact same flow in the working app.</p>
+        <div>
+          <p>No microphone, API key or sign-in is needed.</p>
+          <div class="role-options awaiting" role="tablist" aria-label="Choose a role">
+            <button class="role-btn" data-role="farmer" role="tab" aria-selected="false">Farmer</button>
+            <button class="role-btn" data-role="student" role="tab" aria-selected="false">Student</button>
+            <button class="role-btn" data-role="pension" role="tab" aria-selected="false">Older adult</button>
+            <button class="role-btn" data-role="health" role="tab" aria-selected="false">Family</button>
+          </div>
+        </div>
       </div>
-      <div class="tour-bento reveal">
-        <article class="tour-card tour-large"><div class="tour-n">01</div><h3>Voice</h3><p>Speak as you normally would, in your own language.</p><div class="tour-output">Output · audio</div></article>
-        <article class="tour-card tour-small blue"><div class="tour-n">02</div><h3>Transcript</h3><p>Check the words before sending.</p><div class="tour-output">Output · confirmed text</div></article>
-        <article class="tour-card tour-small coral"><div class="tour-n">03</div><h3>Evidence</h3><p>Match prototype scheme records.</p><div class="tour-output">Output · sourced answer</div></article>
-        <article class="tour-card tour-wide">
-          <div class="tour-wide-copy"><div class="tour-n">04</div><div><h3>Next step</h3><p>Carry the right documents, action checklist included.</p></div></div>
-          <a class="button tour-cta" href="./demo.html"><svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 3.8v12.4L16 10 5 3.8z"/></svg>Open the interactive demo</a>
-        </article>
+
+      <div class="desk idle" data-tour="two">
+        <div class="desk-veil" aria-hidden="true"><div class="veil-timer"><i></i></div></div>
+
+        <div class="desk-grid">
+          <aside class="folder-nav">
+            <div class="folder-steps">
+              <button class="folder-step" data-stage="0"><i>01</i><b>Voice</b></button>
+              <button class="folder-step" data-stage="1" data-locked="true"><i>02</i><b>Transcript</b></button>
+              <button class="folder-step" data-stage="2" data-locked="true"><i>03</i><b>Evidence</b></button>
+              <button class="folder-step" data-stage="3" data-locked="true"><i>04</i><b>Next step</b></button>
+            </div>
+            <div class="rail-progress"><i data-rail-fill></i></div>
+            <div class="folder-note">Aadya keeps the spoken question, source and action checklist together so the route survives after the audio ends.</div>
+          </aside>
+
+          <article class="case-sheet">
+            <div class="sheet-top">
+              <h3 data-v2-title>What do I need before I go?</h3>
+            </div>
+            <div class="sheet-body">
+              <div class="sheet-row"><div class="sheet-key">Spoken question</div><div class="sheet-val native" data-v2-question>"पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?"</div></div>
+              <div class="sheet-row"><div class="sheet-key">Confirmed text</div><div class="sheet-val" data-v2-transcript>पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?</div></div>
+              <div class="sheet-row"><div class="sheet-key">Matched source</div><div class="sheet-val"><span class="source-line"><i></i><span data-v2-source>PM-KISAN · official scheme record</span></span></div></div>
+              <div class="sheet-row"><div class="sheet-key">Plain answer</div><div class="sheet-val" data-v2-answer>Keep Aadhaar, bank details, land record and the registered mobile number ready. Take them to the local agriculture office if you need to apply or correct details.</div></div>
+            </div>
+          </article>
+
+          <div class="prepare-card">
+            <article class="ticket">
+              <div class="micro">Carry these</div>
+              <h3>Ready before the queue.</h3>
+              <p>The answer becomes a compact checklist that can be shown, replayed or shared.</p>
+              <div class="ticket-list" data-v2-docs>
+                <div class="ticket-item"><i>✓</i>Aadhaar card</div>
+                <div class="ticket-item"><i>✓</i>Bank passbook</div>
+                <div class="ticket-item"><i>✓</i>Land record</div>
+                <div class="ticket-item"><i>✓</i>Mobile number</div>
+              </div>
+            </article>
+
+            <article class="office-card">
+              <div class="office-pin">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s6-5.3 6-11a6 6 0 1 0-12 0c0 5.7 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
+              </div>
+              <h4 data-v2-office>Local agriculture office</h4>
+              <p>Take the packet with you. Confirm final eligibility, deadlines and any local requirements at the official office.</p>
+              <a class="cta" href="./demo.html">
+                <svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 3.8v12.4L16 10 5 3.8z"/></svg>
+                Open the interactive demo
+              </a>
+            </article>
+          </div>
+        </div>
       </div>
     </section>
+
+    <script>
+    (function () {
+      const SCENARIOS = {
+        farmer: {
+          question: '"पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?"',
+          transcript: 'पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?',
+          source: 'PM-KISAN · official scheme record',
+          answer: 'Aadhaar, bank account details, land record and a registered mobile number are the useful items to keep ready before visiting the agriculture office.',
+          docs: ['Aadhaar card', 'Bank passbook', 'Land record', 'Mobile number'],
+          office: 'Local agriculture office'
+        },
+        student: {
+          question: '"मेरी छात्रवृत्ति के लिए क्या-क्या चाहिए?"',
+          transcript: 'मेरी छात्रवृत्ति के लिए क्या-क्या चाहिए?',
+          source: 'Scholarship application guidance · prototype record',
+          answer: 'Keep your identity, bank, academic and institution details together before you start the scholarship application or visit the institute nodal officer.',
+          docs: ['Aadhaar card', 'Bank details', 'Mark sheet', 'Institute ID'],
+          office: 'Institute nodal officer'
+        },
+        pension: {
+          question: '"बुज़ुर्ग पेंशन के लिए कहाँ जाना होगा?"',
+          transcript: 'बुज़ुर्ग पेंशन के लिए कहाँ जाना होगा?',
+          source: 'Pension service route · prototype record',
+          answer: 'Keep identity, age, residence and bank details ready, then confirm the state-specific application route with the local welfare or panchayat office.',
+          docs: ['Identity proof', 'Age proof', 'Residence proof', 'Bank details'],
+          office: 'Local welfare office'
+        },
+        health: {
+          question: '"आयुष्मान कार्ड बनवाने के लिए क्या लेकर जाएँ?"',
+          transcript: 'आयुष्मान कार्ड बनवाने के लिए क्या लेकर जाएँ?',
+          source: 'Ayushman Bharat help-desk route · prototype record',
+          answer: 'Carry family identity details and the documents requested by the local help desk, then confirm beneficiary status at an authorised Ayushman Bharat desk.',
+          docs: ['Aadhaar card', 'Family ID', 'Mobile number', 'Existing card, if any'],
+          office: 'Authorised Ayushman help desk'
+        }
+      };
+
+      const DEFAULT_ROLE = 'farmer';
+      const CHOICE_WINDOW = 3000;
+      const STEP_INTERVAL = 2600;
+
+      const tour = document.querySelector('[data-tour="two"]');
+      if (!tour) return;
+      const grid = tour.querySelector('.desk-grid');
+      const roleWrap = document.querySelector('.role-options');
+      const roleButtons = [...document.querySelectorAll('.role-btn')];
+      const folderSteps = [...tour.querySelectorAll('.folder-step')];
+      const sheetRows = [...tour.querySelectorAll('.sheet-row')];
+      const prepare = tour.querySelector('.prepare-card');
+      const railFill = tour.querySelector('[data-rail-fill]');
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const stageTitles = [
+        'What do I need before I go?',
+        'The words are visible before sending.',
+        'The answer shows where it came from.',
+        'Leave with documents and a place to go.'
+      ];
+
+      let started = false;
+      let stage = -1;
+      let maxStage = 0;
+      let scrollBase = 0;
+      let choiceTimer = null;
+      let stepTimer = null;
+
+      function setText(selector, value, animate) {
+        const el = tour.querySelector(selector);
+        if (!el) return;
+        el.textContent = value;
+        if (animate && !reduced) { el.classList.remove('swap'); void el.offsetWidth; el.classList.add('swap'); }
+      }
+
+      function renderDocs(items) {
+        tour.querySelector('[data-v2-docs]').innerHTML =
+          items.map((item) => `<div class="ticket-item"><i>✓</i>${item}</div>`).join('');
+      }
+
+      function fillScenario(key, animate) {
+        const data = SCENARIOS[key];
+        if (!data) return;
+        roleButtons.forEach((b) => {
+          const on = b.dataset.role === key;
+          b.classList.toggle('active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        setText('[data-v2-question]', data.question, animate);
+        setText('[data-v2-transcript]', data.transcript, animate);
+        setText('[data-v2-source]', data.source, animate);
+        setText('[data-v2-answer]', data.answer, animate);
+        setText('[data-v2-office]', data.office, animate);
+        renderDocs(data.docs);
+      }
+
+      function renderStage(index) {
+        stage = index;
+        folderSteps.forEach((step, i) => {
+          step.classList.toggle('active', i === index);
+          step.dataset.locked = i <= index ? 'false' : 'true';
+        });
+        setText('[data-v2-title]', stageTitles[index], true);
+        sheetRows.forEach((row, i) => row.classList.toggle('revealed', i <= index));
+        grid.classList.toggle('expanded', index >= 3);
+        prepare.classList.toggle('revealed', index >= 3);
+        railFill.style.width = ((index + 1) / stageTitles.length * 100) + '%';
+      }
+
+      function scheduleAutoAdvance() {
+        clearInterval(stepTimer);
+        stepTimer = setInterval(() => {
+          if (stage >= stageTitles.length - 1) { clearInterval(stepTimer); return; }
+          maxStage = Math.max(maxStage, stage + 1);
+          renderStage(stage + 1);
+        }, STEP_INTERVAL);
+      }
+
+      function rawProgress() {
+        const rect = tour.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        const start = vh * 0.8, end = vh * 0.4;
+        return Math.max(0, Math.min(1, (start - rect.top) / (rect.height + (start - end))));
+      }
+
+      function scrollStage() {
+        if (!started) return;
+        const p = Math.max(0, (rawProgress() - scrollBase) / Math.max(.001, 1 - scrollBase));
+        const fromScroll = Math.round(p * (stageTitles.length - 1));
+        if (fromScroll > maxStage) {
+          maxStage = fromScroll;
+          renderStage(maxStage);
+          scheduleAutoAdvance();
+        }
+      }
+
+      function start(role, fromUser) {
+        if (started && !fromUser) return;
+        clearTimeout(choiceTimer);
+        roleWrap.classList.remove('awaiting');
+        tour.classList.remove('idle');
+        fillScenario(role, started);
+        started = true;
+        maxStage = 0;
+        stage = -1;
+        scrollBase = rawProgress();
+        renderStage(0);
+        scheduleAutoAdvance();
+      }
+
+      function armChoiceWindow() {
+        if (started || choiceTimer) return;
+        choiceTimer = setTimeout(() => start(DEFAULT_ROLE, false), reduced ? 0 : CHOICE_WINDOW);
+      }
+
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { armChoiceWindow(); io.disconnect(); } });
+      }, { threshold: .35 });
+      io.observe(tour);
+
+      roleButtons.forEach((b) => b.addEventListener('click', () => start(b.dataset.role, true)));
+
+      folderSteps.forEach((b, i) => b.addEventListener('click', () => {
+        if (!started) { start(DEFAULT_ROLE, true); }
+        clearInterval(stepTimer);
+        maxStage = Math.max(maxStage, i);
+        scrollBase = rawProgress();
+        renderStage(i);
+      }));
+
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => { scrollStage(); ticking = false; });
+      }, { passive: true });
+      window.addEventListener('resize', scrollStage, { passive: true });
+    })();
+    </script>
 
     <section class="final-cta">
       <div>
@@ -743,6 +1151,8 @@
       </div>
     </section>
   </main>
+
+  <div class="wrap thesis-note">Five of Aadya's seven languages, Marathi, Tamil, Telugu, Kannada and Malayalam, were added recently and have not yet been reviewed by a native speaker. Confirm important details at the official source linked in each answer.</div>
 
   <footer class="wrap site-footer">
     <div>
@@ -763,13 +1173,14 @@
   import { LANGUAGES, mountPreferenceControls, getPreferences } from "./lib/preferences.js";
   import { matchDemoResponse, localizeDemoResponse } from "./lib/demoFixtures.js";
   const LANDING_COPY = {
-    en:{eyebrow:"Public information, spoken back clearly",heroLead:"Public help,",heroSoft:"in your language.",heroBody:"Ask about schemes, public services, scholarships, pensions and government jobs. Get one sourced next step, spoken clearly.",ask:"Ask in your language",demo:"Try the guided demo",integrations:"See integrations",start:"Get started",proof:"Hindi and English. Spoken answers. No form to decode.",pathKicker:"One product, different doorways",pathTitle:"Start from the life you are living.",pathBody:"Choose the view closest to what you need. Aadya shows useful starting questions from the same prototype records."},
-    hi:{eyebrow:"सार्वजनिक जानकारी, आपकी भाषा में साफ़ जवाब",heroLead:"सरकारी मदद,",heroSoft:"आपकी भाषा में।",heroBody:"योजनाओं, सरकारी सेवाओं, छात्रवृत्तियों, पेंशन और सरकारी नौकरियों के बारे में पूछें। स्रोत सहित अगला कदम साफ़ सुनें।",ask:"अपनी भाषा में पूछें",demo:"आसान डेमो देखें",integrations:"इंटीग्रेशन देखें",start:"शुरू करें",proof:"हिंदी और English। बोलकर उत्तर। कोई लंबा फ़ॉर्म नहीं।",pathKicker:"एक ऐप, आपकी ज़रूरत का रास्ता",pathTitle:"अपनी ज़रूरत से शुरू करें।",pathBody:"अपने काम के सबसे पास वाला रूप चुनें। सहायक प्रोटोटाइप रिकॉर्ड से उपयोगी शुरुआती सवाल दिखाएगा।"},
+    en:{eyebrow:"Public information, spoken back clearly",heroLead:"Public help,",heroSoft:"in your language.",heroBody:"Ask about schemes, public services, scholarships, pensions and government jobs. Get one sourced next step, spoken clearly.",ask:"Ask in your language",demo:"Try the guided demo",integrations:"See integrations",start:"Get started",proof:"Seven languages. Spoken answers. No form to decode.",pathKicker:"One product, different doorways",pathTitle:"Start from the life you are living.",pathBody:"Choose the view closest to what you need. Aadya shows useful starting questions from the same prototype records."},
+    hi:{eyebrow:"सार्वजनिक जानकारी, आपकी भाषा में साफ़ जवाब",heroLead:"सरकारी मदद,",heroSoft:"आपकी भाषा में।",heroBody:"योजनाओं, सरकारी सेवाओं, छात्रवृत्तियों, पेंशन और सरकारी नौकरियों के बारे में पूछें। स्रोत सहित अगला कदम साफ़ सुनें।",ask:"अपनी भाषा में पूछें",demo:"आसान डेमो देखें",integrations:"इंटीग्रेशन देखें",start:"शुरू करें",proof:"सात भाषाएँ। बोलकर उत्तर। कोई लंबा फ़ॉर्म नहीं।",pathKicker:"एक ऐप, आपकी ज़रूरत का रास्ता",pathTitle:"अपनी ज़रूरत से शुरू करें।",pathBody:"अपने काम के सबसे पास वाला रूप चुनें। सहायक प्रोटोटाइप रिकॉर्ड से उपयोगी शुरुआती सवाल दिखाएगा।"},
     mr:{eyebrow:"सार्वजनिक माहिती, तुमच्या भाषेत स्पष्ट उत्तर",heroLead:"एक मदत केंद्र जे",heroSoft:"तुमची भाषा बोलते.",heroBody:"योजना, शिष्यवृत्ती, पेन्शन आणि नोकरीबद्दल आवाजाने विचारा. सहायक अधिकृत माहिती शोधतो, सोप्या शब्दांत सांगतो आणि पुढचे पाऊल दाखवतो.",ask:"तुमच्या भाषेत विचारा",demo:"मार्गदर्शित डेमो पहा",integrations:"इंटिग्रेशन पहा",start:"सुरू करा",proof:"सात भाषा. बोललेली उत्तरे. लांब फॉर्म नाही.",pathKicker:"एक ॲप, तुमच्या गरजेचा मार्ग",pathTitle:"तुमच्या गरजेपासून सुरुवात करा.",pathBody:"तुमच्या कामाशी जुळणारे रूप निवडा. त्याच विश्वसनीय योजना नोंदींमधून सहायक उपयुक्त सुरुवातीचे प्रश्न दाखवेल."},
     bn:{eyebrow:"সরকারি তথ্য, আপনার ভাষায় স্পষ্ট উত্তর",heroLead:"একটি সহায়তা ডেস্ক যা",heroSoft:"আপনার ভাষায় কথা বলে।",heroBody:"প্রকল্প, বৃত্তি, পেনশন ও কাজ সম্পর্কে মুখে প্রশ্ন করুন। সহায়ক সরকারি তথ্য খুঁজে সহজ করে বলে এবং পরের পদক্ষেপ জানায়।",ask:"আপনার ভাষায় জিজ্ঞাসা করুন",demo:"সহজ ডেমো দেখুন",integrations:"ইন্টিগ্রেশন দেখুন",start:"শুরু করুন",proof:"সাতটি ভাষা। কণ্ঠে উত্তর। কোনো লম্বা ফর্ম নেই।",pathKicker:"একটি অ্যাপ, আপনার প্রয়োজনের পথ",pathTitle:"আপনার প্রয়োজন থেকে শুরু করুন।",pathBody:"আপনার কাজের সঙ্গে সবচেয়ে কাছের ধরনটি বেছে নিন। একই বিশ্বস্ত প্রকল্পের নথি থেকে সহায়ক শুরুর প্রশ্ন দেখাবে।"},
     ta:{eyebrow:"பொதுத் தகவல், உங்கள் மொழியில் தெளிவான பதில்",heroLead:"உங்கள் மொழியில் பேசும்",heroSoft:"ஒரு உதவி மையம்.",heroBody:"திட்டங்கள், கல்வி உதவித்தொகை, ஓய்வூதியம் மற்றும் வேலை பற்றி குரலில் கேளுங்கள். சஹாயக் அதிகாரப்பூர்வ தகவலைத் தேடி எளிதாக விளக்கி அடுத்த படியைச் சொல்கிறது.",ask:"உங்கள் மொழியில் கேளுங்கள்",demo:"வழிகாட்டிய செயல்விளக்கம்",integrations:"இணைப்புகளைப் பாருங்கள்",start:"தொடங்குங்கள்",proof:"ஏழு மொழிகள். குரல் பதில்கள். நீண்ட படிவம் இல்லை.",pathKicker:"ஒரே செயலி, உங்கள் தேவைக்கான பாதை",pathTitle:"உங்கள் தேவையிலிருந்து தொடங்குங்கள்.",pathBody:"உங்கள் வேலைக்கு அருகிலுள்ள தோற்றத்தைத் தேர்ந்தெடுங்கள். அதே நம்பகமான திட்டப் பதிவுகளில் இருந்து சஹாயக் தொடக்கக் கேள்விகளைக் காட்டும்."},
     te:{eyebrow:"ప్రజా సమాచారం, మీ భాషలో స్పష్టమైన జవాబు",heroLead:"మీ భాష మాట్లాడే",heroSoft:"ఒక సహాయ కేంద్రం.",heroBody:"పథకాలు, స్కాలర్‌షిప్‌లు, పింఛన్లు, ఉద్యోగాల గురించి మాట్లాడి అడగండి. సహాయక్ అధికారిక సమాచారాన్ని కనుగొని సులభంగా వివరిస్తుంది.",ask:"మీ భాషలో అడగండి",demo:"మార్గదర్శక డెమో",integrations:"ఇంటిగ్రేషన్లు చూడండి",start:"ప్రారంభించండి",proof:"ఏడు భాషలు. వాయిస్ సమాధానాలు. పొడవైన ఫారం లేదు.",pathKicker:"ఒక యాప్, మీ అవసరానికి మార్గం",pathTitle:"మీ అవసరంతో ప్రారంభించండి.",pathBody:"మీ పనికి దగ్గరగా ఉన్న రూపాన్ని ఎంచుకోండి. అదే నమ్మకమైన పథక రికార్డుల నుంచి సహాయక్ ప్రారంభ ప్రశ్నలను చూపిస్తుంది."},
-    kn:{eyebrow:"ಸಾರ್ವಜನಿಕ ಮಾಹಿತಿ, ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಸ್ಪಷ್ಟ ಉತ್ತರ",heroLead:"ನಿಮ್ಮ ಭಾಷೆ ಮಾತನಾಡುವ",heroSoft:"ಒಂದು ಸಹಾಯ ಕೇಂದ್ರ.",heroBody:"ಯೋಜನೆಗಳು, ವಿದ್ಯಾರ್ಥಿವೇತನ, ಪಿಂಚಣಿ ಮತ್ತು ಉದ್ಯೋಗಗಳ ಬಗ್ಗೆ ಧ್ವನಿಯಲ್ಲಿ ಕೇಳಿ. ಸಹಾಯಕ್ ಅಧಿಕೃತ ಮಾಹಿತಿಯನ್ನು ಹುಡುಕಿ ಸರಳವಾಗಿ ವಿವರಿಸಿ ಮುಂದಿನ ಹೆಜ್ಜೆ ಹೇಳುತ್ತದೆ.",ask:"ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಕೇಳಿ",demo:"ಮಾರ್ಗದರ್ಶಿತ ಡೆಮೊ",integrations:"ಇಂಟಿಗ್ರೇಷನ್ ನೋಡಿ",start:"ಪ್ರಾರಂಭಿಸಿ",proof:"ಏಳು ಭಾಷೆಗಳು. ಧ್ವನಿ ಉತ್ತರಗಳು. ಉದ್ದವಾದ ಫಾರ್ಮ್ ಇಲ್ಲ.",pathKicker:"ಒಂದು ಆ್ಯಪ್, ನಿಮ್ಮ ಅಗತ್ಯದ ದಾರಿ",pathTitle:"ನಿಮ್ಮ ಅಗತ್ಯದಿಂದ ಪ್ರಾರಂಭಿಸಿ.",pathBody:"ನಿಮ್ಮ ಕೆಲಸಕ್ಕೆ ಹತ್ತಿರವಾದ ರೂಪವನ್ನು ಆಯ್ಕೆಮಾಡಿ. ಅದೇ ವಿಶ್ವಾಸಾರ್ಹ ಯೋಜನೆ ದಾಖಲೆಗಳಿಂದ ಸಹಾಯಕ್ ಆರಂಭದ ಪ್ರಶ್ನೆಗಳನ್ನು ತೋರಿಸುತ್ತದೆ."}
+    kn:{eyebrow:"ಸಾರ್ವಜನಿಕ ಮಾಹಿತಿ, ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಸ್ಪಷ್ಟ ಉತ್ತರ",heroLead:"ನಿಮ್ಮ ಭಾಷೆ ಮಾತನಾಡುವ",heroSoft:"ಒಂದು ಸಹಾಯ ಕೇಂದ್ರ.",heroBody:"ಯೋಜನೆಗಳು, ವಿದ್ಯಾರ್ಥಿವೇತನ, ಪಿಂಚಣಿ ಮತ್ತು ಉದ್ಯೋಗಗಳ ಬಗ್ಗೆ ಧ್ವನಿಯಲ್ಲಿ ಕೇಳಿ. ಸಹಾಯಕ್ ಅಧಿಕೃತ ಮಾಹಿತಿಯನ್ನು ಹುಡುಕಿ ಸರಳವಾಗಿ ವಿವರಿಸಿ ಮುಂದಿನ ಹೆಜ್ಜೆ ಹೇಳುತ್ತದೆ.",ask:"ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಕೇಳಿ",demo:"ಮಾರ್ಗದರ್ಶಿತ ಡೆಮೊ",integrations:"ಇಂಟಿಗ್ರೇಷನ್ ನೋಡಿ",start:"ಪ್ರಾರಂಭಿಸಿ",proof:"ಏಳು ಭಾಷೆಗಳು. ಧ್ವನಿ ಉತ್ತರಗಳು. ಉದ್ದವಾದ ಫಾರ್ಮ್ ಇಲ್ಲ.",pathKicker:"ಒಂದು ಆ್ಯಪ್, ನಿಮ್ಮ ಅಗತ್ಯದ ದಾರಿ",pathTitle:"ನಿಮ್ಮ ಅಗತ್ಯದಿಂದ ಪ್ರಾರಂಭಿಸಿ.",pathBody:"ನಿಮ್ಮ ಕೆಲಸಕ್ಕೆ ಹತ್ತಿರವಾದ ರೂಪವನ್ನು ಆಯ್ಕೆಮಾಡಿ. ಅದೇ ವಿಶ್ವಾಸಾರ್ಹ ಯೋಜನೆ ದಾಖಲೆಗಳಿಂದ ಸಹಾಯಕ್ ಆರಂಭದ ಪ್ರಶ್ನೆಗಳನ್ನು ತೋರಿಸುತ್ತದೆ."},
+    ml:{eyebrow:"പൊതു വിവരം, നിങ്ങളുടെ ഭാഷയിൽ വ്യക്തമായ ഉത്തരം",heroLead:"നിങ്ങളുടെ ഭാഷ സംസാരിക്കുന്ന",heroSoft:"ഒരു സഹായ കേന്ദ്രം.",heroBody:"പദ്ധതികൾ, സ്കോളർഷിപ്പുകൾ, പെൻഷൻ, സർക്കാർ ജോലികൾ എന്നിവയെക്കുറിച്ച് ശബ്ദത്തിൽ ചോദിക്കൂ. ഔദ്യോഗിക വിവരം കണ്ടെത്തി ലളിതമായി വിശദീകരിച്ച് അടുത്ത നടപടി പറയും.",ask:"നിങ്ങളുടെ ഭാഷയിൽ ചോദിക്കൂ",demo:"ഗൈഡഡ് ഡെമോ കാണുക",integrations:"ഇന്റഗ്രേഷനുകൾ കാണുക",start:"ആരംഭിക്കൂ",proof:"ഏഴ് ഭാഷകൾ. ശബ്ദ ഉത്തരങ്ങൾ. നീണ്ട ഫോം ഇല്ല.",pathKicker:"ഒരു ആപ്പ്, നിങ്ങളുടെ ആവശ്യത്തിനുള്ള വഴി",pathTitle:"നിങ്ങളുടെ ആവശ്യത്തിൽ നിന്ന് ആരംഭിക്കൂ.",pathBody:"നിങ്ങളുടെ ജോലിയോട് ഏറ്റവും അടുത്ത രൂപം തിരഞ്ഞെടുക്കുക. അതേ വിശ്വസനീയമായ പദ്ധതി രേഖകളിൽ നിന്ന് ആദ്യ ഉപകാരപ്രദമായ ചോദ്യങ്ങൾ കാണിക്കും."}
   };
   const SHORT_QUOTES = {
     en:["One clear answer, every time.","Play it again."],
@@ -778,7 +1189,19 @@
     bn:["প্রতিবার একই পরিষ্কার তথ্য।","আবার শুনিয়ে দিন।"],
     ta:["ஒவ்வொரு முறையும் ஒரே தெளிவான தகவல்.","மீண்டும் கேட்கச் செய்யுங்கள்."],
     te:["ప్రతిసారీ ఒకే స్పష్టమైన సమాచారం.","మళ్లీ వినిపించండి."],
-    kn:["ಪ್ರತಿ ಬಾರಿಯೂ ಒಂದೇ ಸ್ಪಷ್ಟ ಮಾಹಿತಿ.","ಮತ್ತೆ ಕೇಳಿಸಿ."]
+    kn:["ಪ್ರತಿ ಬಾರಿಯೂ ಒಂದೇ ಸ್ಪಷ್ಟ ಮಾಹಿತಿ.","ಮತ್ತೆ ಕೇಳಿಸಿ."],
+    ml:["ഓരോ തവണയും ഒരേ വ്യക്തമായ വിവരം.","വീണ്ടും കേൾപ്പിക്കൂ."]
+  };
+
+  const DEVICE_NOTES = {
+    en:["Editable transcript","Sourced answer"],
+    hi:["सुधार सकते हैं","स्रोत सहित उत्तर"],
+    mr:["तुम्ही दुरुस्त करू शकता","स्रोतासह उत्तर"],
+    bn:["সংশোধনযোগ্য প্রতিলিপি","সূত্রসহ উত্তর"],
+    ta:["திருத்தக்கூடிய உரை","ஆதாரத்துடன் பதில்"],
+    te:["సవరించగల లిపి","మూలంతో సమాధానం"],
+    kn:["ತಿದ್ದಬಹುದಾದ ಪಠ್ಯ","ಮೂಲ ಸಹಿತ ಉತ್ತರ"],
+    ml:["തിരുത്താവുന്ന ട്രാൻസ്ക്രിപ്റ്റ്","ഉറവിടത്തോടു കൂടിയ ഉത്തരം"]
   };
 
   mountPreferenceControls("#landing-preferences", { compact: true });
@@ -844,6 +1267,8 @@
     document.querySelectorAll("[data-landing]").forEach((node) => { node.textContent = copy[node.dataset.landing] || node.textContent; });
     document.getElementById("worker-quote").textContent = `“${shortQuotes[0]}”`;
     document.getElementById("replay-quote").textContent = `“${shortQuotes[1]}”`;
+    const notes = DEVICE_NOTES[prefs.language] || DEVICE_NOTES.en;
+    document.querySelectorAll("[data-note]").forEach((node) => { node.textContent = notes[Number(node.dataset.note)]; });
     animateHeroTitle(copy, prefs.language);
   };
   localizeLanding();
