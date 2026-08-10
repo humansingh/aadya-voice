@@ -2329,11 +2329,18 @@ async function handleRecordingStop(stream) {
   try {
     const audioBase64 = await blobToBase64(blob);
     const res = await fetch("/api/transcribe", { method: "POST", headers: await apiHeaders(), body: JSON.stringify({ audioBase64, mimeType: "audio/webm", language: state.lang }) });
-    if (!res.ok) throw new Error("transcription_failed");
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      // The user-facing message stays generic and calm; the real cause
+      // (env misconfiguration, rate limit, auth failure, provider outage)
+      // is logged for whoever is debugging the deployment.
+      console.error(`transcription request failed: HTTP ${res.status} ${data.error || "(no error body)"}`);
+      throw new Error(data.error || "transcription_failed");
+    }
     state.stage = "idle";
     runPipelineWithText(data.text, false, true);
   } catch (e) {
+    console.error("transcription error", e);
     state.error = "Could not reach the transcription service. Check your connection and try again.";
     state.stage = "idle"; render();
   }
