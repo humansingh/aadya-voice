@@ -1,4 +1,5 @@
 const { secureEndpoint } = require('../lib/serverSecurity');
+const { logFailure } = require('../lib/providerError');
 const { getBrowseOpportunities } = require('../lib/opportunityRepository');
 
 module.exports = async (req, res) => {
@@ -27,7 +28,7 @@ module.exports = async (req, res) => {
       eligibility_check_url: record.eligibility_check_url || null,
     })));
   } catch (error) {
-    console.error('opportunities error', error);
+    logFailure('opportunities', error);
     return res.status(500).json({ error: 'opportunities_failed' });
   }
 };

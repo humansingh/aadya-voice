@@ -2,6 +2,7 @@ const OpenAI = require('openai');
 const { toFile } = require('openai');
 const { validateAudio, cleanLanguage } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
+const { logFailure } = require('../lib/providerError');
 const { withProviderTimeout } = require('../lib/providerTimeout');
 const { TASKS } = require('../config/ai');
 
@@ -14,6 +15,20 @@ const { TASKS } = require('../config/ai');
 // turn models are not guaranteed to support it, so this asks only for what
 // every transcription model accepts. Neither field it would have added was
 // ever read by the client, only by this response body.
+//
+// The provider infers the container from the upload's filename, so every type
+// accepted by ALLOWED_AUDIO_TYPES in lib/apiValidation.js needs an entry here.
+// A missing one mislabels the file and the provider rejects it with a 400
+// that reads as a corrupt recording: audio/m4a and audio/ogg were both being
+// sent as .webm, so any browser that records in those formats could not
+// transcribe at all.
+const AUDIO_EXTENSIONS = {
+  'audio/webm': 'webm',
+  'audio/mp4': 'm4a',
+  'audio/m4a': 'm4a',
+  'audio/ogg': 'ogg',
+};
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
   const identity = await secureEndpoint(req, res);
@@ -27,7 +42,7 @@ module.exports = async (req, res) => {
     const validated = validateAudio(audioBase64, mimeType);
     if (validated.error) return res.status(400).json({ error: validated.error });
     const buffer = validated.buffer;
-    const ext = (mimeType || '').includes('mp4') ? 'm4a' : 'webm';
+    const ext = AUDIO_EXTENSIONS[String(mimeType).split(';')[0].trim()] || 'webm';
     const file = await toFile(buffer, `audio.${ext}`);
 
     const openai = new OpenAI();
@@ -46,7 +61,7 @@ module.exports = async (req, res) => {
       duration: null,
     });
   } catch (err) {
-    console.error('transcribe error', err);
+    logFailure('transcribe', err);
     return res.status(500).json({ error: 'transcription_failed' });
   }
 };

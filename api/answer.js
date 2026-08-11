@@ -4,6 +4,7 @@ const { translateToEnglish } = require('../lib/translate');
 const { getStrings } = require('../lib/i18n');
 const { cleanText, cleanLanguage } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
+const { logFailure } = require('../lib/providerError');
 const { withProviderTimeout } = require('../lib/providerTimeout');
 const { checkDeterministicSafety } = require('../lib/safety');
 const { TASKS, LANGUAGE_PRESENTATION_RULE } = require('../config/ai');
@@ -130,8 +131,12 @@ module.exports = async (req, res) => {
     ];
 
     const modelUsed = REASONING_MODEL;
+    // No temperature: the reasoning models accept only the default (1) and
+    // reject any explicit value with 400 unsupported_value, which failed
+    // every answer request. Determinism comes from reasoning_effort, the
+    // strict JSON schema and the grounded prompt, not from sampling.
     const completion = await withProviderTimeout((signal) => openai.chat.completions.create({
-      model: REASONING_MODEL, temperature: 0.2, reasoning_effort: 'low', max_completion_tokens: 1200, response_format: ANSWER_RESPONSE_FORMAT, messages: generationMessages,
+      model: REASONING_MODEL, reasoning_effort: 'low', max_completion_tokens: 1200, response_format: ANSWER_RESPONSE_FORMAT, messages: generationMessages,
     }, { signal }));
     const tGenerate = Date.now();
 
@@ -194,7 +199,7 @@ module.exports = async (req, res) => {
         input: parsed.answer || '',
       }, { signal }));
     } catch (err) {
-      console.error('output moderation error', err);
+      logFailure('answer:output-moderation', err);
       if (MODERATION_FAIL_MODE === 'closed') {
         return res.status(503).json({ error: 'moderation_unavailable' });
       }
@@ -273,7 +278,7 @@ module.exports = async (req, res) => {
       timings,
     });
   } catch (err) {
-    console.error('answer error', err);
+    logFailure('answer', err);
     return res.status(500).json({ error: 'answer_failed' });
   }
 };

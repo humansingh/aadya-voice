@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const OpenAI = require('openai');
 const { cleanText, cleanLanguage } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
+const { logFailure } = require('../lib/providerError');
 const { withProviderTimeout } = require('../lib/providerTimeout');
 const { checkDeterministicSafety } = require('../lib/safety');
 const { TASKS, LANGUAGES, LANGUAGE_PRESENTATION_RULE } = require('../config/ai');
@@ -107,9 +108,10 @@ module.exports = async (req, res) => {
     const sourceContext = sources.length ? sources.map((source) => `${source.name}\n${source.url}\nChecked: ${source.reviewedOn || 'not stated'}`).join('\n\n') : '(none)';
     const languageLabel = LANGUAGES.find((entry) => entry.code === language)?.label || 'English';
     const openai = new OpenAI();
+    // No temperature — see the note in api/answer.js: this model rejects any
+    // explicit temperature with 400 unsupported_value.
     const completion = await withProviderTimeout((signal) => openai.chat.completions.create({
       model: MODEL,
-      temperature: 0.15,
       reasoning_effort: 'low',
       max_completion_tokens: 2200,
       response_format: RESPONSE_FORMAT,
@@ -122,7 +124,7 @@ module.exports = async (req, res) => {
     const parsed = JSON.parse(raw.trim().replace(/^```json\s*|\s*```$/g, ''));
     return res.status(200).json({ artifact: normalizeArtifact(parsed, kind), modelUsed: MODEL });
   } catch (error) {
-    console.error('artifact error', error);
+    logFailure('artifact', error);
     return res.status(error?.code === 'PROVIDER_TIMEOUT' ? 504 : 500).json({ error: error?.code === 'PROVIDER_TIMEOUT' ? 'artifact_timeout' : 'artifact_failed' });
   }
 };

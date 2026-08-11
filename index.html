@@ -1095,6 +1095,23 @@ async function apiHeaders() {
   return { "Content-Type": "application/json", "Authorization": `Bearer ${await user.getIdToken()}` };
 }
 
+// Every user-facing failure string in this app is deliberately calm and
+// generic, which means the browser console is the only place the real cause
+// is ever visible. Log what the server actually said: HTTP status, the error
+// code from the JSON body, and any thrown message. Note the guarded .json()
+// at each call site — a Vercel platform failure returns a plain-text body, so
+// an unguarded .json() threw a parse error and destroyed the status code
+// before it could be logged. That is what made a 500 indistinguishable from
+// an offline device for several rounds of debugging.
+function logApiFailure(scope, { res, data, error } = {}) {
+  const parts = [`[api:${scope}]`];
+  if (res) parts.push(`HTTP ${res.status}${res.statusText ? " " + res.statusText : ""}`);
+  if (data && data.error) parts.push(`error=${data.error}`);
+  if (error) parts.push(`thrown=${error.message || error}`);
+  console.error(parts.join(" "));
+  if (error && error.stack) console.error(error.stack);
+}
+
 // ---------- RENDER ROOT ----------
 function render() {
   const previousMain = root.querySelector("main");
@@ -1318,8 +1335,11 @@ async function loadVoiceOptions() {
   render();
   try {
     const response = await fetch("/api/speak", { method: "POST", headers: await apiHeaders(), body: JSON.stringify({ action: "voices", lang: state.lang }) });
-    const data = await response.json();
-    if (!response.ok || data.provider !== "google-cloud-tts" || !Array.isArray(data.voices)) throw new Error(data.error || "voice_list_failed");
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || data.provider !== "google-cloud-tts" || !Array.isArray(data.voices)) {
+      logApiFailure("speak:voices", { res: response, data });
+      throw new Error(data.error || "voice_list_failed");
+    }
     state.voiceOptions = data.voices;
     if (!state.voiceOptions.some((voice) => voice.name === state.voiceName)) state.voiceName = data.defaultVoice || state.voiceOptions[0]?.name || null;
     if (state.voiceName) writeVoicePreference(state.lang, state.voiceName);
@@ -1913,7 +1933,7 @@ async function createWorkspaceArtifact(kind,message) {
   try{
     const artifact=state.demo?demoWorkspaceArtifact(kind,message):await (async()=>{
       const response=await fetch("/api/artifact",{method:"POST",headers:await apiHeaders(),body:JSON.stringify({kind,language:state.lang,question:message.question,answer:message.text,sources:(message.sources||[]).map(({name,url,reviewedOn})=>({name,url,reviewedOn})),existingChecklist:message.artifact?.items||[],attachments:(message.attachments||[]).map(({name,type,size,text})=>({name,type,size,text}))})});
-      const data=await response.json();if(!response.ok)throw new Error(data.error||"artifact_failed");return data.artifact;
+      const data=await response.json().catch(()=>({}));if(!response.ok){logApiFailure("artifact",{res:response,data});throw new Error(data.error||"artifact_failed");}return data.artifact;
     })();
     state.workspaceArtifacts.push(artifact);state.activeArtifactId=artifact.id;
   }catch(error){state.artifactError=error.message==="artifact_failed"?"Please try again in a moment.":String(error.message||error);}
@@ -2384,16 +2404,13 @@ async function handleRecordingStop(stream) {
     const res = await fetch("/api/transcribe", { method: "POST", headers: await apiHeaders(), body: JSON.stringify({ audioBase64, mimeType: "audio/webm", language: state.lang }) });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      // The user-facing message stays generic and calm; the real cause
-      // (env misconfiguration, rate limit, auth failure, provider outage)
-      // is logged for whoever is debugging the deployment.
-      console.error(`transcription request failed: HTTP ${res.status} ${data.error || "(no error body)"}`);
+      logApiFailure("transcribe", { res, data });
       throw new Error(data.error || "transcription_failed");
     }
     state.stage = "idle";
     runPipelineWithText(data.text, false, true);
   } catch (e) {
-    console.error("transcription error", e);
+    logApiFailure("transcribe", { error: e });
     state.error = "Could not reach the transcription service. Check your connection and try again.";
     state.stage = "idle"; render();
   }
@@ -2452,7 +2469,8 @@ async function runPipelineWithText(text, detailsConfirmed = false, fromVoice = f
 
   try {
     const guardRes = await fetch("/api/guard-input", { method: "POST", headers: await apiHeaders(), body: JSON.stringify({ text }) });
-    const guardData = await guardRes.json();
+    const guardData = await guardRes.json().catch(() => ({}));
+    if (!guardRes.ok) logApiFailure("guard-input", { res: guardRes, data: guardData });
     auditRecord.inputGuardVerdict = String(guardData.score ?? "");
 
     if (guardData.flagged) {
@@ -2465,8 +2483,11 @@ async function runPipelineWithText(text, detailsConfirmed = false, fromVoice = f
     }
 
     const ansRes = await fetch("/api/answer", { method: "POST", headers: await apiHeaders(), body: JSON.stringify({ question: text, language: state.lang, perspective: state.helping || "self", state: state.sessionState, beneficiaryAge: state.beneficiaryAge }) });
-    const data = await ansRes.json();
-    if (!ansRes.ok) throw new Error(data.error || "answer_failed");
+    const data = await ansRes.json().catch(() => ({}));
+    if (!ansRes.ok) {
+      logApiFailure("answer", { res: ansRes, data });
+      throw new Error(data.error || "answer_failed");
+    }
 
     appendAgentMessage(text, data, privateAsk, turnAttachments);
 
@@ -2486,6 +2507,7 @@ async function runPipelineWithText(text, detailsConfirmed = false, fromVoice = f
 
     finishAnswer(data.answer, fromVoice);
   } catch (e) {
+    logApiFailure("answer", { error: e });
     state.attachments = turnAttachments;
     state.error = "Something went wrong reaching the answer service. Please try again.";
     state.stage = "idle";
@@ -2510,8 +2532,11 @@ async function speak(text, lang, onDone, key = "live") {
   stopAudio();
   try {
     const res = await fetch("/api/speak", { method: "POST", headers: await apiHeaders(), body: JSON.stringify({ text, lang, speakingRate: state.speechRate, voiceName: state.voiceName }) });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "tts_failed");
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      logApiFailure("speak", { res, data });
+      throw new Error(data.error || "tts_failed");
+    }
     if (data.provider !== "google-cloud-tts" || !data.audioBase64) throw new Error("invalid_google_tts_response");
     state.voiceName = data.voice;
     writeVoicePreference(lang, data.voice);
@@ -2550,7 +2575,7 @@ async function speak(text, lang, onDone, key = "live") {
     state.error = null;
     render();
   } catch (e) {
-    console.error("Google Cloud TTS failed", e);
+    logApiFailure("speak", { error: e });
     state.stage = "idle";
     state.error = state.lang === "hi" ? "Google Cloud की आवाज़ उपलब्ध नहीं है। उत्तर पढ़ने के लिए खुला रहेगा।" : "Google Cloud voice is unavailable. The answer remains available to read.";
     render();

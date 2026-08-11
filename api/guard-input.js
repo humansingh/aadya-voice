@@ -1,6 +1,7 @@
 const OpenAI = require('openai');
 const { cleanText } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
+const { logFailure } = require('../lib/providerError');
 const { withProviderTimeout } = require('../lib/providerTimeout');
 const { checkDeterministicSafety } = require('../lib/safety');
 const { TASKS } = require('../config/ai');
@@ -42,7 +43,7 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({ flagged, score, source: 'model' });
   } catch (err) {
-    console.error('guard-input error', err);
+    logFailure('guard-input', err);
     // Fail closed: if the guard itself errors, treat as flagged so we don't
     // silently skip a safety check.
     return res.status(200).json({ flagged: true, verdict: 'GUARD_ERROR' });

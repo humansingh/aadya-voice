@@ -5,6 +5,7 @@ const { LANGUAGES } = require('../config/ai');
 const LANG_TO_BCP47 = Object.fromEntries(LANGUAGES.map((lang) => [lang.code, lang.ttsLanguageCode]));
 const { cleanText, cleanLanguage } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
+const { logFailure } = require('../lib/providerError');
 const { withProviderTimeout } = require('../lib/providerTimeout');
 
 const TIER_PREFERENCE = ['Chirp3-HD', 'Neural2', 'Wavenet', 'Standard'];
@@ -95,7 +96,7 @@ module.exports = async (req, res) => {
     const data = await synthRes.json();
     return res.status(200).json({ audioBase64: data.audioContent, voice: voiceName, languageCode, provider: 'google-cloud-tts' });
   } catch (err) {
-    console.error('speak error', err);
+    logFailure('speak', err);
     return res.status(500).json({ error: 'speak_failed' });
   }
 };
