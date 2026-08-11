@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "description": "Local-language voice utility agent for Indian government scheme information.",
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "node scripts/dev-server.js",
     "dev:vercel": "vercel dev",
