@@ -1342,7 +1342,7 @@ function wireVoicePicker() {
       state.showVoicePicker = false;
       state.stage = "speaking";
       render();
-      const sample = state.lang === "hi" ? "नमस्ते, मैं सहायक की चुनी हुई आवाज़ हूँ।" : "Hello, I am the selected voice for Aadya.";
+      const sample = state.lang === "hi" ? "नमस्ते, मैं Aadya की चुनी हुई आवाज़ हूँ।" : "Hello, I am the selected voice for Aadya.";
       speak(sample, state.lang, () => { state.stage = "idle"; render(); }, "voice-preview");
     };
   });
