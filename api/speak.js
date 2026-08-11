@@ -7,6 +7,7 @@ const { cleanText, cleanLanguage } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
 const { logFailure } = require('../lib/providerError');
 const { withProviderTimeout } = require('../lib/providerTimeout');
+const { forSpeech } = require('../lib/speechPronunciation');
 
 const TIER_PREFERENCE = ['Chirp3-HD', 'Neural2', 'Wavenet', 'Standard'];
 const PERSONA_BLUEPRINTS = [
@@ -80,7 +81,9 @@ module.exports = async (req, res) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        input: { text },
+        // Acronyms and helplines are rewritten for the synthesiser only; the
+        // on-screen answer keeps its normal spelling.
+        input: { text: forSpeech(text, lang) },
         voice: { languageCode, name: voiceName },
         audioConfig: { audioEncoding: 'MP3', speakingRate },
       }),

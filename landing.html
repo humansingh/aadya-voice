@@ -8,8 +8,14 @@
 <meta name="description" content="Ask about government schemes, scholarships, pensions and jobs by voice—in the language you already speak." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700&family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./assets/product.css">
+<script>
+  // Applied before first paint so the simple view never flashes the full one.
+  try {
+    document.documentElement.dataset.mode = localStorage.getItem("aadya_view_mode") === "easy" ? "easy" : "full";
+  } catch { document.documentElement.dataset.mode = "full"; }
+</script>
 <style>
   :root {
     --paper: #f4f1e8;
@@ -41,7 +47,7 @@
       radial-gradient(circle at 14% 4%, rgba(243, 189, 82, .10), transparent 27rem),
       radial-gradient(circle at 92% 16%, rgba(47, 132, 94, .08), transparent 32rem),
       var(--paper);
-    font-family: "DM Sans", "Noto Sans Devanagari", system-ui, sans-serif;
+    font-family: "DM Sans", "Mukta", system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
@@ -100,7 +106,7 @@
   .nav-links a { color: #4d5e57; padding: 10px 13px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; transition: .2s ease; }
   .nav-links a:hover { background: var(--paper-2); color: var(--forest); }
   .nav-account-actions { display:flex; align-items:center; gap:5px; }
-  .nav-signin { display:inline-flex; align-items:center; min-height:44px; padding:0 14px; border-radius:999px; color:var(--forest); font-size:13px; font-weight:700; white-space:nowrap; }
+  .nav-signin { display:inline-flex; align-items:center; min-height:44px; padding:0 14px; border:1px solid var(--line); border-radius:999px; color:var(--forest); font-size:13px; font-weight:700; white-space:nowrap; }
   .nav-signin:hover { background:var(--paper-2); }
   .nav-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--forest); color: #fff; min-height: 44px; padding: 0 18px; border-radius: 999px; font-size: 13px; font-weight: 700; white-space:nowrap; }
   .nav-cta svg { width: 14px; transition: transform .2s ease; }
@@ -143,8 +149,8 @@
 
   /* Hero */
   .hero {
-    min-height: 860px;
-    padding: 154px 0 70px;
+    min-height: 0;
+    padding: 126px 0 70px;
     border-radius: var(--radius-xl);
     color: #f8fff9;
     background: linear-gradient(137deg, #164f3d 0%, #0e382c 48%, #09281f 100%);
@@ -174,58 +180,56 @@
   .language-stack span { width: 32px; height: 32px; margin-left: -7px; border: 2px solid var(--forest); border-radius: 50%; display: grid; place-items: center; background: #f2eadb; color: var(--forest); font-size: 10px; font-weight: 700; }
   .language-stack span:first-child { margin-left: 0; }
 
-  /* Interactive call stage */
-  .call-stage {
-    position: relative;
-    min-height: 580px;
-    display: grid;
-    align-items: end;
+  /* Hero image */
+  .hero-figure { position: relative; z-index: 2; margin: 0; }
+  .hero-figure img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    max-height: 380px;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 34px 90px rgba(0,0,0,.3);
   }
-  .call-card {
-    position: relative; z-index: 3;
-    margin-left: auto;
-    width: min(100%, 600px);
-    border: 1px solid rgba(255,255,255,.16);
-    border-radius: 29px;
-    background: rgba(245, 250, 246, .94);
-    color: var(--ink);
-    box-shadow: 0 34px 90px rgba(0,0,0,.28);
-    overflow: hidden;
-  }
-  .call-card-top { min-height: 52px; padding: 0 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(23,53,45,.09); background:rgba(255,255,255,.62); }
-  .live-label { display:flex; align-items:center; gap:8px; color: var(--forest); font-size: 11px; font-weight:800; letter-spacing:.11em; text-transform:uppercase; }
-  .live-label span { width:7px;height:7px;border-radius:50%;background:#35a56f;box-shadow:0 0 0 5px rgba(53,165,111,.12); }
-  .call-card-time { color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums; }
-  .call-content { display:grid; grid-template-columns: 1fr 1.08fr; min-height: 285px; }
-  .transcript-pane { padding: 24px; border-right:1px solid rgba(23,53,45,.09); display:flex;flex-direction:column;justify-content:space-between; gap:18px; background:#fffdf9; }
-  .pane-label { color:#718078;font-size:10px;text-transform:uppercase;letter-spacing:.13em;font-weight:800; }
-  .speaker-line { font-family:"Manrope", "Noto Sans Devanagari", sans-serif; font-size:20px;line-height:1.42;letter-spacing:-.025em; }
-  .speaker-meta { display:flex;align-items:center;gap:9px;font-size:11px;color:var(--muted); }
-  .mini-avatar { width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:var(--paper-2);font-weight:700;color:var(--forest); }
-  .answer-pane { padding:24px;display:flex;flex-direction:column;gap:14px;background:var(--mint-2); }
-  .answer-title { font-size:12px;font-weight:800;color:var(--forest);display:flex;align-items:center;gap:7px; }
-  .answer-title svg { width:15px; }
-  .answer-copy { font-size:15px;line-height:1.55; }
-  .mini-checklist { display:flex;flex-direction:column;gap:8px;margin-top:auto; }
-  .mini-check { display:flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:#36564a; }
-  .mini-check i { width:17px;height:17px;border-radius:50%;display:grid;place-items:center;background:#fff;color:var(--leaf);font-style:normal;font-size:10px; }
-  .call-controls { padding:14px 15px;display:grid;grid-template-columns:1fr auto;gap:10px;border-top:1px solid rgba(23,53,45,.09);background:#fff; }
-  .scenario-switcher { display:flex;gap:7px;overflow-x:auto;scrollbar-width:none; }
-  .scenario-switcher::-webkit-scrollbar{display:none}
-  .scenario { flex:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);padding:8px 11px;border-radius:999px;font-size:11px;font-weight:700;transition:.18s ease; }
-  .scenario.active,.scenario:hover{background:var(--forest);border-color:var(--forest);color:#fff;}
-  .call-mic { width:42px;height:42px;border:0;border-radius:50%;display:grid;place-items:center;background:var(--sun);color:var(--forest);box-shadow:0 8px 20px rgba(243,189,82,.35);transition:.2s ease; }
-  .call-mic:hover { transform:scale(1.06); }
-  .call-mic svg { width:18px; }
 
-  .language-ribbon {
-    position: relative; z-index:3;
-    margin-top:58px;
-    display:none;align-items:center;gap:34px;overflow:hidden;
-    color:#abc9ba;font-size:13px;font-weight:600;white-space:nowrap;
+  /* View controls: text size + simple view */
+  .view-controls { display: flex; align-items: center; gap: 6px; }
+  .size-toggle, .mode-toggle {
+    display: flex; align-items: center; gap: 2px;
+    padding: 3px; border: 1px solid var(--line); border-radius: 999px;
+    background: rgba(255,253,248,.92);
   }
-  .language-ribbon-track { display:flex;gap:34px;min-width:max-content; }
-  .language-ribbon span::before { content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--sun);margin:0 10px 2px 0; }
+  .size-toggle button, .mode-toggle button {
+    min-height: 32px; min-width: 34px; padding: 0 11px;
+    border: 0; border-radius: 999px; background: transparent;
+    color: #5d6b64; font-weight: 800; font-size: 12px; line-height: 1;
+    transition: background .18s ease, color .18s ease;
+  }
+  .size-toggle button:hover, .mode-toggle button:hover { background: var(--paper-2); color: var(--forest); }
+  .size-toggle button[aria-pressed="true"], .mode-toggle button[aria-pressed="true"] { background: var(--forest); color: #fff; }
+  .size-toggle button:disabled { opacity: .38; cursor: not-allowed; background: transparent; color: #5d6b64; }
+  .size-toggle .size-small { font-size: 11px; }
+  .size-toggle .size-large { font-size: 15px; }
+
+  /* Text size scales the page body; the controls themselves stay put. */
+  html[data-text-size="large"] .page { zoom: 1.12; }
+  html[data-text-size="xlarge"] .page { zoom: 1.26; }
+
+  /* Devanagari: Manrope has no Devanagari glyphs, so headings need Mukta by name
+     rather than relying on per-glyph fallback, plus looser tracking and leading. */
+  html[data-language="hi"] h1,
+  html[data-language="hi"] h2,
+  html[data-language="hi"] h3,
+  html[data-language="hi"] h4,
+  html[data-language="hi"] .sheet-top h3,
+  html[data-language="hi"] .ticket h3,
+  html[data-language="hi"] .folder-step b,
+  html[data-language="hi"] .brand,
+  html[data-language="hi"] .footer-brand,
+  html[data-language="hi"] .role-btn { font-family: "Mukta", "Manrope", sans-serif; letter-spacing: -.01em; }
+  html[data-language="hi"] h1 { line-height: 1.28; }
+  html[data-language="hi"] h2 { line-height: 1.24; }
+  html[data-language="hi"] #hero-title { height: auto; min-height: 2.6em; }
 
   /* Language marquee */
   .language-band { overflow: hidden; padding: 28px 0 4px; }
@@ -235,10 +239,9 @@
   @keyframes marquee { to { transform: translateX(-50%); } }
 
   /* Thesis */
-  .thesis-section { padding: 120px 0 80px; }
-  .thesis-grid { display:grid;grid-template-columns:.72fr 1.28fr;gap:62px;align-items:stretch; }
-  .thesis-visual { display:flex;flex-direction:column; }
-  .thesis-image { margin-top:8px;width:100%;height:100%;object-fit:cover;border-radius:var(--radius-lg);box-shadow:var(--shadow); }
+  .thesis-section { padding: 104px 0 72px; }
+  .thesis-grid { display:block; }
+  .thesis-copy { max-width: 860px; }
   .section-kicker { font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:var(--leaf);display:flex;align-items:center;gap:9px; }
   .section-kicker::before{content:"";width:22px;height:1px;background:currentColor;}
   .thesis-copy h2 { margin:0;font-family:"Manrope",sans-serif;font-size:clamp(38px,5.4vw,72px);line-height:1.05;letter-spacing:-.055em;font-weight:600;text-wrap:balance; }
@@ -284,7 +287,7 @@
   .story-person::after { content:"";position:absolute;width:48px;height:25px;border-radius:28px 28px 8px 8px;background:#17352d;left:80px;top:19px;transform:rotate(-8deg); }
   .story-phone{position:absolute;width:62px;height:112px;border:5px solid #172e27;border-radius:15px;background:#fff;right:96px;bottom:74px;transform:rotate(10deg);box-shadow:0 14px 25px rgba(0,0,0,.25);display:grid;place-items:center;}
   .story-phone::after{content:"";width:28px;height:28px;border-radius:50%;background:var(--sun);box-shadow:0 0 0 8px var(--mint-2)}
-  .story-bubble{position:absolute;left:40px;top:38px;max-width:250px;padding:15px 17px;border-radius:18px 18px 18px 5px;background:#fff;color:var(--forest);font-family:"Noto Sans Devanagari",sans-serif;font-size:15px;font-weight:600;box-shadow:0 12px 34px rgba(23,53,45,.12);}
+  .story-bubble{position:absolute;left:40px;top:38px;max-width:250px;padding:15px 17px;border-radius:18px 18px 18px 5px;background:#fff;color:var(--forest);font-family:"Mukta",sans-serif;font-size:15px;font-weight:600;box-shadow:0 12px 34px rgba(23,53,45,.12);}
   .story-copy{padding:28px 30px 30px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;}
   .story-copy h3{margin:0 0 8px;font-family:"Manrope",sans-serif;font-size:28px;letter-spacing:-.04em}.story-copy p{margin:0;color:var(--muted);font-size:14px;line-height:1.6;max-width:560px}
   .story-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.story-tab{border:1px solid var(--line);background:transparent;color:var(--muted);padding:9px 12px;border-radius:999px;font-size:11px;font-weight:700}.story-tab.active{background:var(--forest);color:#fff;border-color:var(--forest)}
@@ -292,7 +295,7 @@
   .small-story{min-height:252px;border-radius:30px;padding:28px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:flex;flex-direction:column;justify-content:space-between;transition:.25s ease;}
   .small-story:hover{background:rgba(255,255,255,.12);transform:translateY(-3px)}
   .story-icon{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:var(--sun);color:var(--forest)}.story-icon svg{width:23px}
-  .small-story h3{font-family:"Manrope",sans-serif;font-size:23px;line-height:1.14;letter-spacing:-.035em;margin:22px 0 8px}.small-story p{margin:0;color:#b9cec2;font-size:13px;line-height:1.55}.small-story .quote{font-family:"Noto Sans Devanagari",sans-serif;color:#fff;font-size:14px;margin-top:16px}
+  .small-story h3{font-family:"Manrope",sans-serif;font-size:23px;line-height:1.14;letter-spacing:-.035em;margin:22px 0 8px}.small-story p{margin:0;color:#b9cec2;font-size:13px;line-height:1.55}.small-story .quote{font-family:"Mukta",sans-serif;color:#fff;font-size:14px;margin-top:16px}
 
   /* Trust */
   .trust-section { padding:120px 0; }
@@ -374,7 +377,7 @@
   .sheet-row.revealed{opacity:1;transform:none;filter:none}
   .sheet-key{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#819088}
   .sheet-val{font-size:13px;line-height:1.58;color:#395249;max-width:62ch}
-  .sheet-val.native{font:500 17px/1.5 "Manrope","Noto Sans Devanagari",sans-serif;letter-spacing:-.02em;color:var(--ink)}
+  .sheet-val.native{font:500 17px/1.5 "Manrope","Mukta",sans-serif;letter-spacing:-.02em;color:var(--ink)}
   .source-line{display:flex;align-items:center;gap:8px}
   .source-line i{width:7px;height:7px;border-radius:50%;background:#4c996f;box-shadow:0 0 0 5px rgba(76,153,111,.10)}
   .sheet-row.revealed .source-line i{animation:sourcePing 1.6s var(--ease) 2}
@@ -418,7 +421,7 @@
   html[data-mode="easy"] .nav-links,html[data-mode="easy"] .menu-btn,html[data-mode="easy"] .mobile-nav-sheet{display:none}
   html[data-mode="easy"] .nav-cta{border-radius:4px;box-shadow:none}
   html[data-mode="easy"] .hero{min-height:auto;padding:64px 0 48px;border:0;border-radius:0;background:#fff;color:#111}
-  html[data-mode="easy"] .hero::before,html[data-mode="easy"] .hero::after,html[data-mode="easy"] .call-stage,html[data-mode="easy"] .language-ribbon{display:none}
+  html[data-mode="easy"] .hero::before,html[data-mode="easy"] .hero::after,html[data-mode="easy"] .hero-figure,html[data-mode="easy"] .language-band{display:none}
   html[data-mode="easy"] .hero-grid{display:block;max-width:850px}
   html[data-mode="easy"] .eyebrow{color:#176b45;letter-spacing:0;text-transform:none;font-size:16px}
   html[data-mode="easy"] .eyebrow-dot{border-radius:0;background:#176b45;box-shadow:none}
@@ -461,129 +464,44 @@
   html[data-mode="easy"] .persona-symbol{background:var(--easy-surface-2);border:1px solid var(--easy-border);color:var(--easy-ink)}
   html[data-mode="easy"] .persona-card.active .persona-symbol{background:var(--easy-active);border-color:var(--easy-border-strong)}
   html[data-mode="easy"] .site-footer{background:var(--easy-surface);border-color:var(--easy-border-strong)}
+  html[data-mode="easy"] .nav-signin{border-color:var(--easy-border);border-radius:4px}
+  html[data-mode="easy"] .language-stack span{border-radius:3px;margin-left:-2px}
+
+  html[data-mode="easy"] .size-toggle,html[data-mode="easy"] .mode-toggle{border-color:var(--easy-border);background:var(--easy-surface);border-radius:5px}
+  html[data-mode="easy"] .size-toggle button,html[data-mode="easy"] .mode-toggle button{min-height:34px;border-radius:3px;color:var(--easy-ink)}
+  html[data-mode="easy"] .size-toggle button[aria-pressed="true"],html[data-mode="easy"] .mode-toggle button[aria-pressed="true"]{background:var(--easy-primary);color:#fff}
 
   /* The mode controls keep one physical anchor while the surrounding view changes. */
   @media (min-width:981px){
     nav{display:grid;grid-template-columns:auto minmax(min-content,1fr) auto auto;align-items:center}
     .nav-links{justify-self:center}
-    .landing-prefs{grid-column:3}
+    .view-controls{grid-column:3}
     .nav-account-actions{grid-column:4}
   }
   html[data-mode="easy"] .nav-wrap{position:fixed;top:22px;left:50%;transform:translateX(-50%);width:min(1040px,calc(100% - 40px));margin:0;padding:0;background:transparent;border:0;box-shadow:none}
-  html[data-mode="easy"] nav{min-height:62px;padding:8px 9px 8px 16px;border:1px solid var(--easy-border);border-radius:999px;background:var(--easy-surface);box-shadow:0 14px 36px rgba(35,35,33,.08);backdrop-filter:none}
+  html[data-mode="easy"] nav{min-height:62px;padding:8px 9px 8px 16px;border:1px solid var(--easy-border);border-radius:6px;background:var(--easy-surface);box-shadow:0 14px 36px rgba(35,35,33,.08);backdrop-filter:none}
   html[data-mode="easy"] nav .brand{min-height:35px}
   html[data-mode="easy"] nav .nav-cta{min-height:44px;height:44px}
-  html[data-mode="easy"] .brand-mark{border-radius:50%}
+  html[data-mode="easy"] .brand-mark{border-radius:4px}
   html[data-mode="easy"] .hero{padding-block:132px 64px}
   html[data-mode="easy"] .wrap{width:100%;max-width:none;padding-inline:max(24px,calc((100vw - 1280px)/2));box-sizing:border-box}
   html[data-mode="easy"] .hero-actions{display:grid;grid-template-columns:1fr;width:min(100%,720px);gap:10px}
   html[data-mode="easy"] .hero-actions .button{display:flex!important;width:100%;justify-content:center}
 
   @media (max-width: 980px) {
-    .nav-links,.landing-prefs{display:none}.menu-btn{display:grid}.mobile-nav-sheet{display:grid}.landing-mobile-prefs{display:block}
-    .hero{min-height:auto;padding-top:132px}.hero-grid{grid-template-columns:1fr}.hero-copy{text-align:center}.hero-copy>p{margin-inline:auto}.hero-actions,.hero-proof{justify-content:center}.call-stage{min-height:560px}.call-card{margin-inline:auto}.language-ribbon{margin-top:35px}
+    .nav-links,.landing-prefs{display:none}.menu-btn{display:grid}.view-controls{margin-left:auto}.mobile-nav-sheet{display:grid}.landing-mobile-prefs{display:block}
+    .hero{min-height:auto;padding-top:120px}.hero-grid{grid-template-columns:1fr}.hero-copy{text-align:center}.hero-copy>p{margin-inline:auto}.hero-actions,.hero-proof{justify-content:center}.hero-figure{max-width:560px;margin-inline:auto}
     .thesis-grid,.trust-grid,.field-panel,.final-cta,.cost-head,.cost-grid{grid-template-columns:1fr;gap:42px}.thesis-grid{gap:28px}.journey-grid{grid-template-columns:1fr 1fr}.journey-step:nth-child(2){border-right:0}.journey-step:nth-child(-n+2){border-bottom:1px solid var(--line)}
     .moments-grid{grid-template-columns:1fr}.small-stories{grid-template-columns:1fr 1fr}.field-panel,.final-cta{padding:48px}.cta-art{order:-1}.pathway-head{grid-template-columns:1fr}.persona-grid{grid-template-columns:repeat(3,1fr)}
     .desk-grid,.desk-grid.expanded{grid-template-columns:180px minmax(0,1fr)}.prepare-card{grid-column:1/-1;flex-direction:row;max-height:0;overflow:hidden}.prepare-card.revealed{max-height:900px;overflow:visible}.prepare-card>*{flex:1}.office-card{min-height:260px}
   }
   @media (max-width: 680px) {
-    .page{width:100%;margin:0}.shell,.hero,.moments,.field-panel,.final-cta{border-radius:0}.wrap{width:min(100% - 30px,1180px)}.nav-wrap{top:12px;width:calc(100% - 22px)}nav{padding-left:13px}.brand span:last-child{font-size:14px}.nav-signin,.menu-btn,.mobile-nav-sheet,.landing-mobile-prefs{display:none!important}.landing-prefs{display:flex!important}
-    .hero{padding:116px 0 48px}.hero-grid{gap:25px}h1{font-size:48px}.hero-copy>p{font-size:16px}.call-stage{min-height:520px}.call-card{border-radius:23px}.call-content{grid-template-columns:1fr}.transcript-pane{border-right:0;border-bottom:1px solid var(--line);min-height:150px}.answer-pane{min-height:190px}.speaker-line{font-size:17px}.scenario-switcher .scenario:nth-child(n+4){display:none}.language-ribbon{font-size:11px}
+    .page{width:100%;margin:0}.shell,.hero,.moments,.field-panel,.final-cta{border-radius:0}.wrap{width:min(100% - 30px,1180px)}.nav-wrap{top:12px;width:calc(100% - 22px)}nav{padding-left:13px}.brand span:last-child{font-size:14px}.nav-cta span{display:none}.nav-cta{padding:0 12px}.nav-signin{padding:0 11px;font-size:12px}.mode-toggle button,.size-toggle button{padding:0 9px}
+    .hero{padding:104px 0 44px}.hero-grid{gap:25px}h1{font-size:48px}.hero-copy>p{font-size:16px}.hero-figure img{aspect-ratio:3/2;border-radius:22px}
     .thesis-section{padding:82px 0 54px}.thesis-copy h2{font-size:42px}.thesis-copy p{font-size:16px}.section-head{align-items:start;flex-direction:column}.journey{padding-bottom:84px}.journey-grid{grid-template-columns:1fr}.journey-step{min-height:300px;border-right:0;border-bottom:1px solid var(--line)!important}.journey-step:last-child{border-bottom:0!important}.moments{padding:64px 0}.story-card{min-height:auto}.story-art{min-height:315px}.story-bubble{left:18px;top:24px;max-width:220px}.story-phone{right:42px}.story-copy{grid-template-columns:1fr}.story-tabs{justify-content:flex-start}.small-stories{grid-template-columns:1fr}.trust-section{padding:82px 0}.confidence-card{grid-template-columns:58px 1fr}.confidence-card .signal{display:none}.field-panel,.final-cta{padding:52px 22px}.cost-section{padding-top:82px}.cost-shell{padding:45px 22px;border-radius:0}.cost-totals{grid-template-columns:1fr}.cost-total{min-height:90px}.cost-total strong{margin-top:10px}.cost-line{grid-template-columns:92px 1fr 64px}.cost-notes{grid-template-columns:1fr}.cost-sources{justify-content:flex-start}.final-cta{margin-top:82px}.cta-disc{width:230px;height:230px}.cta-art{height:270px}.site-footer{grid-template-columns:1fr}.footer-links{justify-content:flex-start}.pathways{padding-top:82px}.pathway-head{gap:18px}.persona-grid{grid-template-columns:1fr 1fr}.persona-card{min-height:190px}
     .role-options{gap:7px}.role-btn{min-height:38px;padding:0 16px;font-size:13px}.desk{border-radius:28px;padding:10px}.desk-cta{right:18px;bottom:-20px;padding:0 14px;font-size:11px}.desk-grid,.desk-grid.expanded{grid-template-columns:minmax(0,1fr)}.folder-nav{min-height:auto}.folder-steps{grid-template-columns:1fr 1fr}.folder-step{padding:12px 8px}.folder-step b{font-size:13px}.folder-note{display:none}.prepare-card{flex-direction:column}.sheet-row{grid-template-columns:1fr;gap:6px}.sheet-top h3{font-size:24px}.case-sheet::before{display:none}
   }
   @media(max-width:680px){html[data-mode="easy"] .nav-wrap{top:12px;width:calc(100% - 22px)}html[data-mode="easy"] .wrap{padding-inline:18px}html[data-mode="easy"] .hero{padding:108px 0 42px}html[data-mode="easy"] .hero-copy{text-align:left}html[data-mode="easy"] .hero-actions,html[data-mode="easy"] .hero-proof{justify-content:flex-start}html[data-mode="easy"] .persona-grid{grid-template-columns:1fr}html[data-mode="easy"] .pathways{padding-top:42px}html[data-mode="easy"] .preference-dock{border-radius:4px}}
-
-  /* ── Mobile hero device: same call card, phone enclosure ───────────── */
-  .device-frame { display: contents; }
-  .device-halo, .floating-note, .device-state { display: none; }
-
-  @media (max-width: 980px) {
-    .call-stage { min-height: auto; padding-top: 6px; place-items: center; }
-
-    .device-halo {
-      display: block; position: absolute; z-index: 1;
-      width: min(430px, 88vw); aspect-ratio: 1; border-radius: 50%;
-      background: radial-gradient(circle, rgba(204,235,216,.26), transparent 66%);
-      filter: blur(2px); animation: haloBreathe 6.5s ease-in-out infinite;
-    }
-    @keyframes haloBreathe { 0%,100%{transform:scale(.94);opacity:.72} 50%{transform:scale(1.06);opacity:1} }
-
-    .device-frame {
-      display: block; position: relative; z-index: 3;
-      width: min(352px, calc(100vw - 74px));
-      margin: 0 auto; padding: 12px 12px 13px;
-      border-radius: 40px;
-      border: 1px solid rgba(255,255,255,.32);
-      background: rgba(251,255,252,.13);
-      box-shadow: 0 48px 110px -52px rgba(0,0,0,.72), inset 0 1px 0 rgba(255,255,255,.34);
-      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      transform: rotate(1.4deg);
-    }
-    .device-frame::before {
-      content: ""; position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
-      width: 74px; height: 18px; border-radius: 0 0 14px 14px; background: rgba(255,255,255,.16);
-    }
-
-    .call-card {
-      width: 100%; margin: 0; border: 0; border-radius: 30px;
-      background: linear-gradient(180deg, #fffdf7, #f2f9f4);
-      box-shadow: 0 18px 42px -34px rgba(5,42,36,.7);
-    }
-    .call-card-top { min-height: 56px; padding: 6px 16px 0; }
-    .call-content { grid-template-columns: 1fr; min-height: 0; }
-    .transcript-pane { border-right: 0; border-bottom: 1px solid rgba(23,53,45,.09); padding: 17px 16px; min-height: 0; gap: 13px; }
-    .answer-pane { padding: 17px 16px; min-height: 0; }
-    .speaker-line { font-size: 17px; }
-    .answer-copy { font-size: 13.5px; }
-    .call-controls { padding: 11px 12px; }
-    .scenario { padding: 7px 10px; font-size: 10.5px; }
-    .call-mic { width: 38px; height: 38px; }
-
-    .device-state {
-      display: flex; align-items: center; gap: 9px; margin-top: 11px;
-      padding: 9px 11px; border-radius: 17px;
-      border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.11);
-      color: #e9f6ee;
-    }
-    .device-orb {
-      width: 28px; height: 28px; flex: none; border-radius: 50%; display: grid; place-items: center;
-      color: #fff; background: radial-gradient(circle at 32% 25%, #65d9b8, var(--leaf) 58%, var(--forest-2));
-      box-shadow: 0 0 0 6px rgba(47,132,94,.14);
-    }
-    .device-orb svg { width: 13px; height: 13px; }
-    .device-state-copy { flex: 1; min-width: 0; font-size: 10.5px; font-weight: 800; letter-spacing: -.01em; }
-    .device-wave { display: flex; align-items: center; gap: 2px; height: 18px; }
-    .device-wave i { width: 2px; border-radius: 999px; background: var(--sun); animation: deviceWave 1s ease-in-out infinite; }
-    .device-wave i:nth-child(1){height:32%}
-    .device-wave i:nth-child(2){height:70%;animation-delay:.1s}
-    .device-wave i:nth-child(3){height:100%;animation-delay:.2s}
-    .device-wave i:nth-child(4){height:56%;animation-delay:.3s}
-    .device-wave i:nth-child(5){height:84%;animation-delay:.4s}
-    @keyframes deviceWave { 0%,100%{transform:scaleY(.48);opacity:.55} 50%{transform:scaleY(1);opacity:1} }
-
-    .floating-note {
-      display: block; position: absolute; z-index: 4; max-width: 168px;
-      padding: 9px 12px; border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.42);
-      background: rgba(255,253,248,.95); color: var(--forest);
-      font-size: 10px; font-weight: 800; letter-spacing: -.01em; line-height: 1.3;
-      box-shadow: 0 20px 44px -28px rgba(0,0,0,.85);
-      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    }
-    .floating-note::before {
-      content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%;
-      background: var(--sun); margin-right: 7px; vertical-align: 1px;
-    }
-    .note-one { top: 58px; right: -17px; transform: rotate(2.5deg); }
-    .note-two { left: -19px; bottom: 112px; transform: rotate(-3deg); }
-  }
-
-  @media (max-width: 380px) {
-    .device-frame { width: min(330px, calc(100vw - 40px)); padding: 9px; border-radius: 33px; transform: rotate(1deg); }
-    .call-card { border-radius: 25px; }
-    .note-one { right: -8px; } .note-two { left: -8px; }
-  }
 
   @media (prefers-reduced-motion: reduce) {
     html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}
@@ -602,17 +520,23 @@
       <span>Aadya</span>
     </a>
     <div class="nav-links">
-      <a href="#why">Why it matters</a>
-      <a href="#journey">How it works</a>
-      <a href="#moments">Who it helps</a>
-      <a href="#trust">Trust</a>
-      <a href="./about.html">About</a>
+      <a href="#journey" data-landing="navHow">How it works</a>
+      <a href="./about.html" data-landing="navAbout">About</a>
     </div>
-    <div class="landing-prefs" id="landing-preferences"></div>
+    <div class="view-controls" id="view-controls">
+      <div class="landing-prefs" id="landing-preferences"></div>
+      <div class="size-toggle" role="group" aria-label="Text size">
+        <button type="button" class="size-small" id="text-smaller" aria-label="Decrease text size">A−</button>
+        <button type="button" class="size-large" id="text-larger" aria-label="Increase text size">A+</button>
+      </div>
+      <div class="mode-toggle">
+        <button type="button" id="simple-toggle" aria-pressed="false" data-landing="simpleView">Simple</button>
+      </div>
+    </div>
     <div class="nav-account-actions" aria-label="Account actions">
-      <a class="nav-signin" href="./signup.html?mode=signin">Sign in</a>
+      <a class="nav-signin" href="./signup.html?mode=signin" data-landing="signIn">Sign in</a>
       <a class="nav-cta" href="./index.html">
-        <span>Try Aadya</span>
+        <span data-landing="tryAadya">Try Aadya</span>
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg>
       </a>
     </div>
@@ -621,13 +545,10 @@
     </button>
   </nav>
   <div class="mobile-nav-sheet" id="mobile-nav" aria-hidden="true">
-    <a href="#why"><span>Why it matters</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
-    <a href="#journey"><span>How it works</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
-    <a href="#moments"><span>Who it helps</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
-    <a href="#trust"><span>How trust works</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
-    <a href="./about.html"><span>About & architecture</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
-    <a class="mobile-signin" href="./signup.html?mode=signin"><span>Sign in</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
-    <a class="mobile-open" href="./index.html"><span>Try Aadya</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a href="#journey"><span data-landing="navHow">How it works</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a href="./about.html"><span data-landing="navAbout">About</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a class="mobile-signin" href="./signup.html?mode=signin"><span data-landing="signIn">Sign in</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
+    <a class="mobile-open" href="./index.html"><span data-landing="tryAadya">Try Aadya</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 10h12m-5-5 5 5-5 5"/></svg></a>
   </div>
 </div>
 
@@ -658,68 +579,9 @@
           </div>
         </div>
 
-        <div class="call-stage reveal visible" aria-label="Interactive Aadya conversation preview">
-          <div class="device-halo" aria-hidden="true"></div>
-
-          <div class="device-frame">
-            <div class="call-card" id="call-card">
-              <div class="call-card-top">
-                <div class="live-label"><span></span> Aadya is listening</div>
-                <div class="call-card-time" id="call-time">00:08</div>
-              </div>
-              <div class="call-content">
-                <div class="transcript-pane">
-                  <div>
-                    <div class="pane-label">What Aadya heard</div>
-                    <div class="speaker-line" id="scenario-question">माझ्या वडिलांना वृद्धापकाळ पेन्शन मिळेल का?</div>
-                  </div>
-                  <div class="speaker-meta"><span class="mini-avatar" id="scenario-avatar">म</span><span id="scenario-language">Marathi · voice</span></div>
-                </div>
-                <div class="answer-pane">
-                  <div class="answer-title">
-                    <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2.5 16 5v4.5c0 4-2.5 6.7-6 8-3.5-1.3-6-4-6-8V5z"/><path d="m7 10 2 2 4-4"/></svg>
-                    <span id="scenario-source">From official pension details</span>
-                  </div>
-                  <div class="answer-copy" id="scenario-answer">Check the age and income criteria first. Carry Aadhaar, a bank passbook and proof of age to the Gram Panchayat or block office.</div>
-                  <div class="mini-checklist" id="scenario-checklist">
-                    <div class="mini-check"><i>✓</i> Aadhaar card</div>
-                    <div class="mini-check"><i>✓</i> Bank passbook</div>
-                    <div class="mini-check"><i>✓</i> Proof of age</div>
-                  </div>
-                </div>
-              </div>
-              <div class="call-controls">
-                <div class="scenario-switcher" role="tablist" aria-label="Preview a use case">
-                  <button class="scenario active" data-scenario="elder">Pension</button>
-                  <button class="scenario" data-scenario="farmer">PM-KISAN</button>
-                  <button class="scenario" data-scenario="student">Scholarship</button>
-                  <button class="scenario" data-scenario="caregiver">Ayushman</button>
-                </div>
-                <button class="call-mic" id="preview-mic" aria-label="Replay preview">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
-                </button>
-              </div>
-            </div>
-
-            <div class="device-state" aria-hidden="true">
-              <span class="device-orb">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
-              </span>
-              <span class="device-state-copy" data-landing="ask">Ask in your language</span>
-              <span class="device-wave"><i></i><i></i><i></i><i></i><i></i></span>
-            </div>
-
-            <div class="floating-note note-one" data-note="0">Editable transcript</div>
-            <div class="floating-note note-two" data-note="1">Sourced answer</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="language-ribbon" aria-hidden="true">
-        <div class="language-ribbon-track">
-          <span>हिंदी में पूछें</span><span>ಕನ್ನಡದಲ್ಲಿ ಕೇಳಿ</span><span>தமிழில் கேளுங்கள்</span><span>বাংলায় জিজ্ঞাসা করুন</span><span>मराठीत विचारा</span><span>తెలుగులో అడగండి</span><span>Ask in English</span>
-          <span>हिंदी में पूछें</span><span>ಕನ್ನಡದಲ್ಲಿ ಕೇಳಿ</span><span>தமிழில் கேளுங்கள்</span><span>বাংলায় জিজ্ঞাসা করুন</span><span>मराठीत विचारा</span><span>తెలుగులో అడగండి</span><span>Ask in English</span>
-        </div>
+        <figure class="hero-figure reveal visible">
+          <img src="./assets/landing_s2_cover.jpg" alt="Two farmers looking at a phone together beside a rice field" width="1200" height="900" />
+        </figure>
       </div>
     </div>
   </section>
@@ -734,14 +596,9 @@
   <main>
     <section class="thesis-section" id="why">
       <div class="wrap thesis-grid">
-        <div class="thesis-visual reveal">
-          <!-- <div class="section-kicker">The utility</div> -->
-          <img class="thesis-image" src="./assets/landing_s2_cover.jpg" alt="Two farmers reviewing a phone together beside a rice field" />
-        </div>
         <div class="thesis-copy reveal">
-          <h2>The problem is often not eligibility. <em>It is the interface.</em></h2>
-          <p>Millions of useful opportunities are hidden inside English-heavy websites, long PDFs, unfamiliar forms and offices that are expensive to visit twice. Aadya turns that maze into a conversation: one question in a person’s mother tongue, one sourced answer, and one concrete next step.</p>
-          <div class="thesis-note">Long-running voice agents can become an access layer for people who transact with the world through a phone and their mother tongue. It is not a replacement for the official office, but a better way to arrive prepared.</div>
+          <h2><span data-landing="whyTitle">The problem is rarely eligibility.</span> <em data-landing="whyTitleEm">It is the interface.</em></h2>
+          <p data-landing="whyBody">Help sits behind English websites, long PDFs and offices that cost a day to visit twice. Aadya turns that into a conversation: one question in your language, one sourced answer, one next step.</p>
         </div>
       </div>
     </section>
@@ -751,35 +608,35 @@
         <div class="section-head reveal">
           <div>
             <!-- <div class="section-kicker">One question, made useful</div> -->
-            <h2>From voice to action.</h2>
+            <h2 data-landing="journeyTitle">From voice to action.</h2>
           </div>
           <!-- <p>Designed around the exact moment somebody needs help—not around a chatbot window or a menu tree.</p> -->
         </div>
         <div class="journey-stage reveal">
           <div class="journey-grid">
             <article class="journey-step">
-              <div class="step-number">01 · SPEAK</div>
+              <div class="step-number" data-landing="j1Num">01 · SPEAK</div>
               <div class="step-visual"><div class="voice-bars"><i></i><i></i><i></i><i></i><i></i></div></div>
-              <h3>Ask it normally</h3>
-              <p>Speak in the language and phrasing you use at home. No scheme name or perfect search term required.</p>
+              <h3 data-landing="j1Title">Ask it normally</h3>
+              <p data-landing="j1Body">Speak in the language and phrasing you use at home. No scheme name or perfect search term required.</p>
             </article>
             <article class="journey-step">
-              <div class="step-number">02 · CHECK</div>
-              <div class="step-visual"><div class="transcript-slip"><small>HEARD</small><i></i><i></i><i></i></div></div>
-              <h3>Correct what it heard</h3>
-              <p>The transcript is editable before it is sent, so a place name or family name can be fixed without re-recording.</p>
+              <div class="step-number" data-landing="j2Num">02 · CHECK</div>
+              <div class="step-visual"><div class="transcript-slip"><small data-landing="heardLabel">HEARD</small><i></i><i></i><i></i></div></div>
+              <h3 data-landing="j2Title">Correct what it heard</h3>
+              <p data-landing="j2Body">The transcript is editable before it is sent, so a place name or family name can be fixed without re-recording.</p>
             </article>
             <article class="journey-step">
-              <div class="step-number">03 · VERIFY</div>
-              <div class="step-visual"><div class="source-stamp">OFFICIAL<br>DETAILS<br>FOUND</div></div>
-              <h3>Know where it came from</h3>
-              <p>The answer carries a source and an honest confidence state instead of pretending every response is certain.</p>
+              <div class="step-number" data-landing="j3Num">03 · VERIFY</div>
+              <div class="step-visual"><div class="source-stamp" data-landing="sourceStamp">OFFICIAL DETAILS FOUND</div></div>
+              <h3 data-landing="j3Title">Know where it came from</h3>
+              <p data-landing="j3Body">The answer carries a source and an honest confidence state instead of pretending every response is certain.</p>
             </article>
             <article class="journey-step">
-              <div class="step-number">04 · ACT</div>
-              <div class="step-visual"><div class="check-card"><b>TAKE WITH YOU</b><span>Aadhaar</span><span>Bank details</span><span>Age proof</span></div></div>
-              <h3>Leave with a checklist</h3>
-              <p>Documents, office or helpline, and the next practical step are packaged to screenshot, share or hear again.</p>
+              <div class="step-number" data-landing="j4Num">04 · ACT</div>
+              <div class="step-visual"><div class="check-card"><b data-landing="takeWith">TAKE WITH YOU</b><span data-landing="docAadhaar">Aadhaar</span><span data-landing="docBank">Bank details</span><span data-landing="docAge">Age proof</span></div></div>
+              <h3 data-landing="j4Title">Leave with a checklist</h3>
+              <p data-landing="j4Body">Documents, office or helpline, and the next practical step are packaged to screenshot, share or hear again.</p>
             </article>
           </div>
         </div>
@@ -791,7 +648,7 @@
         <div class="section-head reveal">
           <div>
             <!-- <div class="section-kicker">Built for real moments</div> -->
-            <h2>Help that meets people where they are.</h2>
+            <h2 data-landing="momentsTitle">Help that meets people where they are.</h2>
           </div>
           <!-- <p>At a hospital desk, before a bus to the block office, or while helping an entire village from one phone.</p> -->
         </div>
@@ -808,9 +665,9 @@
                 <p id="story-description">At 6am, from a field, a farmer checks what may hold up a PM-KISAN installment and hears which land and bank records to verify—without reading a portal.</p>
               </div>
               <div class="story-tabs" role="tablist">
-                <button class="story-tab active" data-story="farmer">Farmer</button>
-                <button class="story-tab" data-story="patient">Patient</button>
-                <button class="story-tab" data-story="student">Student</button>
+                <button class="story-tab active" data-story="farmer" data-landing="tabFarmer">Farmer</button>
+                <button class="story-tab" data-story="patient" data-landing="tabPatient">Patient</button>
+                <button class="story-tab" data-story="student" data-landing="tabStudent">Student</button>
               </div>
             </div>
           </article>
@@ -820,8 +677,8 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 3h8l4 4v14H6z"/><path d="M9 12h6M9 16h4M14 3v5h5"/></svg>
               </div>
               <div>
-                <h3>Frontline workers answer once, consistently.</h3>
-                <p>CSC operators, ASHA workers and NGO field staff can reuse a sourced answer and a screenshot-ready checklist.</p>
+                <h3 data-landing="ss1Title">Frontline workers answer once, consistently.</h3>
+                <p data-landing="ss1Body">CSC operators, ASHA workers and NGO field staff can reuse a sourced answer and a screenshot-ready checklist.</p>
                 <div class="quote" id="worker-quote">“एक ही जानकारी, हर बार साफ़।”</div>
               </div>
             </article>
@@ -830,8 +687,8 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 18v-5a8 8 0 0 1 16 0v5"/><path d="M4 16H2v4h4v-4zm16 0h2v4h-4v-4z"/></svg>
               </div>
               <div>
-                <h3>People can listen, not just read.</h3>
-                <p>Every useful answer can be played again, paused and shared with the family member making the trip.</p>
+                <h3 data-landing="ss2Title">People can listen, not just read.</h3>
+                <p data-landing="ss2Body">Every useful answer can be played again, paused and shared with the family member making the trip.</p>
                 <div class="quote" id="replay-quote">“फिर से सुनाओ।”</div>
               </div>
             </article>
@@ -844,28 +701,28 @@
       <div class="wrap trust-grid">
         <div class="trust-copy reveal">
           <!-- <div class="section-kicker">Designed to be honest</div> -->
-          <h2>A calm voice should not sound more certain than the evidence.</h2>
-          <p>Aadya separates what it found in the small prototype records from what is only general guidance. It does not declare someone eligible; it explains the published criteria and points to the source link.</p>
+          <h2 data-landing="trustTitle">A calm voice should not sound more certain than the evidence.</h2>
+          <p data-landing="trustBody">Aadya separates what it found in the small prototype records from what is only general guidance. It does not declare someone eligible; it explains the published criteria and points to the source link.</p>
           <div class="trust-rule">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3 20 6v6c0 5-3.3 8-8 9-4.7-1-8-4-8-9V6z"/><path d="m8.5 12 2.2 2.2 4.8-5"/></svg>
-            Every answer shows the quality of its match.
+            <span data-landing="trustRule">Every answer shows the quality of its match.</span>
           </div>
         </div>
         <div class="confidence-stack reveal">
           <article class="confidence-card">
             <div class="confidence-mark">01</div>
-            <div><h3>Matched to a prototype record</h3><p>Confirm important details at the source link shown in the answer.</p></div>
-            <div class="signal">Strong match</div>
+            <div><h3 data-landing="c1Title">Matched to a prototype record</h3><p data-landing="c1Body">Confirm important details at the source link shown in the answer.</p></div>
+            <div class="signal" data-landing="c1Sig">Strong match</div>
           </article>
           <article class="confidence-card">
             <div class="confidence-mark">02</div>
-            <div><h3>Partly covered—confirm the rest</h3><p>It answers the supported part, says what is missing and identifies who can confirm it.</p></div>
-            <div class="signal">Partial match</div>
+            <div><h3 data-landing="c2Title">Partly covered—confirm the rest</h3><p data-landing="c2Body">It answers the supported part, says what is missing and identifies who can confirm it.</p></div>
+            <div class="signal" data-landing="c2Sig">Partial match</div>
           </article>
           <article class="confidence-card">
             <div class="confidence-mark">03</div>
-            <div><h3>General guidance</h3><p>No direct record match, stated plainly, with the office or helpline that normally handles it.</p></div>
-            <div class="signal">No record match</div>
+            <div><h3 data-landing="c3Title">General guidance</h3><p data-landing="c3Body">No direct record match, stated plainly, with the office or helpline that normally handles it.</p></div>
+            <div class="signal" data-landing="c3Sig">No record match</div>
           </article>
         </div>
       </div>
@@ -874,30 +731,30 @@
     <section class="wrap field-panel reveal">
       <div>
         <!-- <div class="section-kicker">A force multiplier</div> -->
-        <h2>One phone can become a village help desk.</h2>
-        <p>Aadya is useful for the person asking—and for the person who helps fifty others ask. Bilingual labels, replayable answers, persistent history and shareable checklists keep the conversation usable across generations.</p>
+        <h2 data-landing="fieldTitle">One phone can become a village help desk.</h2>
+        <p data-landing="fieldBody">Aadya is useful for the person asking—and for the person who helps fifty others ask. Bilingual labels, replayable answers, persistent history and shareable checklists keep the conversation usable across generations.</p>
       </div>
       <div class="field-list">
-        <div class="field-item"><span>Common Service Centre operators</span><span>Faster guidance</span></div>
-        <div class="field-item"><span>ASHA and Anganwadi workers</span><span>Clear referrals</span></div>
-        <div class="field-item"><span>NGO field teams</span><span>Consistent answers</span></div>
-        <div class="field-item"><span>Family members and caregivers</span><span>Shared context</span></div>
+        <div class="field-item"><span data-landing="fi1a">Common Service Centre operators</span><span data-landing="fi1b">Faster guidance</span></div>
+        <div class="field-item"><span data-landing="fi2a">ASHA and Anganwadi workers</span><span data-landing="fi2b">Clear referrals</span></div>
+        <div class="field-item"><span data-landing="fi3a">NGO field teams</span><span data-landing="fi3b">Consistent answers</span></div>
+        <div class="field-item"><span data-landing="fi4a">Family members and caregivers</span><span data-landing="fi4b">Shared context</span></div>
       </div>
     </section>
 
     <section class="wrap pathways" id="pathways">
       <div class="pathway-head">
         <div>
-          <div class="section-kicker">How it works</div>
-          <h2>See one question become a prepared visit.</h2>
+          <div class="section-kicker" data-landing="navHow">How it works</div>
+          <h2 data-landing="pathHeading">See one question become a prepared visit.</h2>
         </div>
         <div>
-          <p>No microphone, API key or sign-in is needed.</p>
+          <p data-landing="pathNote">No microphone, API key or sign-in is needed.</p>
           <div class="role-options awaiting" role="tablist" aria-label="Choose a role">
-            <button class="role-btn" data-role="farmer" role="tab" aria-selected="false">Farmer</button>
-            <button class="role-btn" data-role="student" role="tab" aria-selected="false">Student</button>
-            <button class="role-btn" data-role="pension" role="tab" aria-selected="false">Older adult</button>
-            <button class="role-btn" data-role="health" role="tab" aria-selected="false">Family</button>
+            <button class="role-btn" data-role="farmer" role="tab" aria-selected="false" data-landing="roleFarmer">Farmer</button>
+            <button class="role-btn" data-role="student" role="tab" aria-selected="false" data-landing="roleStudent">Student</button>
+            <button class="role-btn" data-role="pension" role="tab" aria-selected="false" data-landing="roleOlder">Older adult</button>
+            <button class="role-btn" data-role="health" role="tab" aria-selected="false" data-landing="roleFamily">Family</button>
           </div>
         </div>
       </div>
@@ -909,13 +766,13 @@
         <div class="desk-grid">
           <aside class="folder-nav">
             <div class="folder-steps">
-              <button class="folder-step" data-stage="0"><i>01</i><b>Voice</b></button>
-              <button class="folder-step" data-stage="1" data-locked="true"><i>02</i><b>Transcript</b></button>
-              <button class="folder-step" data-stage="2" data-locked="true"><i>03</i><b>Evidence</b></button>
-              <button class="folder-step" data-stage="3" data-locked="true"><i>04</i><b>Next step</b></button>
+              <button class="folder-step" data-stage="0"><i>01</i><b data-landing="stepVoice">Voice</b></button>
+              <button class="folder-step" data-stage="1" data-locked="true"><i>02</i><b data-landing="stepTranscript">Transcript</b></button>
+              <button class="folder-step" data-stage="2" data-locked="true"><i>03</i><b data-landing="stepEvidence">Evidence</b></button>
+              <button class="folder-step" data-stage="3" data-locked="true"><i>04</i><b data-landing="stepNext">Next step</b></button>
             </div>
             <div class="rail-progress"><i data-rail-fill></i></div>
-            <div class="folder-note">Aadya keeps the spoken question, source and action checklist together so the route survives after the audio ends.</div>
+            <div class="folder-note" data-landing="folderNote">Aadya keeps the spoken question, source and action checklist together so the route survives after the audio ends.</div>
           </aside>
 
           <article class="case-sheet">
@@ -923,18 +780,18 @@
               <h3 data-v2-title>What do I need before I go?</h3>
             </div>
             <div class="sheet-body">
-              <div class="sheet-row"><div class="sheet-key">Spoken question</div><div class="sheet-val native" data-v2-question>"पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?"</div></div>
-              <div class="sheet-row"><div class="sheet-key">Confirmed text</div><div class="sheet-val" data-v2-transcript>पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?</div></div>
-              <div class="sheet-row"><div class="sheet-key">Matched source</div><div class="sheet-val"><span class="source-line"><i></i><span data-v2-source>PM-KISAN · official scheme record</span></span></div></div>
-              <div class="sheet-row"><div class="sheet-key">Plain answer</div><div class="sheet-val" data-v2-answer>Keep Aadhaar, bank details, land record and the registered mobile number ready. Take them to the local agriculture office if you need to apply or correct details.</div></div>
+              <div class="sheet-row"><div class="sheet-key" data-landing="keySpoken">Spoken question</div><div class="sheet-val native" data-v2-question>"पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?"</div></div>
+              <div class="sheet-row"><div class="sheet-key" data-landing="keyConfirmed">Confirmed text</div><div class="sheet-val" data-v2-transcript>पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?</div></div>
+              <div class="sheet-row"><div class="sheet-key" data-landing="keySource">Matched source</div><div class="sheet-val"><span class="source-line"><i></i><span data-v2-source>PM-KISAN · official scheme record</span></span></div></div>
+              <div class="sheet-row"><div class="sheet-key" data-landing="keyAnswer">Plain answer</div><div class="sheet-val" data-v2-answer>Keep Aadhaar, bank details, land record and the registered mobile number ready. Take them to the local agriculture office if you need to apply or correct details.</div></div>
             </div>
           </article>
 
           <div class="prepare-card">
             <article class="ticket">
-              <div class="micro">Carry these</div>
-              <h3>Ready before the queue.</h3>
-              <p>The answer becomes a compact checklist that can be shown, replayed or shared.</p>
+              <div class="micro" data-landing="carryThese">Carry these</div>
+              <h3 data-landing="ticketTitle">Ready before the queue.</h3>
+              <p data-landing="ticketBody">The answer becomes a compact checklist that can be shown, replayed or shared.</p>
               <div class="ticket-list" data-v2-docs>
                 <div class="ticket-item"><i>✓</i>Aadhaar card</div>
                 <div class="ticket-item"><i>✓</i>Bank passbook</div>
@@ -948,53 +805,114 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s6-5.3 6-11a6 6 0 1 0-12 0c0 5.7 6 11 6 11Z"/><circle cx="12" cy="10" r="2"/></svg>
               </div>
               <h4 data-v2-office>Local agriculture office</h4>
-              <p>Take the packet with you. Confirm final eligibility, deadlines and any local requirements at the official office.</p>
+              <p data-landing="officeBody">Take the packet with you. Confirm final eligibility, deadlines and any local requirements at the official office.</p>
             </article>
           </div>
         </div>
       </div>
       <a class="cta desk-cta" href="./demo.html">
         <svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 3.8v12.4L16 10 5 3.8z"/></svg>
-        Open the interactive demo
+        <span data-landing="openDemo">Open the interactive demo</span>
       </a>
       </div>
     </section>
 
     <script>
     (function () {
+      // Hindi is the one fully translated language; every other language falls back
+      // to English here, matching the rest of the page.
       const SCENARIOS = {
-        farmer: {
-          question: '"पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?"',
-          transcript: 'पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?',
-          source: 'PM-KISAN · official scheme record',
-          answer: 'Aadhaar, bank account details, land record and a registered mobile number are the useful items to keep ready before visiting the agriculture office.',
-          docs: ['Aadhaar card', 'Bank passbook', 'Land record', 'Mobile number'],
-          office: 'Local agriculture office'
+        en: {
+          farmer: {
+            question: '"पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?"',
+            transcript: 'पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?',
+            source: 'PM-KISAN · official scheme record',
+            answer: 'Aadhaar, bank account details, land record and a registered mobile number are the useful items to keep ready before visiting the agriculture office.',
+            docs: ['Aadhaar card', 'Bank passbook', 'Land record', 'Mobile number'],
+            office: 'Local agriculture office'
+          },
+          student: {
+            question: '"मेरी छात्रवृत्ति के लिए क्या-क्या चाहिए?"',
+            transcript: 'मेरी छात्रवृत्ति के लिए क्या-क्या चाहिए?',
+            source: 'Scholarship application guidance · prototype record',
+            answer: 'Keep your identity, bank, academic and institution details together before you start the scholarship application or visit the institute nodal officer.',
+            docs: ['Aadhaar card', 'Bank details', 'Mark sheet', 'Institute ID'],
+            office: 'Institute nodal officer'
+          },
+          pension: {
+            question: '"बुज़ुर्ग पेंशन के लिए कहाँ जाना होगा?"',
+            transcript: 'बुज़ुर्ग पेंशन के लिए कहाँ जाना होगा?',
+            source: 'Pension service route · prototype record',
+            answer: 'Keep identity, age, residence and bank details ready, then confirm the state-specific application route with the local welfare or panchayat office.',
+            docs: ['Identity proof', 'Age proof', 'Residence proof', 'Bank details'],
+            office: 'Local welfare office'
+          },
+          health: {
+            question: '"आयुष्मान कार्ड बनवाने के लिए क्या लेकर जाएँ?"',
+            transcript: 'आयुष्मान कार्ड बनवाने के लिए क्या लेकर जाएँ?',
+            source: 'Ayushman Bharat help-desk route · prototype record',
+            answer: 'Carry family identity details and the documents requested by the local help desk, then confirm beneficiary status at an authorised Ayushman Bharat desk.',
+            docs: ['Aadhaar card', 'Family ID', 'Mobile number', 'Existing card, if any'],
+            office: 'Authorised Ayushman help desk'
+          }
         },
-        student: {
-          question: '"मेरी छात्रवृत्ति के लिए क्या-क्या चाहिए?"',
-          transcript: 'मेरी छात्रवृत्ति के लिए क्या-क्या चाहिए?',
-          source: 'Scholarship application guidance · prototype record',
-          answer: 'Keep your identity, bank, academic and institution details together before you start the scholarship application or visit the institute nodal officer.',
-          docs: ['Aadhaar card', 'Bank details', 'Mark sheet', 'Institute ID'],
-          office: 'Institute nodal officer'
-        },
-        pension: {
-          question: '"बुज़ुर्ग पेंशन के लिए कहाँ जाना होगा?"',
-          transcript: 'बुज़ुर्ग पेंशन के लिए कहाँ जाना होगा?',
-          source: 'Pension service route · prototype record',
-          answer: 'Keep identity, age, residence and bank details ready, then confirm the state-specific application route with the local welfare or panchayat office.',
-          docs: ['Identity proof', 'Age proof', 'Residence proof', 'Bank details'],
-          office: 'Local welfare office'
-        },
-        health: {
-          question: '"आयुष्मान कार्ड बनवाने के लिए क्या लेकर जाएँ?"',
-          transcript: 'आयुष्मान कार्ड बनवाने के लिए क्या लेकर जाएँ?',
-          source: 'Ayushman Bharat help-desk route · prototype record',
-          answer: 'Carry family identity details and the documents requested by the local help desk, then confirm beneficiary status at an authorised Ayushman Bharat desk.',
-          docs: ['Aadhaar card', 'Family ID', 'Mobile number', 'Existing card, if any'],
-          office: 'Authorised Ayushman help desk'
+        hi: {
+          farmer: {
+            question: '"पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?"',
+            transcript: 'पीएम किसान के लिए कौन से कागज़ लेकर जाऊँ?',
+            source: 'PM-KISAN · अधिकृत योजना रिकॉर्ड',
+            answer: 'कृषि कार्यालय जाने से पहले आधार, बैंक खाते का विवरण, ज़मीन का रिकॉर्ड और रजिस्टर्ड मोबाइल नंबर तैयार रखिए।',
+            docs: ['आधार कार्ड', 'बैंक पासबुक', 'ज़मीन का रिकॉर्ड', 'मोबाइल नंबर'],
+            office: 'स्थानीय कृषि कार्यालय'
+          },
+          student: {
+            question: '"मेरी छात्रवृत्ति के लिए क्या-क्या चाहिए?"',
+            transcript: 'मेरी छात्रवृत्ति के लिए क्या-क्या चाहिए?',
+            source: 'छात्रवृत्ति आवेदन मार्गदर्शन · प्रोटोटाइप रिकॉर्ड',
+            answer: 'आवेदन शुरू करने या संस्थान के नोडल अधिकारी से मिलने से पहले पहचान, बैंक, पढ़ाई और संस्थान से जुड़े विवरण एक साथ रखिए।',
+            docs: ['आधार कार्ड', 'बैंक विवरण', 'अंकतालिका', 'संस्थान का पहचान पत्र'],
+            office: 'संस्थान के नोडल अधिकारी'
+          },
+          pension: {
+            question: '"बुज़ुर्ग पेंशन के लिए कहाँ जाना होगा?"',
+            transcript: 'बुज़ुर्ग पेंशन के लिए कहाँ जाना होगा?',
+            source: 'पेंशन सेवा मार्ग · प्रोटोटाइप रिकॉर्ड',
+            answer: 'पहचान, आयु, निवास और बैंक विवरण तैयार रखिए, फिर राज्य के अनुसार आवेदन का तरीक़ा स्थानीय कल्याण या पंचायत कार्यालय से पक्का कीजिए।',
+            docs: ['पहचान प्रमाण', 'आयु प्रमाण', 'निवास प्रमाण', 'बैंक विवरण'],
+            office: 'स्थानीय कल्याण कार्यालय'
+          },
+          health: {
+            question: '"आयुष्मान कार्ड बनवाने के लिए क्या लेकर जाएँ?"',
+            transcript: 'आयुष्मान कार्ड बनवाने के लिए क्या लेकर जाएँ?',
+            source: 'आयुष्मान भारत हेल्प-डेस्क मार्ग · प्रोटोटाइप रिकॉर्ड',
+            answer: 'परिवार की पहचान से जुड़े विवरण और स्थानीय हेल्प डेस्क के माँगे कागज़ात ले जाइए, फिर अधिकृत आयुष्मान भारत डेस्क पर लाभार्थी स्थिति पक्की कीजिए।',
+            docs: ['आधार कार्ड', 'परिवार पहचान', 'मोबाइल नंबर', 'पुराना कार्ड, यदि हो'],
+            office: 'अधिकृत आयुष्मान हेल्प डेस्क'
+          }
         }
+      };
+
+      const STAGE_TITLES = {
+        en: [
+          'What do I need before I go?',
+          'The words are visible before sending.',
+          'The answer shows where it came from.',
+          'Leave with documents and a place to go.'
+        ],
+        hi: [
+          'जाने से पहले मुझे क्या चाहिए?',
+          'भेजने से पहले शब्द दिखते हैं।',
+          'जवाब बताता है कि जानकारी कहाँ से आई।',
+          'कागज़ात और पता, दोनों लेकर जाइए।'
+        ]
+      };
+
+      const pack = () => {
+        const language = document.documentElement.dataset.language;
+        return {
+          scenarios: SCENARIOS[language] || SCENARIOS.en,
+          stageTitles: STAGE_TITLES[language] || STAGE_TITLES.en
+        };
       };
 
       const DEFAULT_ROLE = 'farmer';
@@ -1012,14 +930,8 @@
       const railFill = tour.querySelector('[data-rail-fill]');
       const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const stageTitles = [
-        'What do I need before I go?',
-        'The words are visible before sending.',
-        'The answer shows where it came from.',
-        'Leave with documents and a place to go.'
-      ];
-
       let started = false;
+      let activeRole = DEFAULT_ROLE;
       let stage = -1;
       let maxStage = 0;
       let scrollBase = 0;
@@ -1039,8 +951,9 @@
       }
 
       function fillScenario(key, animate) {
-        const data = SCENARIOS[key];
+        const data = pack().scenarios[key];
         if (!data) return;
+        activeRole = key;
         roleButtons.forEach((b) => {
           const on = b.dataset.role === key;
           b.classList.toggle('active', on);
@@ -1060,17 +973,17 @@
           step.classList.toggle('active', i === index);
           step.dataset.locked = i <= index ? 'false' : 'true';
         });
-        setText('[data-v2-title]', stageTitles[index], true);
+        setText('[data-v2-title]', pack().stageTitles[index], true);
         sheetRows.forEach((row, i) => row.classList.toggle('revealed', i <= index));
         grid.classList.toggle('expanded', index >= 3);
         prepare.classList.toggle('revealed', index >= 3);
-        railFill.style.width = ((index + 1) / stageTitles.length * 100) + '%';
+        railFill.style.width = ((index + 1) / pack().stageTitles.length * 100) + '%';
       }
 
       function scheduleAutoAdvance() {
         clearInterval(stepTimer);
         stepTimer = setInterval(() => {
-          if (stage >= stageTitles.length - 1) { clearInterval(stepTimer); return; }
+          if (stage >= pack().stageTitles.length - 1) { clearInterval(stepTimer); return; }
           maxStage = Math.max(maxStage, stage + 1);
           renderStage(stage + 1);
         }, STEP_INTERVAL);
@@ -1086,7 +999,7 @@
       function scrollStage() {
         if (!started) return;
         const p = Math.max(0, (rawProgress() - scrollBase) / Math.max(.001, 1 - scrollBase));
-        const fromScroll = Math.round(p * (stageTitles.length - 1));
+        const fromScroll = Math.round(p * (pack().stageTitles.length - 1));
         if (fromScroll > maxStage) {
           maxStage = fromScroll;
           renderStage(maxStage);
@@ -1135,28 +1048,36 @@
         requestAnimationFrame(() => { scrollStage(); ticking = false; });
       }, { passive: true });
       window.addEventListener('resize', scrollStage, { passive: true });
+
+      // Re-render the walkthrough in the newly chosen language, keeping the
+      // reader on the step they had reached.
+      window.addEventListener('aadya:preferences', () => {
+        if (!started) return;
+        fillScenario(activeRole, false);
+        renderStage(Math.max(0, stage));
+      });
     })();
     </script>
 
     <section class="final-cta">
       <div>
-        <h2>Ask the question you were about to postpone.</h2>
-        <p>Try Aadya without a form or a perfect search phrase. Speak naturally, review what it heard, and leave with the next step.</p>
+        <h2 data-landing="finalTitle">Ask the question you were about to postpone.</h2>
+        <p data-landing="finalBody">Try Aadya without a form or a perfect search phrase. Speak naturally, review what it heard, and leave with the next step.</p>
         <a class="button light" href="./index.html">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
-          Get started
+          <span data-landing="start">Get started</span>
         </a>
       </div>
       <div class="cta-art" aria-hidden="true">
         <div class="cta-disc">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
-          <span>Tap · Speak · Know</span>
+          <span data-landing="tapSpeak">Tap · Speak · Know</span>
         </div>
       </div>
     </section>
   </main>
 
-  <div class="wrap thesis-note">Five of Aadya's seven languages, Marathi, Tamil, Telugu, Kannada and Malayalam, were added recently and have not yet been reviewed by a native speaker. Confirm important details at the official source linked in each answer.</div>
+  <div class="wrap thesis-note" data-landing="disclaimer">Five of Aadya's seven languages, Marathi, Tamil, Telugu, Kannada and Malayalam, were added recently and have not yet been reviewed by a native speaker. Confirm important details at the official source linked in each answer.</div>
 
   <footer class="wrap site-footer">
     <div>
@@ -1164,9 +1085,9 @@
         <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h2m2-5v10m4-13v16m4-11v6m4-4v2"/></svg></span>
         Aadya
       </div>
-      <div class="footer-copy">A voice access layer for public information. Always verify eligibility, deadlines and final decisions with the official office, website or helpline.</div>
+      <div class="footer-copy" data-landing="footerCopy">A voice access layer for public information. Always verify eligibility, deadlines and final decisions with the official office, website or helpline.</div>
     </div>
-    <div class="footer-links"><a href="./signup.html?mode=signin">Sign in</a><a href="./signup.html?mode=signup">Create account</a><a href="./index.html">Open as guest</a><a href="./about.html">About & architecture</a><a href="./demo.html">Interactive demo</a><a href="./integrations.html">Integrations</a><a href="#trust">How confidence works</a></div>
+    <div class="footer-links"><a href="./signup.html?mode=signin" data-landing="signIn">Sign in</a><a href="./signup.html?mode=signup" data-landing="createAccount">Create account</a><a href="./index.html" data-landing="openGuest">Open as guest</a><a href="./about.html" data-landing="aboutArch">About &amp; architecture</a><a href="./demo.html" data-landing="interactiveDemo">Interactive demo</a><a href="./integrations.html" data-landing="footerIntegrations">Integrations</a><a href="#trust" data-landing="howConfidence">How confidence works</a></div>
   </footer>
 </div>
 
@@ -1174,8 +1095,7 @@
 
 
 <script type="module">
-  import { LANGUAGES, mountPreferenceControls, getPreferences } from "./lib/preferences.js";
-  import { matchDemoResponse, localizeDemoResponse } from "./lib/demoFixtures.js";
+  import { mountPreferenceControls, getPreferences, setPreferences } from "./lib/preferences.js";
   const LANDING_COPY = {
     en:{eyebrow:"Public information, spoken back clearly",heroLead:"Public help,",heroSoft:"in your language.",heroBody:"Ask about schemes, public services, scholarships, pensions and government jobs. Get one sourced next step, spoken clearly.",ask:"Ask in your language",demo:"Try the guided demo",integrations:"See integrations",start:"Get started",proof:"Seven languages. Spoken answers. No form to decode.",pathKicker:"One product, different doorways",pathTitle:"Start from the life you are living.",pathBody:"Choose the view closest to what you need. Aadya shows useful starting questions from the same prototype records."},
     hi:{eyebrow:"सार्वजनिक जानकारी, आपकी भाषा में साफ़ जवाब",heroLead:"सरकारी मदद,",heroSoft:"आपकी भाषा में।",heroBody:"योजनाओं, सरकारी सेवाओं, छात्रवृत्तियों, पेंशन और सरकारी नौकरियों के बारे में पूछें। स्रोत सहित अगला कदम साफ़ सुनें।",ask:"अपनी भाषा में पूछें",demo:"आसान डेमो देखें",integrations:"इंटीग्रेशन देखें",start:"शुरू करें",proof:"सात भाषाएँ। बोलकर उत्तर। कोई लंबा फ़ॉर्म नहीं।",pathKicker:"एक ऐप, आपकी ज़रूरत का रास्ता",pathTitle:"अपनी ज़रूरत से शुरू करें।",pathBody:"अपने काम के सबसे पास वाला रूप चुनें। Aadya प्रोटोटाइप रिकॉर्ड से उपयोगी शुरुआती सवाल दिखाएगा।"},
@@ -1186,6 +1106,104 @@
     kn:{eyebrow:"ಸಾರ್ವಜನಿಕ ಮಾಹಿತಿ, ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಸ್ಪಷ್ಟ ಉತ್ತರ",heroLead:"ನಿಮ್ಮ ಭಾಷೆ ಮಾತನಾಡುವ",heroSoft:"ಒಂದು ಸಹಾಯ ಕೇಂದ್ರ.",heroBody:"ಯೋಜನೆಗಳು, ವಿದ್ಯಾರ್ಥಿವೇತನ, ಪಿಂಚಣಿ ಮತ್ತು ಉದ್ಯೋಗಗಳ ಬಗ್ಗೆ ಧ್ವನಿಯಲ್ಲಿ ಕೇಳಿ. Aadya ಅಧಿಕೃತ ಮಾಹಿತಿಯನ್ನು ಹುಡುಕಿ ಸರಳವಾಗಿ ವಿವರಿಸಿ ಮುಂದಿನ ಹೆಜ್ಜೆ ಹೇಳುತ್ತದೆ.",ask:"ನಿಮ್ಮ ಭಾಷೆಯಲ್ಲಿ ಕೇಳಿ",demo:"ಮಾರ್ಗದರ್ಶಿತ ಡೆಮೊ",integrations:"ಇಂಟಿಗ್ರೇಷನ್ ನೋಡಿ",start:"ಪ್ರಾರಂಭಿಸಿ",proof:"ಏಳು ಭಾಷೆಗಳು. ಧ್ವನಿ ಉತ್ತರಗಳು. ಉದ್ದವಾದ ಫಾರ್ಮ್ ಇಲ್ಲ.",pathKicker:"ಒಂದು ಆ್ಯಪ್, ನಿಮ್ಮ ಅಗತ್ಯದ ದಾರಿ",pathTitle:"ನಿಮ್ಮ ಅಗತ್ಯದಿಂದ ಪ್ರಾರಂಭಿಸಿ.",pathBody:"ನಿಮ್ಮ ಕೆಲಸಕ್ಕೆ ಹತ್ತಿರವಾದ ರೂಪವನ್ನು ಆಯ್ಕೆಮಾಡಿ. ಅದೇ ವಿಶ್ವಾಸಾರ್ಹ ಯೋಜನೆ ದಾಖಲೆಗಳಿಂದ Aadya ಆರಂಭದ ಪ್ರಶ್ನೆಗಳನ್ನು ತೋರಿಸುತ್ತದೆ."},
     ml:{eyebrow:"പൊതു വിവരം, നിങ്ങളുടെ ഭാഷയിൽ വ്യക്തമായ ഉത്തരം",heroLead:"നിങ്ങളുടെ ഭാഷ സംസാരിക്കുന്ന",heroSoft:"ഒരു സഹായ കേന്ദ്രം.",heroBody:"പദ്ധതികൾ, സ്കോളർഷിപ്പുകൾ, പെൻഷൻ, സർക്കാർ ജോലികൾ എന്നിവയെക്കുറിച്ച് ശബ്ദത്തിൽ ചോദിക്കൂ. ഔദ്യോഗിക വിവരം കണ്ടെത്തി ലളിതമായി വിശദീകരിച്ച് അടുത്ത നടപടി പറയും.",ask:"നിങ്ങളുടെ ഭാഷയിൽ ചോദിക്കൂ",demo:"ഗൈഡഡ് ഡെമോ കാണുക",integrations:"ഇന്റഗ്രേഷനുകൾ കാണുക",start:"ആരംഭിക്കൂ",proof:"ഏഴ് ഭാഷകൾ. ശബ്ദ ഉത്തരങ്ങൾ. നീണ്ട ഫോം ഇല്ല.",pathKicker:"ഒരു ആപ്പ്, നിങ്ങളുടെ ആവശ്യത്തിനുള്ള വഴി",pathTitle:"നിങ്ങളുടെ ആവശ്യത്തിൽ നിന്ന് ആരംഭിക്കൂ.",pathBody:"നിങ്ങളുടെ ജോലിയോട് ഏറ്റവും അടുത്ത രൂപം തിരഞ്ഞെടുക്കുക. അതേ വിശ്വസനീയമായ പദ്ധതി രേഖകളിൽ നിന്ന് ആദ്യ ഉപകാരപ്രദമായ ചോദ്യങ്ങൾ കാണിക്കും."}
   };
+  // Everything else on the page. English is the fallback for languages that have
+  // not been translated yet, so switching away from Hindi always restores English
+  // rather than leaving the previous language's text in the DOM.
+  const PAGE_COPY = {
+    en: {
+      navHow: "How it works", navAbout: "About", simpleView: "Simple", tryAadya: "Try Aadya", signIn: "Sign in",
+      whyTitle: "The problem is rarely eligibility.", whyTitleEm: "It is the interface.",
+      whyBody: "Help sits behind English websites, long PDFs and offices that cost a day to visit twice. Aadya turns that into a conversation: one question in your language, one sourced answer, one next step.",
+      journeyTitle: "From voice to action.",
+      j1Num: "01 · SPEAK", j1Title: "Ask it normally", j1Body: "Speak in the language and phrasing you use at home. No scheme name or perfect search term required.",
+      j2Num: "02 · CHECK", j2Title: "Correct what it heard", j2Body: "The transcript is editable before it is sent, so a place name or family name can be fixed without re-recording.",
+      j3Num: "03 · VERIFY", j3Title: "Know where it came from", j3Body: "The answer carries a source and an honest confidence state instead of pretending every response is certain.",
+      j4Num: "04 · ACT", j4Title: "Leave with a checklist", j4Body: "Documents, office or helpline, and the next practical step are packaged to screenshot, share or hear again.",
+      heardLabel: "HEARD", sourceStamp: "OFFICIAL DETAILS FOUND", takeWith: "TAKE WITH YOU",
+      docAadhaar: "Aadhaar", docBank: "Bank details", docAge: "Age proof",
+      momentsTitle: "Help that meets people where they are.",
+      tabFarmer: "Farmer", tabPatient: "Patient", tabStudent: "Student",
+      ss1Title: "Frontline workers answer once, consistently.", ss1Body: "CSC operators, ASHA workers and NGO field staff can reuse a sourced answer and a screenshot-ready checklist.",
+      ss2Title: "People can listen, not just read.", ss2Body: "Every useful answer can be played again, paused and shared with the family member making the trip.",
+      trustTitle: "A calm voice should not sound more certain than the evidence.",
+      trustBody: "Aadya separates what it found in the small prototype records from what is only general guidance. It does not declare someone eligible; it explains the published criteria and points to the source link.",
+      trustRule: "Every answer shows the quality of its match.",
+      c1Title: "Matched to a prototype record", c1Body: "Confirm important details at the source link shown in the answer.", c1Sig: "Strong match",
+      c2Title: "Partly covered—confirm the rest", c2Body: "It answers the supported part, says what is missing and identifies who can confirm it.", c2Sig: "Partial match",
+      c3Title: "General guidance", c3Body: "No direct record match, stated plainly, with the office or helpline that normally handles it.", c3Sig: "No record match",
+      fieldTitle: "One phone can become a village help desk.",
+      fieldBody: "Aadya is useful for the person asking—and for the person who helps fifty others ask. Bilingual labels, replayable answers, persistent history and shareable checklists keep the conversation usable across generations.",
+      fi1a: "Common Service Centre operators", fi1b: "Faster guidance",
+      fi2a: "ASHA and Anganwadi workers", fi2b: "Clear referrals",
+      fi3a: "NGO field teams", fi3b: "Consistent answers",
+      fi4a: "Family members and caregivers", fi4b: "Shared context",
+      pathHeading: "See one question become a prepared visit.", pathNote: "No microphone, API key or sign-in is needed.",
+      roleFarmer: "Farmer", roleStudent: "Student", roleOlder: "Older adult", roleFamily: "Family",
+      stepVoice: "Voice", stepTranscript: "Transcript", stepEvidence: "Evidence", stepNext: "Next step",
+      folderNote: "Aadya keeps the spoken question, source and action checklist together so the route survives after the audio ends.",
+      keySpoken: "Spoken question", keyConfirmed: "Confirmed text", keySource: "Matched source", keyAnswer: "Plain answer",
+      carryThese: "Carry these", ticketTitle: "Ready before the queue.", ticketBody: "The answer becomes a compact checklist that can be shown, replayed or shared.",
+      officeBody: "Take the packet with you. Confirm final eligibility, deadlines and any local requirements at the official office.",
+      openDemo: "Open the interactive demo",
+      finalTitle: "Ask the question you were about to postpone.",
+      finalBody: "Try Aadya without a form or a perfect search phrase. Speak naturally, review what it heard, and leave with the next step.",
+      tapSpeak: "Tap · Speak · Know",
+      disclaimer: "Five of Aadya's seven languages, Marathi, Tamil, Telugu, Kannada and Malayalam, were added recently and have not yet been reviewed by a native speaker. Confirm important details at the official source linked in each answer.",
+      footerCopy: "A voice access layer for public information. Always verify eligibility, deadlines and final decisions with the official office, website or helpline.",
+      createAccount: "Create account", openGuest: "Open as guest", aboutArch: "About & architecture",
+      interactiveDemo: "Interactive demo", footerIntegrations: "Integrations", howConfidence: "How confidence works",
+      storyFarmerTitle: "A farmer, before the day begins.", storyFarmerBody: "A farmer checks what may hold up a PM-KISAN installment and which land and bank records to verify.",
+      storyPatientTitle: "A caregiver, at the admissions desk.", storyPatientBody: "A caregiver checks what Ayushman Bharat needs and which documents to show at the hospital.",
+      storyStudentTitle: "A citizen, before an application.", storyStudentBody: "A citizen hears the requirements and carries a short document list instead of decoding a portal alone."
+    },
+    hi: {
+      navHow: "यह कैसे काम करता है", navAbout: "परिचय", simpleView: "आसान", tryAadya: "Aadya आज़माएँ", signIn: "साइन इन",
+      whyTitle: "समस्या पात्रता की नहीं होती।", whyTitleEm: "समस्या तरीक़े की होती है।",
+      whyBody: "मदद अंग्रेज़ी वेबसाइटों, लंबे PDF और उन दफ़्तरों के पीछे छिपी रहती है जहाँ दोबारा जाने में पूरा दिन लगता है। Aadya इसे बातचीत बना देता है: आपकी भाषा में एक सवाल, स्रोत सहित एक जवाब, और एक अगला कदम।",
+      journeyTitle: "आवाज़ से कार्रवाई तक।",
+      j1Num: "01 · बोलिए", j1Title: "जैसे बोलते हैं, वैसे पूछिए", j1Body: "घर में जिस भाषा और लहज़े में बात करते हैं, उसी में पूछिए। न योजना का नाम याद रखना है, न सही सर्च शब्द।",
+      j2Num: "02 · जाँचिए", j2Title: "जो सुना, उसे सुधारिए", j2Body: "भेजने से पहले लिखा हुआ पाठ बदला जा सकता है, इसलिए गाँव या परिवार का नाम दोबारा रिकॉर्ड किए बिना ठीक हो जाता है।",
+      j3Num: "03 · परखिए", j3Title: "जानिए जवाब कहाँ से आया", j3Body: "हर जवाब के साथ उसका स्रोत और भरोसे का सही स्तर दिखता है—यह दावा नहीं किया जाता कि हर बात पक्की है।",
+      j4Num: "04 · कीजिए", j4Title: "सूची लेकर जाइए", j4Body: "कागज़ात, दफ़्तर या हेल्पलाइन और अगला व्यावहारिक कदम एक साथ मिलते हैं—स्क्रीनशॉट लीजिए, साझा कीजिए या दोबारा सुनिए।",
+      heardLabel: "सुना गया", sourceStamp: "अधिकृत जानकारी मिली", takeWith: "साथ ले जाइए",
+      docAadhaar: "आधार", docBank: "बैंक विवरण", docAge: "आयु प्रमाण",
+      momentsTitle: "मदद, वहीं जहाँ लोग हैं।",
+      tabFarmer: "किसान", tabPatient: "मरीज़", tabStudent: "विद्यार्थी",
+      ss1Title: "फ़ील्ड कार्यकर्ता एक बार में सही जवाब देते हैं।", ss1Body: "CSC संचालक, आशा कार्यकर्ता और एनजीओ टीमें स्रोत सहित जवाब और स्क्रीनशॉट लायक सूची दोबारा इस्तेमाल कर सकती हैं।",
+      ss2Title: "पढ़ना ज़रूरी नहीं, सुनना काफ़ी है।", ss2Body: "हर काम का जवाब दोबारा सुना, रोका और उस परिजन को भेजा जा सकता है जो दफ़्तर जा रहा है।",
+      trustTitle: "शांत आवाज़ को सबूत से ज़्यादा भरोसेमंद नहीं लगना चाहिए।",
+      trustBody: "Aadya यह अलग करके बताता है कि क्या उसे रिकॉर्ड में मिला और क्या सिर्फ़ सामान्य मार्गदर्शन है। वह किसी को पात्र घोषित नहीं करता; वह प्रकाशित शर्तें समझाता है और स्रोत का लिंक दिखाता है।",
+      trustRule: "हर जवाब बताता है कि मिलान कितना पक्का है।",
+      c1Title: "रिकॉर्ड से मिलान हुआ", c1Body: "जवाब में दिए स्रोत लिंक पर ज़रूरी बातें एक बार ज़रूर जाँच लें।", c1Sig: "पक्का मिलान",
+      c2Title: "आंशिक जानकारी—बाकी की पुष्टि करें", c2Body: "जितना पक्का है उतना बताता है, क्या छूट रहा है यह कहता है, और कौन पुष्टि कर सकता है यह भी।", c2Sig: "आंशिक मिलान",
+      c3Title: "सामान्य मार्गदर्शन", c3Body: "रिकॉर्ड में सीधा मिलान नहीं मिला—यह साफ़ कहा जाता है, साथ में वह दफ़्तर या हेल्पलाइन बताई जाती है जो यह काम देखती है।", c3Sig: "मिलान नहीं मिला",
+      fieldTitle: "एक फ़ोन पूरे गाँव का मदद केंद्र बन सकता है।",
+      fieldBody: "Aadya उस व्यक्ति के लिए उपयोगी है जो पूछ रहा है—और उसके लिए भी जो पचास और लोगों को पुछवाता है। दोभाषी लेबल, दोबारा सुने जा सकने वाले जवाब, सुरक्षित इतिहास और साझा करने लायक सूचियाँ बातचीत को हर पीढ़ी के लिए आसान रखती हैं।",
+      fi1a: "कॉमन सर्विस सेंटर संचालक", fi1b: "तेज़ मार्गदर्शन",
+      fi2a: "आशा और आँगनवाड़ी कार्यकर्ता", fi2b: "साफ़ रेफ़रल",
+      fi3a: "एनजीओ फ़ील्ड टीमें", fi3b: "एक जैसे जवाब",
+      fi4a: "परिजन और देखभाल करने वाले", fi4b: "साझा जानकारी",
+      pathHeading: "देखिए, एक सवाल तैयार यात्रा कैसे बनता है।", pathNote: "न माइक चाहिए, न API की, न साइन इन।",
+      roleFarmer: "किसान", roleStudent: "विद्यार्थी", roleOlder: "बुज़ुर्ग", roleFamily: "परिवार",
+      stepVoice: "आवाज़", stepTranscript: "लिखा पाठ", stepEvidence: "प्रमाण", stepNext: "अगला कदम",
+      folderNote: "Aadya बोला गया सवाल, स्रोत और काम की सूची एक साथ रखता है, ताकि आवाज़ ख़त्म होने के बाद भी रास्ता बना रहे।",
+      keySpoken: "बोला गया सवाल", keyConfirmed: "पक्का किया पाठ", keySource: "मिला हुआ स्रोत", keyAnswer: "सीधा जवाब",
+      carryThese: "ये साथ ले जाइए", ticketTitle: "क़तार से पहले तैयार।", ticketBody: "जवाब एक छोटी सूची बन जाता है, जिसे दिखाया, दोबारा सुना या साझा किया जा सकता है।",
+      officeBody: "यह सूची साथ ले जाइए। अंतिम पात्रता, तारीख़ें और स्थानीय शर्तें अधिकृत दफ़्तर में ज़रूर पक्की कर लीजिए।",
+      openDemo: "इंटरैक्टिव डेमो खोलें",
+      finalTitle: "वह सवाल पूछिए जिसे आप टालने वाले थे।",
+      finalBody: "बिना फ़ॉर्म और बिना सही सर्च शब्द के Aadya आज़माइए। सहज बोलिए, सुना हुआ जाँचिए, और अगला कदम लेकर जाइए।",
+      tapSpeak: "दबाइए · बोलिए · जानिए",
+      disclaimer: "Aadya की सात में से पाँच भाषाएँ—मराठी, तमिल, तेलुगु, कन्नड़ और मलयालम—हाल ही में जोड़ी गई हैं और अभी तक किसी मूल वक्ता ने उनकी जाँच नहीं की है। ज़रूरी बातें हर जवाब में दिए अधिकृत स्रोत पर पक्की कर लें।",
+      footerCopy: "सार्वजनिक जानकारी तक पहुँचने की एक आवाज़ी परत। पात्रता, तारीख़ें और अंतिम फ़ैसले हमेशा अधिकृत दफ़्तर, वेबसाइट या हेल्पलाइन से पक्के करें।",
+      createAccount: "खाता बनाएँ", openGuest: "मेहमान के रूप में खोलें", aboutArch: "परिचय और संरचना",
+      interactiveDemo: "इंटरैक्टिव डेमो", footerIntegrations: "इंटीग्रेशन", howConfidence: "भरोसा कैसे तय होता है",
+      storyFarmerTitle: "किसान, दिन शुरू होने से पहले।", storyFarmerBody: "किसान जाँचता है कि PM-KISAN की किस्त क्यों रुक सकती है और ज़मीन व बैंक के कौन से रिकॉर्ड देखने हैं।",
+      storyPatientTitle: "देखभाल करने वाला, भर्ती डेस्क पर।", storyPatientBody: "आयुष्मान भारत के लिए क्या चाहिए और अस्पताल में कौन से कागज़ दिखाने हैं, यह पता चलता है।",
+      storyStudentTitle: "एक नागरिक, आवेदन से पहले।", storyStudentBody: "पोर्टल अकेले समझने के बजाय ज़रूरी शर्तें सुनकर एक छोटी दस्तावेज़ सूची साथ ले जाता है।"
+    }
+  };
+
   const SHORT_QUOTES = {
     en:["One clear answer, every time.","Play it again."],
     hi:["एक ही जानकारी, हर बार साफ़।","फिर से सुनाओ।"],
@@ -1195,17 +1213,6 @@
     te:["ప్రతిసారీ ఒకే స్పష్టమైన సమాచారం.","మళ్లీ వినిపించండి."],
     kn:["ಪ್ರತಿ ಬಾರಿಯೂ ಒಂದೇ ಸ್ಪಷ್ಟ ಮಾಹಿತಿ.","ಮತ್ತೆ ಕೇಳಿಸಿ."],
     ml:["ഓരോ തവണയും ഒരേ വ്യക്തമായ വിവരം.","വീണ്ടും കേൾപ്പിക്കൂ."]
-  };
-
-  const DEVICE_NOTES = {
-    en:["Editable transcript","Sourced answer"],
-    hi:["सुधार सकते हैं","स्रोत सहित उत्तर"],
-    mr:["तुम्ही दुरुस्त करू शकता","स्रोतासह उत्तर"],
-    bn:["সংশোধনযোগ্য প্রতিলিপি","সূত্রসহ উত্তর"],
-    ta:["திருத்தக்கூடிய உரை","ஆதாரத்துடன் பதில்"],
-    te:["సవరించగల లిపి","మూలంతో సమాధానం"],
-    kn:["ತಿದ್ದಬಹುದಾದ ಪಠ್ಯ","ಮೂಲ ಸಹಿತ ಉತ್ತರ"],
-    ml:["തിരുത്താവുന്ന ട്രാൻസ്ക്രിപ്റ്റ്","ഉറവിടത്തോടു കൂടിയ ഉത്തരം"]
   };
 
   mountPreferenceControls("#landing-preferences", { compact: true });
@@ -1264,15 +1271,18 @@
     };
     window.setTimeout(typeNext, 280);
   };
+  const copyFor = (language) => ({
+    ...LANDING_COPY.en, ...PAGE_COPY.en,
+    ...(LANDING_COPY[language] || {}), ...(PAGE_COPY[language] || {})
+  });
+
   const localizeLanding = () => {
     const prefs = getPreferences();
-    const copy = LANDING_COPY[prefs.language] || LANDING_COPY.en;
+    const copy = copyFor(prefs.language);
     const shortQuotes = SHORT_QUOTES[prefs.language] || SHORT_QUOTES.en;
     document.querySelectorAll("[data-landing]").forEach((node) => { node.textContent = copy[node.dataset.landing] || node.textContent; });
     document.getElementById("worker-quote").textContent = `“${shortQuotes[0]}”`;
     document.getElementById("replay-quote").textContent = `“${shortQuotes[1]}”`;
-    const notes = DEVICE_NOTES[prefs.language] || DEVICE_NOTES.en;
-    document.querySelectorAll("[data-note]").forEach((node) => { node.textContent = notes[Number(node.dataset.note)]; });
     animateHeroTitle(copy, prefs.language);
   };
   localizeLanding();
@@ -1286,57 +1296,16 @@
     te:{elder:"MGNREGAలో నా కుటుంబానికి ఎన్ని రోజుల పని లభిస్తుంది?",farmer:"PM-KISAN చెల్లింపు ఇంకా ఎందుకు రాలేదు?",student:"ఓటరు గుర్తింపు కార్డు ఎలా పొందాలి?",caregiver:"ఆయుష్మాన్ భారత్‌కు ఏ పత్రాలు కావాలి?"},
     kn:{elder:"MGNREGAಯಲ್ಲಿ ನನ್ನ ಕುಟುಂಬಕ್ಕೆ ಎಷ್ಟು ದಿನ ಕೆಲಸ ಸಿಗುತ್ತದೆ?",farmer:"PM-KISAN ಪಾವತಿ ಇನ್ನೂ ಏಕೆ ಬಂದಿಲ್ಲ?",student:"ಮತದಾರರ ಗುರುತಿನ ಚೀಟಿ ಹೇಗೆ ಪಡೆಯುವುದು?",caregiver:"ಆಯುಷ್ಮಾನ್ ಭಾರತ್‌ಗೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು?"}
   };
-  const SCENARIO_LABELS = {
-    en:{elder:"MGNREGA",farmer:"PM-KISAN",student:"Voter ID",caregiver:"Ayushman"},
-    hi:{elder:"मनरेगा",farmer:"PM-KISAN",student:"वोटर आईडी",caregiver:"आयुष्मान"},
-    mr:{elder:"मनरेगा",farmer:"PM-KISAN",student:"मतदार ओळखपत्र",caregiver:"आयुष्मान"},
-    bn:{elder:"মনরেগা",farmer:"PM-KISAN",student:"ভোটার আইডি",caregiver:"আয়ুষ্মান"},
-    ta:{elder:"MGNREGA",farmer:"PM-KISAN",student:"வாக்காளர் அட்டை",caregiver:"ஆயுஷ்மான்"},
-    te:{elder:"MGNREGA",farmer:"PM-KISAN",student:"ఓటరు కార్డు",caregiver:"ఆయుష్మాన్"},
-    kn:{elder:"MGNREGA",farmer:"PM-KISAN",student:"ಮತದಾರರ ಚೀಟಿ",caregiver:"ಆಯುಷ್ಮಾನ್"}
-  };
-  const buildLandingScenarios = () => {
-    const prefs = getPreferences();
-    const questions = SCENARIO_QUESTIONS[prefs.language] || SCENARIO_QUESTIONS.en;
-    const language = LANGUAGES.find(item => item.code === prefs.language) || LANGUAGES[0];
-    return Object.fromEntries(Object.entries(questions).map(([key, question]) => {
-      const response = localizeDemoResponse(matchDemoResponse(question), prefs.language);
-      return [key, {question,avatar:language.short,language:language.label,source:response.tierLabel || "Aadya",answer:response.answer,checks:response.documentsNeeded || []}];
-    }));
-  };
-
   const getStoryData = () => {
-    const questions = SCENARIO_QUESTIONS[getPreferences().language] || SCENARIO_QUESTIONS.en;
+    const language = getPreferences().language;
+    const questions = SCENARIO_QUESTIONS[language] || SCENARIO_QUESTIONS.en;
+    const copy = copyFor(language);
     return {
-      farmer: { quote: `“${questions.farmer}”`, title: "A farmer, before the day begins.", description: "A farmer checks what may hold up a PM-KISAN installment and which land and bank records to verify." },
-      patient: { quote: `“${questions.caregiver}”`, title: "A caregiver, at the admissions desk.", description: "A caregiver checks what Ayushman Bharat needs and which documents to show at the hospital." },
-      student: { quote: `“${questions.student}”`, title: "A citizen, before an application.", description: "A citizen hears the requirements and carries a short document list instead of decoding a portal alone." }
+      farmer: { quote: `“${questions.farmer}”`, title: copy.storyFarmerTitle, description: copy.storyFarmerBody },
+      patient: { quote: `“${questions.caregiver}”`, title: copy.storyPatientTitle, description: copy.storyPatientBody },
+      student: { quote: `“${questions.student}”`, title: copy.storyStudentTitle, description: copy.storyStudentBody }
     };
   };
-
-  let activeScenarioKey = "farmer";
-  const setScenario = (key) => {
-    activeScenarioKey = key;
-    const scenarios = buildLandingScenarios();
-    const s = scenarios[key];
-    document.getElementById("scenario-question").textContent = s.question;
-    document.getElementById("scenario-avatar").textContent = s.avatar;
-    document.getElementById("scenario-language").textContent = s.language;
-    document.getElementById("scenario-source").textContent = s.source;
-    document.getElementById("scenario-answer").textContent = s.answer;
-    document.getElementById("scenario-checklist").innerHTML = s.checks.map(x => `<div class="mini-check"><i>✓</i>${x}</div>`).join("");
-    const labels = SCENARIO_LABELS[getPreferences().language] || SCENARIO_LABELS.en;
-    document.querySelectorAll(".scenario").forEach(btn => { btn.textContent = labels[btn.dataset.scenario]; btn.classList.toggle("active", btn.dataset.scenario === key); });
-  };
-  document.querySelectorAll(".scenario").forEach(btn => btn.addEventListener("click", () => setScenario(btn.dataset.scenario)));
-
-  document.getElementById("preview-mic").addEventListener("click", () => {
-    const active = document.querySelector(".scenario.active");
-    const keys = Object.keys(buildLandingScenarios());
-    setScenario(keys[(keys.indexOf(active.dataset.scenario) + 1) % keys.length]);
-  });
-  window.addEventListener("aadya:preferences", () => setScenario(activeScenarioKey));
-  setScenario(activeScenarioKey);
 
   let activeStoryKey = "farmer";
   const setStory = (key) => {
@@ -1389,6 +1358,39 @@
     if (!mobileNav.contains(event.target) && !menuButton.contains(event.target)) setMobileNav(false);
   });
   window.addEventListener("keydown", (event) => { if (event.key === "Escape") setMobileNav(false); });
+
+  // Text size: three steps, stored with the rest of the device preferences.
+  const TEXT_SIZES = ["normal", "large", "xlarge"];
+  const smaller = document.getElementById("text-smaller");
+  const larger = document.getElementById("text-larger");
+  const syncSizeButtons = () => {
+    const index = TEXT_SIZES.indexOf(getPreferences().textSize);
+    smaller.disabled = index <= 0;
+    larger.disabled = index >= TEXT_SIZES.length - 1;
+  };
+  const stepTextSize = (delta) => {
+    const index = TEXT_SIZES.indexOf(getPreferences().textSize);
+    const next = TEXT_SIZES[Math.min(TEXT_SIZES.length - 1, Math.max(0, index + delta))];
+    setPreferences({ textSize: next });
+  };
+  smaller.addEventListener("click", () => stepTextSize(-1));
+  larger.addEventListener("click", () => stepTextSize(1));
+  window.addEventListener("aadya:preferences", syncSizeButtons);
+  syncSizeButtons();
+
+  // Simple view: the plain, high-contrast version of the same page.
+  const MODE_KEY = "aadya_view_mode";
+  const simpleToggle = document.getElementById("simple-toggle");
+  const applyMode = (simple) => {
+    document.documentElement.dataset.mode = simple ? "easy" : "full";
+    simpleToggle.setAttribute("aria-pressed", String(simple));
+  };
+  simpleToggle.addEventListener("click", () => {
+    const simple = document.documentElement.dataset.mode !== "easy";
+    try { localStorage.setItem(MODE_KEY, simple ? "easy" : "full"); } catch {}
+    applyMode(simple);
+  });
+  applyMode(document.documentElement.dataset.mode === "easy");
 </script>
 </body>
 </html>

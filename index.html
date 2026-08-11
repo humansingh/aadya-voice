@@ -180,7 +180,7 @@
   /* ---------- Voice-first welcome ---------- */
   .welcome-empty-state { flex: 1; width: min(1040px, 100%); margin: auto; display: flex; flex-direction: column; justify-content: center; gap: 22px; padding: 18px 0 24px; }
   .first-mic-screen { flex: 1; min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; position: relative; padding: 20px; }
-  .mic-focus { display: flex; flex-direction: column; align-items: center; gap: 26px; }
+  .mic-focus { display: flex; flex-direction: column; align-items: center; gap: 52px; }
   .first-mic-button { width: clamp(150px, 30vw, 230px); aspect-ratio: 1; border: 0; border-radius: 50%; display: grid; place-items: center; color: var(--forest); background: radial-gradient(circle at 35% 28%, #f8d990, var(--sun) 62%, #d99a35); box-shadow: 0 28px 65px rgba(18,61,49,.22), 0 0 0 22px rgba(47,132,94,.08); animation: micBreathe 3.6s ease-in-out infinite; }
   .first-mic-button:hover, .first-mic-button:focus-visible { animation-play-state: paused; }
   @keyframes micBreathe {
@@ -581,9 +581,9 @@
   .session-intent{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
   .session-intent button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;color:var(--ink);font:inherit;cursor:pointer}
   .session-intent button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .info-btn{width:24px;height:24px;border:0;background:none;color:var(--muted);display:grid;place-items:center;cursor:pointer;flex-shrink:0}
-  .info-btn svg{width:15px;height:15px}
-  .info-btn:hover,.info-btn[aria-expanded="true"]{color:var(--forest)}
+  .session-intent button.info-btn{width:24px;height:24px;padding:0;border:0;border-radius:0;background:none;box-shadow:none;color:var(--muted);display:grid;place-items:center;cursor:pointer;flex-shrink:0}
+  .info-btn svg{width:17px;height:17px}
+  .session-intent button.info-btn:hover,.session-intent button.info-btn[aria-expanded="true"]{background:none;color:var(--forest)}
   .info-popover{max-width:290px;text-align:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 15px;font-size:12px;line-height:1.55;color:var(--muted);box-shadow:0 18px 40px rgba(23,53,45,.12)}
   .info-popover[hidden]{display:none}
   .privacy-row{display:none}
@@ -629,6 +629,7 @@ import { firebaseConfig } from "./lib/firebaseClient.js";
 import { DEMO_DELAYS, DEMO_SUGGESTIONS, matchDemoResponse, localizeDemoResponse } from "./lib/demoFixtures.js";
 import { getPreferences, setPreferences, getCopy } from "./lib/preferences.js";
 import { resolveLoginIdentifier, seededAccountForEmail } from "./lib/seededAccounts.js";
+import { sessionScriptForEmail, matchSessionTurn, sessionArtifact, applySessionExperience, clearSessionExperience } from "./lib/sessionScripts.js";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -898,6 +899,9 @@ let state = {
   artifactExpanded: false,
   artifactBusy: false,
   artifactError: null,
+  // Set when the signed-in account has a script in lib/sessionScripts.js.
+  sessionScript: null,
+  sessionPlayed: [],
 };
 let disposeAuthPreferences = null;
 let lastRenderedView = null;
@@ -931,6 +935,7 @@ function resetSession() {
   state.currentCaseId = null;
   state.currentCaseLabel = "";
   state.attachments = [];
+  state.sessionPlayed = []; // a new conversation starts the script from turn one
 }
 
 window.addEventListener("online", () => { state.offline = false; render(); });
@@ -973,10 +978,12 @@ function wsUi(key) { return WORKSPACE_UI[state.lang]?.[key] || WORKSPACE_UI.en[k
 // In demo mode the chips must always land on a scripted fixture, so they're
 // overridden with the demo questions rather than the localized defaults.
 function suggestions() {
+  if (state.sessionScript) return state.sessionScript.starters;
   if (state.demo) return DEMO_SUGGESTIONS_LOCALIZED[state.lang] || DEMO_SUGGESTIONS;
   return t(SUGGESTIONS);
 }
 function suggestionsEn() {
+  if (state.sessionScript) return state.sessionScript.startersEn || state.sessionScript.starters;
   if (state.demo) return DEMO_SUGGESTIONS;
   return SUGGESTIONS_EN;
 }
@@ -1009,6 +1016,9 @@ onAuthStateChanged(auth, async (user) => {
   state.user = user;
   state.workerMode = false;
   state.accountProfile = null;
+  state.sessionScript = null;
+  state.sessionPlayed = [];
+  clearSessionExperience();
   if (user) {
     subscribeHistory();
     if (!user.isAnonymous) await loadAccountSettings(user);
@@ -1021,6 +1031,7 @@ async function loadAccountSettings(user) {
     const snapshot = await getDoc(doc(db, "users", user.uid));
     const stored = snapshot.exists() ? snapshot.data() : {};
     const seeded = seededAccountForEmail(user.email);
+    applySessionScript(user);
     state.workerMode = stored.workerMode === true;
     state.accountProfile = {
       displayName: stored.displayName || user.displayName || seeded?.displayName || user.email,
@@ -1030,7 +1041,18 @@ async function loadAccountSettings(user) {
     console.error("account settings load failed", error);
     const seeded = seededAccountForEmail(user.email);
     state.accountProfile = { displayName: user.displayName || seeded?.displayName || user.email, title: seeded?.title || "" };
+    applySessionScript(user);
   }
+}
+
+// Accounts with a script in lib/sessionScripts.js open in the language and at
+// the reading level that script is written for.
+function applySessionScript(user) {
+  const script = sessionScriptForEmail(user?.email);
+  state.sessionScript = script;
+  state.sessionPlayed = [];
+  applySessionExperience(script);
+  if (script && state.lang !== script.language) setPreferences({ language: script.language });
 }
 
 async function setWorkerMode(enabled) {
@@ -1650,7 +1672,7 @@ function buildMain() {
             <button data-helping="self" aria-pressed="${state.helping === "self"}" class="${state.helping === "self" ? "active" : ""}">${state.lang === "hi" ? "मेरे लिए" : "For me"}</button>
             <button data-helping="other" aria-pressed="${state.helping === "other"}" class="${state.helping === "other" ? "active" : ""}">${state.lang === "hi" ? "किसी और के लिए" : "For someone else"}</button>
             <button class="info-btn" id="session-intent-info" aria-label="${state.lang === "hi" ? "इसका मतलब जानें" : "What does this mean?"}" aria-expanded="${state.showSessionInfo}">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 9v4.2M10 6.2v.1"/></svg>
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="10" cy="10" r="7.4"/><path d="M10 9.2v4.3M10 6.5v.1"/></svg>
             </button>
           </div>
           <div class="info-popover" id="session-intent-popover" ${state.showSessionInfo ? "" : "hidden"}>${state.lang === "hi" ? "यह बदलता है कि Aadya उत्तर में किसे संबोधित करता है। “किसी और के लिए” चुनने पर लाभार्थी की उम्र भी पूछी जाती है, क्योंकि कुछ योजनाओं के नियम उम्र पर निर्भर करते हैं।" : "This changes who Aadya's answer speaks to. Choosing “For someone else” also asks their age, since some scheme rules depend on it."}</div>
@@ -1931,7 +1953,8 @@ async function createWorkspaceArtifact(kind,message) {
   if(state.artifactBusy)return;
   state.artifactOpen=true;state.artifactBusy=true;state.artifactError=null;render();
   try{
-    const artifact=state.demo?demoWorkspaceArtifact(kind,message):await (async()=>{
+    const scripted=message.scriptTurnId?sessionArtifact(state.sessionScript,message.scriptTurnId,kind):null;
+    const artifact=scripted?(await sleep(DEMO_DELAYS.thinking),scripted):state.demo?demoWorkspaceArtifact(kind,message):await (async()=>{
       const response=await fetch("/api/artifact",{method:"POST",headers:await apiHeaders(),body:JSON.stringify({kind,language:state.lang,question:message.question,answer:message.text,sources:(message.sources||[]).map(({name,url,reviewedOn})=>({name,url,reviewedOn})),existingChecklist:message.artifact?.items||[],attachments:(message.attachments||[]).map(({name,type,size,text})=>({name,type,size,text}))})});
       const data=await response.json().catch(()=>({}));if(!response.ok){logApiFailure("artifact",{res:response,data});throw new Error(data.error||"artifact_failed");}return data.artifact;
     })();
@@ -1968,6 +1991,8 @@ async function reportWrongAnswer(message) {
 }
 
 function handleFollowupChip(label, sourceMessage) {
+  // Scripted chips are already phrased as questions — send them verbatim.
+  if (sourceMessage.scripted) { runPipelineWithText(label); return; }
   const kind = label === (DOC_LABEL[state.lang] || DOC_LABEL.en) ? "docs" : label === (SIMPLER_LABEL[state.lang] || SIMPLER_LABEL.en) ? "simpler" : "help";
   runPipelineWithText(t(FOLLOWUPS[kind]) + sourceMessage.question);
 }
@@ -2454,6 +2479,20 @@ async function runPipelineWithText(text, detailsConfirmed = false, fromVoice = f
   else state.messages.push({ role: "user", text, private: privateAsk, attachments: turnAttachments });
   state.stage = "thinking"; state.error = null; render();
 
+  // Seeded-account sessions follow lib/sessionScripts.js. Only a question that
+  // matches a scripted turn is served from the script; anything else falls
+  // through to the live pipeline below, so the session never dead-ends.
+  const scriptedTurn = matchSessionTurn(state.sessionScript, text, state.sessionPlayed);
+  if (scriptedTurn) {
+    await sleep(DEMO_DELAYS.thinking);
+    state.sessionPlayed.push(scriptedTurn.id);
+    const data = { ...scriptedTurn.response, scripted: true, scriptTurnId: scriptedTurn.id };
+    appendAgentMessage(text, data, privateAsk, turnAttachments);
+    if (!privateAsk) await saveHistory(text, data);
+    finishAnswer(data.answer, fromVoice);
+    return;
+  }
+
   // Demo mode: no model calls at all — scripted fixture with a staged delay.
   if (state.demo) {
     await sleep(DEMO_DELAYS.thinking);
@@ -2743,14 +2782,14 @@ function subscribeHistory() {
 // live pipeline and demo mode so both render through identical code paths —
 // demo must be visually indistinguishable from the real app.
 function appendAgentMessage(question, data, privateAsk = false, attachments = []) {
-  const chips = data.tier === "refuse" ? (data.chips || []) : [];
+  const chips = (data.tier === "refuse" || data.scripted) ? (data.chips || []) : [];
   const sources = Array.isArray(data.sources) ? data.sources : [];
   // Shown for tier 1 and 2 — documentsNeeded comes from the prototype corpus,
   // not model output, so it's equally trustworthy on a partial answer; the
   // tier label already carries the "confirm the rest" caveat.
   const artifact = ((data.tier === 1 || data.tier === 2) && Array.isArray(data.documentsNeeded) && data.documentsNeeded.length)
     ? { heading: "Document checklist", items: data.documentsNeeded } : null;
-  state.messages.push({ role: "agent", text: explainAcronyms(applySessionPerspective(data.answer)), question, tier: data.tier, tierLabel: data.tierLabel, gap: data.gap, sources, disclaimer: data.disclaimer || DISCLAIMER[state.lang] || DISCLAIMER.en, chips, artifact, private: privateAsk, attachments });
+  state.messages.push({ role: "agent", text: explainAcronyms(applySessionPerspective(data.answer)), question, tier: data.tier, tierLabel: data.tierLabel, gap: data.gap, sources, disclaimer: data.disclaimer || DISCLAIMER[state.lang] || DISCLAIMER.en, chips, artifact, private: privateAsk, attachments, scripted: data.scripted === true, scriptTurnId: data.scriptTurnId || null });
 }
 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }

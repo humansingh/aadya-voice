@@ -29,7 +29,7 @@ async function main() {
   assert(!fs.existsSync(path.join(ROOT, 'get-started.html')), 'setup wizard must be deleted');
   assert(!fs.existsSync(path.join(ROOT, 'old-copy')), 'old-copy must be deleted');
   assert(!landing.includes('signup-nudge') && !landing.includes('AADYA_SIGNUP_NUDGE_DELAY_MS'), 'signup nudge must be deleted');
-  assert(landing.includes('href="./signup.html?mode=signin">Sign in</a>') && landing.includes('href="./signup.html?mode=signup">Create account</a>'), 'landing sign-in and create-account links missing');
+  assert(/href="\.\/signup\.html\?mode=signin"[^>]*>Sign in</.test(landing) && /href="\.\/signup\.html\?mode=signup"[^>]*>Create account</.test(landing), 'landing sign-in and create-account links missing');
   assert(!landing.includes('id="cost-controls"') && about.includes('id="cost-controls"') && about.includes('updateCostView') && about.includes('Pricing checked 11 August 2026'), 'live cost view must live on About, not the landing hero');
   assert(about.includes('https://platform.openai.com/docs/pricing') && about.includes('https://cloud.google.com/text-to-speech/pricing'), 'cost assumptions must link official pricing');
   assert(signup.includes('createUserWithEmailAndPassword') && signup.includes('signInWithEmailAndPassword') && signup.includes('sendPasswordResetEmail'), 'full-page account actions missing');
@@ -88,6 +88,13 @@ async function main() {
   const seededAccounts = read('lib/seededAccounts.js');
   assert(seededAccounts.includes('Amit Kumar') && seededAccounts.includes('title: "Farmer"'), 'seeded farmer account missing');
   assert(seededAccounts.includes('Priya Sharma') && seededAccounts.includes('Job seeker · Student · Professional'), 'seeded job seeker account missing');
+  assert(seededAccounts.includes('jobs@aadya.app') && seededAccounts.includes('farm@aadya.app'), 'scripted session accounts missing');
+  const sessionScripts = read('lib/sessionScripts.js');
+  assert(sessionScripts.includes('"jobs@aadya.app"') && sessionScripts.includes('"farm@aadya.app"'), 'session scripts must be keyed by seeded account');
+  assert(!/\bdemo\b/i.test(sessionScripts.replace(/^\/\/.*$/gm, '')), 'scripted sessions must not be labelled as a demo');
+  assert(index.includes('matchSessionTurn(state.sessionScript') && index.includes('sessionArtifact(state.sessionScript'), 'index.html must route scripted turns and artefacts through lib/sessionScripts.js');
+  assert(!index.includes('sessionScript ? `<span class="demo-badge"'), 'scripted accounts must not be badged');
+  assert(read('api/speak.js').includes("forSpeech(text, lang)"), 'text-to-speech must normalise pronunciation before synthesis');
   assert(!index.includes('sidebar-common-more') && !index.includes('new-chat-shortcut') && !index.includes('wsUi("findHelp")'), 'redundant sidebar controls must be removed');
   assert(index.includes('Prototype records can be wrong or out of date. Confirm at the source link.'), 'composer source warning missing');
   assert(index.includes('width: 100%;') && index.includes('border-radius: 0;') && index.includes('box-shadow: none;'), 'application shell must be flush with the viewport');
