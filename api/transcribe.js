@@ -1,18 +1,25 @@
-const Groq = require('groq-sdk');
-const { toFile } = require('groq-sdk');
+const OpenAI = require('openai');
+const { toFile } = require('openai');
 const { validateAudio, cleanLanguage } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
 const { withProviderTimeout } = require('../lib/providerTimeout');
+const { TASKS } = require('../config/ai');
 
 // Client sends { audioBase64, mimeType } — JSON body, not multipart.
 // Keeping the upload as base64-in-JSON avoids multipart parsing edge cases
 // in serverless functions and keeps this route trivial to test with curl.
+//
+// response_format is 'json', not 'verbose_json' — verbose_json (language
+// detection, duration, segments) is a Whisper-specific feature; committed-
+// turn models are not guaranteed to support it, so this asks only for what
+// every transcription model accepts. Neither field it would have added was
+// ever read by the client, only by this response body.
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
   const identity = await secureEndpoint(req, res);
   if (!identity) return;
-  if (!process.env.GROQ_API_KEY) {
-    return res.status(500).json({ error: 'GROQ_API_KEY not set on server' });
+  if (!process.env.OPENAI_API_KEY) {
+    return res.status(500).json({ error: 'OPENAI_API_KEY not set on server' });
   }
 
   try {
@@ -23,20 +30,20 @@ module.exports = async (req, res) => {
     const ext = (mimeType || '').includes('mp4') ? 'm4a' : 'webm';
     const file = await toFile(buffer, `audio.${ext}`);
 
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+    const openai = new OpenAI();
     const lang = cleanLanguage(language);
-    const transcription = await withProviderTimeout((signal) => groq.audio.transcriptions.create({
+    const transcription = await withProviderTimeout((signal) => openai.audio.transcriptions.create({
       file,
-      model: 'whisper-large-v3-turbo',
+      model: TASKS.transcription.model,
       temperature: 0,
-      response_format: 'verbose_json',
+      response_format: 'json',
       language: lang,
     }, { signal }));
 
     return res.status(200).json({
       text: transcription.text,
-      language: transcription.language || null,
-      duration: transcription.duration || null,
+      language: lang,
+      duration: null,
     });
   } catch (err) {
     console.error('transcribe error', err);

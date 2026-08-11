@@ -128,5 +128,5 @@ const HOST = process.env.HOST || '0.0.0.0';
 server.listen(PORT, HOST, () => {
   console.log(`Aadya local dev server running at http://localhost:${PORT}`);
   console.log(`Listening on all network interfaces (${HOST})`);
-  console.log(`GROQ_API_KEY loaded: ${process.env.GROQ_API_KEY ? 'yes' : 'NO — missing!'}`);
+  console.log(`OPENAI_API_KEY loaded: ${process.env.OPENAI_API_KEY ? 'yes' : 'NO — missing!'}`);
 });

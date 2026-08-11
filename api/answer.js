@@ -1,4 +1,3 @@
-const Groq = require('groq-sdk');
 const OpenAI = require('openai');
 const { retrieve } = require('../lib/retrieval');
 const { translateToEnglish } = require('../lib/translate');
@@ -7,21 +6,15 @@ const { cleanText, cleanLanguage } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
 const { withProviderTimeout } = require('../lib/providerTimeout');
 const { checkDeterministicSafety } = require('../lib/safety');
+const { TASKS, LANGUAGE_PRESENTATION_RULE } = require('../config/ai');
 
-const MAIN_MODEL = 'openai/gpt-oss-120b';
-// Keep the existing retry path unchanged during the emergency model swap.
-// Both deprecated Llama identifiers now resolve to Groq's documented 120B
-// replacement, so a 429 retry uses the same model rather than silently
-// lowering answer quality.
-const FALLBACK_MODEL = 'openai/gpt-oss-120b';
-// Hardcoded here as a temporary bridge — both move into config/ai.js's
-// `moderation` task group once that module lands.
-const MODERATION_MODEL = 'omni-moderation-latest';
+const REASONING_MODEL = TASKS.reasoning.model;
+const MODERATION_MODEL = TASKS.moderation.model;
 // open: a moderation-call failure serves the answer anyway, logs it, and
 // flags moderation_skipped on the response — a transient OpenAI blip
 // shouldn't take the app down during a public trial or live demo.
 // closed: a moderation-call failure blocks the response (503).
-const MODERATION_FAIL_MODE = (process.env.MODERATION_FAIL_MODE || 'open').toLowerCase() === 'closed' ? 'closed' : 'open';
+const MODERATION_FAIL_MODE = TASKS.moderation.failMode;
 
 // Retrieval-score cutoffs that decide the base tier before generation.
 // Tuned against data/schemes.json's keyword-overlap scoring (0-1 range).
@@ -57,9 +50,11 @@ TIER 3 (general): RETRIEVED DOCUMENTS is empty or unrelated. Answer usefully fro
 HARD RULES — never break these, in any tier:
 1. NEVER state a definitive eligibility verdict ("you are eligible" / "you qualify"). State the published criteria plainly and tell the user what to carry to verify in person. Use phrasing like "the published criteria are..." — never "you are eligible."
 2. Keep the answer short (3-5 sentences), plain language, suitable to be read aloud. The first sentence must be the plain result or next action, with no preamble.
-3. Respond in the SELECTED LANGUAGE supplied with the question: use Hindi in Devanagari for "hi" and simple English for "en", even when the user code-switches or types a scheme name in another script.
+3. Respond in the SELECTED LANGUAGE supplied with the question, in that language's own script, even when the user code-switches or types a scheme name in another script.
 4. Set "refuse": true ONLY for genuinely out-of-domain requests — medical diagnosis, legal advice, or anything harmful/unsafe. Do NOT refuse just because retrieval found nothing; that's Tier 3, not a refusal. When refusing, leave "answer" empty.
 5. Expand every acronym on first use. Never output unexplained forms such as CSC, BPL, SECC, OTP, EPIC, or KCC.
+
+${LANGUAGE_PRESENTATION_RULE}
 
 Respond ONLY with strict JSON, no markdown fences, matching exactly:
 {"answer": string, "sourceIds": string[], "gap": string, "refuse": boolean}`;
@@ -68,9 +63,6 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
   const identity = await secureEndpoint(req, res);
   if (!identity) return;
-  if (!process.env.GROQ_API_KEY) {
-    return res.status(500).json({ error: 'GROQ_API_KEY not set on server' });
-  }
   if (!process.env.OPENAI_API_KEY) {
     return res.status(500).json({ error: 'OPENAI_API_KEY not set on server' });
   }
@@ -107,11 +99,10 @@ module.exports = async (req, res) => {
       });
     }
 
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
     const openai = new OpenAI();
 
     // --- Translate + retrieve ---
-    const englishQuery = await translateToEnglish(groq, question, lang);
+    const englishQuery = await translateToEnglish(openai, question, lang);
     const tTranslate = Date.now();
 
     const matches = await retrieve(englishQuery, 5);
@@ -138,23 +129,10 @@ module.exports = async (req, res) => {
       },
     ];
 
-    let completion;
-    let modelUsed = MAIN_MODEL;
-    try {
-      completion = await withProviderTimeout((signal) => groq.chat.completions.create({
-        model: MAIN_MODEL, temperature: 0.2, reasoning_effort: 'low', max_completion_tokens: 1200, response_format: ANSWER_RESPONSE_FORMAT, messages: generationMessages,
-      }, { signal }));
-    } catch (err) {
-      if (err?.status === 429) {
-        console.warn(`[answer] ${MAIN_MODEL} rate-limited, falling back to ${FALLBACK_MODEL} (testing only)`);
-        modelUsed = FALLBACK_MODEL;
-        completion = await withProviderTimeout((signal) => groq.chat.completions.create({
-          model: FALLBACK_MODEL, temperature: 0.2, reasoning_effort: 'low', max_completion_tokens: 1200, response_format: ANSWER_RESPONSE_FORMAT, messages: generationMessages,
-        }, { signal }));
-      } else {
-        throw err;
-      }
-    }
+    const modelUsed = REASONING_MODEL;
+    const completion = await withProviderTimeout((signal) => openai.chat.completions.create({
+      model: REASONING_MODEL, temperature: 0.2, reasoning_effort: 'low', max_completion_tokens: 1200, response_format: ANSWER_RESPONSE_FORMAT, messages: generationMessages,
+    }, { signal }));
     const tGenerate = Date.now();
 
     let parsed;

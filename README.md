@@ -11,7 +11,7 @@ Aadya listens first. A voice assistant that helps people ask about government sc
 
 ## What this is
 
-Aadya accepts a spoken or typed question in Hindi or English, checks it against a small, source-checked repository of Indian government schemes, scholarships, jobs and services, speaks back a grounded answer, and turns that answer into a document-and-office checklist a person can carry. It does not decide eligibility and does not represent any government body. Every answer states the published criteria and points to the official source and office to confirm in person.
+Aadya accepts a spoken or typed question in one of seven languages (English, Hindi, Marathi, Tamil, Telugu, Kannada, Malayalam), checks it against a small, source-checked repository of Indian government schemes, scholarships, jobs and services, speaks back a grounded answer, and turns that answer into a document-and-office checklist a person can carry. It does not decide eligibility and does not represent any government body. Every answer states the published criteria and points to the official source and office to confirm in person. Five of the seven languages are newly added and not yet native-speaker reviewed — see the review-status notes on the landing page and About page.
 
 ## Product surfaces
 
@@ -54,10 +54,9 @@ Keys live in Vercel project settings for the deployed app, never in this reposit
 
 | Variable | Purpose |
 | --- | --- |
-| `GROQ_API_KEY` | Transcription, translation and answer/artifact generation (current provider, mid-migration to OpenAI; see Request flow below) |
 | `GOOGLE_TTS_API_KEY` | Google Cloud Text-to-Speech, used by `api/speak.js` |
-| `OPENAI_API_KEY` | Output moderation (`omni-moderation-latest`), blocking gate in `api/answer.js` |
-| `MODERATION_FAIL_MODE` | `open` (default) or `closed`; what happens if the moderation call itself fails |
+| `OPENAI_API_KEY` | Transcription, translation, reasoning, drafts and moderation — every `api/*.js` handler except `speak.js`. See [`config/ai.js`](config/ai.js) for which model each task uses |
+| `MODERATION_FAIL_MODE` | `open` (default) or `closed`; what happens if the output-moderation call itself fails |
 | `FIREBASE_PROJECT_ID` | Firebase project id, used for ID-token verification |
 | `FIREBASE_SERVICE_ACCOUNT_JSON` | Server-side Firebase Admin credential, one-line JSON |
 | `OPPORTUNITY_SOURCE` | `local` or `firestore`; which repository the API reads from |
@@ -68,13 +67,13 @@ Keys live in Vercel project settings for the deployed app, never in this reposit
 
 ## Request flow
 
-This section describes the current code and needs updating once the OpenAI-platform migration (transcription, embeddings, reasoning and lightweight tasks moving off Groq) lands.
+Every model call in this flow goes through OpenAI; see [`config/ai.js`](config/ai.js) for exact model IDs per task and [`docs/PROVIDER-HISTORY.md`](docs/PROVIDER-HISTORY.md) for what each one replaced. Retrieval is still keyword-overlap scoring, not embeddings-based, despite `text-embedding-3-large` being configured — that lands in a separate commit.
 
-1. The browser records or types a question and calls `POST /api/transcribe` (Firebase-authenticated) if it was spoken. Groq Whisper Large V3 Turbo returns the transcript.
-2. The client calls `POST /api/guard-input` as a pre-flight UX check: a deterministic keyword floor, then a Groq jailbreak/injection classifier.
-3. The client calls `POST /api/answer`. The same deterministic safety check runs again server-side, so a direct call to this endpoint cannot skip it. The question is translated to English if needed, matched against the local retrieval corpus, and sent to Groq for a tiered, structured-JSON answer. The generated answer is then passed through a blocking OpenAI `omni-moderation-latest` check before it is returned; a flagged answer is replaced with a redirect, never sent to the user.
+1. The browser records or types a question and calls `POST /api/transcribe` (Firebase-authenticated) if it was spoken. `gpt-transcribe` returns the transcript, hinted with the selected language.
+2. The client calls `POST /api/guard-input` as a pre-flight UX check: a deterministic keyword floor, then an `omni-moderation-latest` check.
+3. The client calls `POST /api/answer`. The same deterministic safety check runs again server-side, so a direct call to this endpoint cannot skip it. The question is translated to English if needed (lexical query expansion only, via `gpt-5.6-luna`) and matched against the local retrieval corpus. The *original* question, plus the retrieved English evidence, goes to `gpt-5.6-terra` for a tiered, structured-JSON answer in the user's selected language. The generated answer is then passed through a blocking `omni-moderation-latest` check before it is returned; a flagged answer is replaced with a redirect, never sent to the user.
 4. The client calls `POST /api/speak` to synthesize the answer with Google Cloud Text-to-Speech.
-5. Optionally, `POST /api/artifact` turns a question and answer into an application draft or document checklist, gated by the same deterministic safety check.
+5. Optionally, `POST /api/artifact` turns a question and answer into an application draft or document checklist using `gpt-5.6-terra`, gated by the same deterministic safety check.
 6. `GET /api/opportunities` serves the browse/directory catalogue directly from Firestore or the local repository; no model call is involved.
 
 See `about.html` for the full visual diagram of this flow, including identity and storage.
@@ -122,6 +121,6 @@ The scheme dataset is a small, hand-checked prototype set, not a complete or con
 - [Firebase](https://firebase.google.com) Auth and Firestore (authentication, history, opportunity store)
 - [Google Cloud Text-to-Speech](https://cloud.google.com/text-to-speech) (speech output)
 - [OpenAI Platform](https://platform.openai.com) (transcription, embeddings, reasoning, moderation)
-- [Groq](https://groq.com) (previous provider for transcription and reasoning; see `docs/PROVIDER-HISTORY.md` once the migration commit lands)
+- [Groq](https://groq.com) (previous provider for transcription and reasoning; see [`docs/PROVIDER-HISTORY.md`](docs/PROVIDER-HISTORY.md) for what replaced it and why)
 - Claude Code (development)
 - Codex (development)

@@ -1,18 +1,24 @@
-const Groq = require('groq-sdk');
+const OpenAI = require('openai');
 const { cleanText } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
 const { withProviderTimeout } = require('../lib/providerTimeout');
 const { checkDeterministicSafety } = require('../lib/safety');
+const { TASKS } = require('../config/ai');
 
-// Runs the transcript through Llama Prompt Guard 2 before it ever reaches
-// the main model. If this flags the input, we refuse before doing any
-// retrieval or generation.
+const MODERATION_MODEL = TASKS.moderation.model;
+
+// Client-side pre-flight for UX (see api/answer.js and api/artifact.js for
+// the server-side deterministic re-check a direct POST can't skip). Runs
+// the transcript through omni-moderation-latest before it ever reaches the
+// main model — the final model stack has no dedicated jailbreak/prompt-
+// injection classifier, so this content-moderation model is the sole
+// model-based input check, same model as the output gate in api/answer.js.
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
   const identity = await secureEndpoint(req, res);
   if (!identity) return;
-  if (!process.env.GROQ_API_KEY) {
-    return res.status(500).json({ error: 'GROQ_API_KEY not set on server' });
+  if (!process.env.OPENAI_API_KEY) {
+    return res.status(500).json({ error: 'OPENAI_API_KEY not set on server' });
   }
 
   try {
@@ -23,22 +29,16 @@ module.exports = async (req, res) => {
     const deterministic = checkDeterministicSafety(text);
     if (deterministic.flagged) return res.status(200).json({ flagged: true, score: 1, source: 'code', category: deterministic.category });
 
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-    const result = await withProviderTimeout((signal) => groq.chat.completions.create({
-      messages: [{ role: 'user', content: text }],
-      model: 'meta-llama/llama-prompt-guard-2-86m',
-      temperature: 1,
-      max_completion_tokens: 1,
-      top_p: 1,
-      stream: false,
+    const openai = new OpenAI();
+    const moderationResult = await withProviderTimeout((signal) => openai.moderations.create({
+      model: MODERATION_MODEL,
+      input: text,
     }, { signal }));
 
-    // Prompt Guard 2 returns a jailbreak/injection probability score (0-1) as
-    // the completion text, not a text label — score close to 1 means likely
-    // malicious/injected input.
-    const score = parseFloat(result.choices[0].message.content || '0');
-    const FLAG_THRESHOLD = 0.5;
-    const flagged = Number.isNaN(score) || score >= FLAG_THRESHOLD;
+    const result = moderationResult.results?.[0];
+    const categoryScores = Object.values(result?.category_scores || {});
+    const score = categoryScores.length ? Math.max(...categoryScores) : 0;
+    const flagged = Boolean(result?.flagged);
 
     return res.status(200).json({ flagged, score, source: 'model' });
   } catch (err) {

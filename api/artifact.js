@@ -1,11 +1,12 @@
 const crypto = require('crypto');
-const Groq = require('groq-sdk');
+const OpenAI = require('openai');
 const { cleanText, cleanLanguage } = require('../lib/apiValidation');
 const { secureEndpoint } = require('../lib/serverSecurity');
 const { withProviderTimeout } = require('../lib/providerTimeout');
 const { checkDeterministicSafety } = require('../lib/safety');
+const { TASKS, LANGUAGES, LANGUAGE_PRESENTATION_RULE } = require('../config/ai');
 
-const MODEL = 'openai/gpt-oss-120b';
+const MODEL = TASKS.reasoning.model;
 const ALLOWED_KINDS = new Set(['application', 'checklist']);
 const RESPONSE_FORMAT = {
   type: 'json_schema',
@@ -66,7 +67,7 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
   const identity = await secureEndpoint(req, res);
   if (!identity) return;
-  if (!process.env.GROQ_API_KEY) return res.status(500).json({ error: 'GROQ_API_KEY not set on server' });
+  if (!process.env.OPENAI_API_KEY) return res.status(500).json({ error: 'OPENAI_API_KEY not set on server' });
 
   try {
     const body = req.body || {};
@@ -104,15 +105,16 @@ module.exports = async (req, res) => {
       : 'Prepare a practical, ordered checklist for confirming eligibility, gathering documents and using the official application route.';
     const attachmentContext = attachments.length ? attachments.map((attachment) => `FILE: ${attachment.name} (${attachment.type})\n${attachment.text || '[File attached as a reference; its contents were not extracted.]'}`).join('\n\n') : '(none)';
     const sourceContext = sources.length ? sources.map((source) => `${source.name}\n${source.url}\nChecked: ${source.reviewedOn || 'not stated'}`).join('\n\n') : '(none)';
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-    const completion = await withProviderTimeout((signal) => groq.chat.completions.create({
+    const languageLabel = LANGUAGES.find((entry) => entry.code === language)?.label || 'English';
+    const openai = new OpenAI();
+    const completion = await withProviderTimeout((signal) => openai.chat.completions.create({
       model: MODEL,
       temperature: 0.15,
       reasoning_effort: 'low',
       max_completion_tokens: 2200,
       response_format: RESPONSE_FORMAT,
       messages: [
-        { role: 'system', content: `You prepare careful public-service application aids for India. You never submit anything, determine eligibility, or invent personal facts, deadlines, rules, document requirements, contact details or URLs. ${task} Use only the supplied answer, source list, existing checklist and readable attachment text. An attachment without extracted text is not evidence. Put every missing personal or scheme-specific fact in missingInformation. Keep official URLs verbatim. Write in ${language === 'hi' ? 'simple Hindi in Devanagari' : 'simple English'}. The caveat must say this is a preparation draft, not a submitted application, and that every detail must be confirmed at the official source. Return only the required JSON.` },
+        { role: 'system', content: `You prepare careful public-service application aids for India. You never submit anything, determine eligibility, or invent personal facts, deadlines, rules, document requirements, contact details or URLs. ${task} Use only the supplied answer, source list, existing checklist and readable attachment text. An attachment without extracted text is not evidence. Put every missing personal or scheme-specific fact in missingInformation. Keep official URLs verbatim. Write in simple ${languageLabel}, in that language's own script.\n\n${LANGUAGE_PRESENTATION_RULE}\n\nThe caveat must say this is a preparation draft, not a submitted application, and that every detail must be confirmed at the official source. Return only the required JSON.` },
         { role: 'user', content: `QUESTION\n${question}\n\nAADYA ANSWER\n${answer}\n\nOFFICIAL SOURCES\n${sourceContext}\n\nEXISTING DOCUMENT CHECKLIST\n${existingChecklist.join('\n') || '(none)'}\n\nTRANSIENT ATTACHMENTS\n${attachmentContext}` },
       ],
     }, { signal }));

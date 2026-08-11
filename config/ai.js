@@ -6,10 +6,8 @@
 // time; throws on boot for an unknown model ID, a missing required field,
 // or an out-of-range numeric, rather than failing confusingly later.
 //
-// Not yet wired to any call site (api/*.js, lib/translate.js still call
-// Groq directly) — that migration is a separate commit. The exceptions are
-// lib/apiValidation.js, api/speak.js and lib/preferences.js's manual
-// mirror, which already read the `languages` list from here.
+// Wired into every api/*.js handler and lib/translate.js. See
+// docs/PROVIDER-HISTORY.md for what each task group replaced.
 //
 // Cost-control tunables (max_output_tokens, retrieved-doc cap, turn cap,
 // retry/backoff, per-session timeout, daily spend ceiling, DRY_RUN) are
@@ -133,9 +131,9 @@ const TASKS = {
 // code path; it documents what was verified to exist.
 //
 // `transcriptionHints` (scheme names, districts, common transliterations
-// per language, passed to gpt-transcribe once transcription migrates off
-// Groq) are intentionally empty — real hint data is future work, not
-// something to fabricate now.
+// per language, meant to be passed to gpt-transcribe as a prompt hint) are
+// intentionally empty — real hint data is future work, not something to
+// fabricate now. api/transcribe.js does not read this field yet.
 //
 // `verified: true` means the language has been exercised end to end
 // (Aman's call — five of these seven are newly added and not yet

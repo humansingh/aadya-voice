@@ -30,8 +30,8 @@ async function main() {
   assert(!fs.existsSync(path.join(ROOT, 'old-copy')), 'old-copy must be deleted');
   assert(!landing.includes('signup-nudge') && !landing.includes('AADYA_SIGNUP_NUDGE_DELAY_MS'), 'signup nudge must be deleted');
   assert(landing.includes('href="./signup.html?mode=signin">Sign in</a>') && landing.includes('href="./signup.html?mode=signup">Create account</a>'), 'landing sign-in and create-account links missing');
-  assert(!landing.includes('id="cost-controls"') && about.includes('id="cost-controls"') && about.includes('updateCostView') && about.includes('Pricing checked 9 August 2026'), 'live cost view must live on About, not the landing hero');
-  assert(about.includes('https://groq.com/pricing') && about.includes('https://cloud.google.com/text-to-speech/pricing'), 'cost assumptions must link official pricing');
+  assert(!landing.includes('id="cost-controls"') && about.includes('id="cost-controls"') && about.includes('updateCostView') && about.includes('Pricing checked 11 August 2026'), 'live cost view must live on About, not the landing hero');
+  assert(about.includes('https://platform.openai.com/docs/pricing') && about.includes('https://cloud.google.com/text-to-speech/pricing'), 'cost assumptions must link official pricing');
   assert(signup.includes('createUserWithEmailAndPassword') && signup.includes('signInWithEmailAndPassword') && signup.includes('sendPasswordResetEmail'), 'full-page account actions missing');
   assert(signup.includes('linkWithCredential') && signup.includes('auth.currentUser?.isAnonymous'), 'sign-up must preserve an existing guest identity');
   assert(signup.includes('landscape-canvas') && signup.includes('refraction-lens') && signup.includes('voice-sigil'), 'signup page must preserve the original dialog effects');
@@ -113,10 +113,25 @@ async function main() {
   assert(rules.includes('allow delete: if request.auth != null && resource.data.uid == request.auth.uid'), 'users must be able to delete their own records');
   assert(rules.includes('match /unanswered/{fingerprint}'), 'anonymous aggregate rules missing');
 
-  const allModelSource = [read('api/answer.js'), read('lib/translate.js')].join('\n');
-  assert(!allModelSource.includes('llama-3.3-70b-versatile') && !allModelSource.includes('llama-3.1-8b-instant'), 'retired Llama model remains');
-  assert(allModelSource.includes('openai/gpt-oss-120b'), 'replacement model missing');
-  assert(read('api/answer.js').includes("type: 'json_schema'") && read('api/answer.js').includes('reasoning_effort'), 'replacement model must use its strict structured-output contract');
+  // Every model-touching file, plus config/ai.js (the source of truth) and
+  // package.json (dependency list), must carry zero Groq-era identifiers.
+  // This is a deliberate, permanent regression guard, not a one-time check
+  // for the migration commit — a reintroduced Groq call site should fail
+  // npm test the same way a reintroduced retired Llama model string did
+  // before this migration.
+  const modelTouchingFiles = ['api/answer.js', 'api/artifact.js', 'api/transcribe.js', 'api/guard-input.js', 'api/speak.js', 'lib/translate.js', 'config/ai.js', 'package.json'];
+  const modelSource = modelTouchingFiles.map(read).join('\n');
+  const retiredIdentifiers = ['groq-sdk', 'groq/groq-sdk', "require('groq", 'llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'openai/gpt-oss-120b', 'openai/gpt-oss-safeguard-20b', 'meta-llama/llama-prompt-guard-2-86m', 'whisper-large-v3-turbo', 'GROQ_API_KEY'];
+  for (const identifier of retiredIdentifiers) {
+    assert(!modelSource.includes(identifier), `retired Groq-era identifier "${identifier}" must not remain in ${modelTouchingFiles.join(', ')}`);
+  }
+  assert(read('api/transcribe.js').includes('TASKS.transcription.model') && read('config/ai.js').includes("'gpt-transcribe'"), 'transcription model id must live in config/ai.js, not hardcoded per call site');
+  assert(!read('api/answer.js').includes('gpt-5.6-terra') && read('config/ai.js').includes("'gpt-5.6-terra'"), 'reasoning model id must live in config/ai.js, not hardcoded per call site');
+  assert(read('api/answer.js').includes('TASKS.reasoning.model') && read('api/artifact.js').includes('TASKS.reasoning.model'), 'answer and artifact generation must read the reasoning model from config/ai.js');
+  assert(read('lib/translate.js').includes('TASKS.lightweight.model'), 'translation must read the lightweight model from config/ai.js');
+  assert(read('api/guard-input.js').includes('TASKS.moderation.model') && read('api/answer.js').includes('TASKS.moderation.model'), 'input and output moderation must both read the moderation model from config/ai.js');
+  assert(read('api/answer.js').includes("type: 'json_schema'") && read('api/answer.js').includes('reasoning_effort'), 'reasoning model must use its strict structured-output contract');
+  assert(!read('package.json').includes('groq-sdk') && !fs.existsSync(path.join(ROOT, 'node_modules', 'groq-sdk')), 'groq-sdk must be uninstalled, not just unused');
 
   const schemes = JSON.parse(read('data/schemes.json'));
   assert.strictEqual(schemes.length, 8, 'exactly eight reviewed prototype records expected');
