@@ -1185,7 +1185,7 @@ function renderApp() {
           </span>
           <span class="wordmark-copy">
             <span class="wordmark-text">Aadya</span>
-            <span class="wordmark-sub">${escapeHtml(ui("desk"))}</span>
+            <!-- <span class="wordmark-sub">${escapeHtml(ui("desk"))}</span> -->
           </span>
           ${state.demo ? `<span class="demo-badge" title="Scripted responses — no live model calls">Demo</span>` : ""}
           ${currentViewLabel ? `<span class="history-badge">${currentViewLabel}</span>` : ""}
@@ -1630,7 +1630,7 @@ function buildMain() {
             <button data-helping="self" aria-pressed="${state.helping === "self"}" class="${state.helping === "self" ? "active" : ""}">${state.lang === "hi" ? "मेरे लिए" : "For me"}</button>
             <button data-helping="other" aria-pressed="${state.helping === "other"}" class="${state.helping === "other" ? "active" : ""}">${state.lang === "hi" ? "किसी और के लिए" : "For someone else"}</button>
             <button class="info-btn" id="session-intent-info" aria-label="${state.lang === "hi" ? "इसका मतलब जानें" : "What does this mean?"}" aria-expanded="${state.showSessionInfo}">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10" cy="10" r="7.5"/><path d="M10 9v4.2M10 6.8v.1"/></svg>
+              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M10 9v4.2M10 6.2v.1"/></svg>
             </button>
           </div>
           <div class="info-popover" id="session-intent-popover" ${state.showSessionInfo ? "" : "hidden"}>${state.lang === "hi" ? "यह बदलता है कि Aadya उत्तर में किसे संबोधित करता है। “किसी और के लिए” चुनने पर लाभार्थी की उम्र भी पूछी जाती है, क्योंकि कुछ योजनाओं के नियम उम्र पर निर्भर करते हैं।" : "This changes who Aadya's answer speaks to. Choosing “For someone else” also asks their age, since some scheme rules depend on it."}</div>

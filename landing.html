@@ -337,6 +337,8 @@
   @keyframes pillWait{0%,100%{box-shadow:0 0 0 0 rgba(18,61,49,0)}45%{box-shadow:0 0 0 6px rgba(18,61,49,.05)}}
 
   /* desk / enclosure */
+  .desk-wrap{position:relative}
+  .desk-cta{position:absolute;right:34px;bottom:-24px;z-index:6;box-shadow:0 20px 40px rgba(18,61,49,.34),0 0 0 6px #fbfaf5}
   .desk{position:relative;margin-top:38px;border-radius:38px;padding:18px;background:#dbe9dc;overflow:hidden;box-shadow:var(--shadow)}
   .desk::before{content:"";position:absolute;width:500px;height:500px;border-radius:50%;right:-250px;bottom:-300px;border:1px solid rgba(18,61,49,.11);box-shadow:0 0 0 65px rgba(18,61,49,.025),0 0 0 130px rgba(18,61,49,.014)}
   .desk-grid{position:relative;z-index:2;display:grid;grid-template-columns:210px minmax(0,1fr) 0px;gap:10px;height:570px;overflow:hidden;transition:grid-template-columns .75s var(--ease),gap .75s var(--ease),filter .6s var(--ease),opacity .6s var(--ease),transform .6s var(--ease)}
@@ -404,7 +406,6 @@
   .office-pin svg{width:21px}
   .office-card h4{margin:18px 0 7px;font:600 18px "Manrope",sans-serif;letter-spacing:-.03em}
   .office-card p{margin:0;color:var(--muted);font-size:11px;line-height:1.55}
-  .office-card .cta{margin-top:auto;width:100%}
 
 
   .reveal { opacity: 1; transform: none; }
@@ -489,7 +490,7 @@
     .page{width:100%;margin:0}.shell,.hero,.moments,.field-panel,.final-cta{border-radius:0}.wrap{width:min(100% - 30px,1180px)}.nav-wrap{top:12px;width:calc(100% - 22px)}nav{padding-left:13px}.brand span:last-child{font-size:14px}.nav-signin,.menu-btn,.mobile-nav-sheet,.landing-mobile-prefs{display:none!important}.landing-prefs{display:flex!important}
     .hero{padding:116px 0 48px}.hero-grid{gap:25px}h1{font-size:48px}.hero-copy>p{font-size:16px}.call-stage{min-height:520px}.call-card{border-radius:23px}.call-content{grid-template-columns:1fr}.transcript-pane{border-right:0;border-bottom:1px solid var(--line);min-height:150px}.answer-pane{min-height:190px}.speaker-line{font-size:17px}.scenario-switcher .scenario:nth-child(n+4){display:none}.language-ribbon{font-size:11px}
     .thesis-section{padding:82px 0 54px}.thesis-copy h2{font-size:42px}.thesis-copy p{font-size:16px}.section-head{align-items:start;flex-direction:column}.journey{padding-bottom:84px}.journey-grid{grid-template-columns:1fr}.journey-step{min-height:300px;border-right:0;border-bottom:1px solid var(--line)!important}.journey-step:last-child{border-bottom:0!important}.moments{padding:64px 0}.story-card{min-height:auto}.story-art{min-height:315px}.story-bubble{left:18px;top:24px;max-width:220px}.story-phone{right:42px}.story-copy{grid-template-columns:1fr}.story-tabs{justify-content:flex-start}.small-stories{grid-template-columns:1fr}.trust-section{padding:82px 0}.confidence-card{grid-template-columns:58px 1fr}.confidence-card .signal{display:none}.field-panel,.final-cta{padding:52px 22px}.cost-section{padding-top:82px}.cost-shell{padding:45px 22px;border-radius:0}.cost-totals{grid-template-columns:1fr}.cost-total{min-height:90px}.cost-total strong{margin-top:10px}.cost-line{grid-template-columns:92px 1fr 64px}.cost-notes{grid-template-columns:1fr}.cost-sources{justify-content:flex-start}.final-cta{margin-top:82px}.cta-disc{width:230px;height:230px}.cta-art{height:270px}.site-footer{grid-template-columns:1fr}.footer-links{justify-content:flex-start}.pathways{padding-top:82px}.pathway-head{gap:18px}.persona-grid{grid-template-columns:1fr 1fr}.persona-card{min-height:190px}
-    .role-options{gap:7px}.role-btn{min-height:38px;padding:0 16px;font-size:13px}.desk{border-radius:28px;padding:10px}.desk-grid,.desk-grid.expanded{grid-template-columns:minmax(0,1fr)}.folder-nav{min-height:auto}.folder-steps{grid-template-columns:1fr 1fr}.folder-step{padding:12px 8px}.folder-step b{font-size:13px}.folder-note{display:none}.prepare-card{flex-direction:column}.sheet-row{grid-template-columns:1fr;gap:6px}.sheet-top h3{font-size:24px}.case-sheet::before{display:none}
+    .role-options{gap:7px}.role-btn{min-height:38px;padding:0 16px;font-size:13px}.desk{border-radius:28px;padding:10px}.desk-cta{right:18px;bottom:-20px;padding:0 14px;font-size:11px}.desk-grid,.desk-grid.expanded{grid-template-columns:minmax(0,1fr)}.folder-nav{min-height:auto}.folder-steps{grid-template-columns:1fr 1fr}.folder-step{padding:12px 8px}.folder-step b{font-size:13px}.folder-note{display:none}.prepare-card{flex-direction:column}.sheet-row{grid-template-columns:1fr;gap:6px}.sheet-top h3{font-size:24px}.case-sheet::before{display:none}
   }
   @media(max-width:680px){html[data-mode="easy"] .nav-wrap{top:12px;width:calc(100% - 22px)}html[data-mode="easy"] .wrap{padding-inline:18px}html[data-mode="easy"] .hero{padding:108px 0 42px}html[data-mode="easy"] .hero-copy{text-align:left}html[data-mode="easy"] .hero-actions,html[data-mode="easy"] .hero-proof{justify-content:flex-start}html[data-mode="easy"] .persona-grid{grid-template-columns:1fr}html[data-mode="easy"] .pathways{padding-top:42px}html[data-mode="easy"] .preference-dock{border-radius:4px}}
 
@@ -635,7 +636,7 @@
     <div class="wrap">
       <div class="hero-grid">
         <div class="hero-copy reveal visible">
-          <div class="eyebrow"><span class="eyebrow-dot"></span><span data-landing="eyebrow">Public information, spoken back clearly</span></div>
+          <!-- <div class="eyebrow"><span class="eyebrow-dot"></span><span data-landing="eyebrow">Public information, spoken back clearly</span></div> -->
           <h1 id="hero-title" aria-label="Public help, in your language."><span aria-hidden="true"><span data-landing="heroLead">Public help,</span> <span class="soft" data-landing="heroSoft">in your language.</span><span class="type-caret"></span></span></h1>
           <p data-landing="heroBody">Ask about schemes, public services, scholarships, pensions and government jobs. Get one sourced next step, spoken clearly.</p>
           <div class="hero-actions">
@@ -651,9 +652,9 @@
           </div>
           <div class="hero-proof">
             <div class="language-stack" aria-label="Supported languages">
-              <span>हि</span><span>EN</span>
+              <span>EN</span><span>हि</span><span>म</span><span>த</span><span>తె</span><span>ಕ</span><span>മ</span>
             </div>
-            <span data-landing="proof">Hindi and English. Spoken answers. No form to decode.</span>
+            <!-- <span data-landing="proof">Seven languages. Spoken answers. No form to decode.</span> -->
           </div>
         </div>
 
@@ -901,6 +902,7 @@
         </div>
       </div>
 
+      <div class="desk-wrap">
       <div class="desk idle" data-tour="two">
         <div class="desk-veil" aria-hidden="true"><div class="veil-timer"><i></i></div></div>
 
@@ -947,13 +949,14 @@
               </div>
               <h4 data-v2-office>Local agriculture office</h4>
               <p>Take the packet with you. Confirm final eligibility, deadlines and any local requirements at the official office.</p>
-              <a class="cta" href="./demo.html">
-                <svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 3.8v12.4L16 10 5 3.8z"/></svg>
-                Open the interactive demo
-              </a>
             </article>
           </div>
         </div>
+      </div>
+      <a class="cta desk-cta" href="./demo.html">
+        <svg viewBox="0 0 20 20" fill="currentColor"><path d="M5 3.8v12.4L16 10 5 3.8z"/></svg>
+        Open the interactive demo
+      </a>
       </div>
     </section>
 
