@@ -35,7 +35,7 @@
       <div class="cost-breakdown"><div class="cost-line"><span>Transcription</span><div class="cost-bar"><i id="cost-bar-stt"></i></div><b id="cost-stt">$0</b></div><div class="cost-line"><span>Reasoning + safety</span><div class="cost-bar"><i id="cost-bar-llm"></i></div><b id="cost-llm">$0</b></div><div class="cost-line"><span>Google speech</span><div class="cost-bar"><i id="cost-bar-tts"></i></div><b id="cost-tts">$0</b></div></div>
       <div class="cost-optional"><b>Not included in the variable total:</b> Firebase usage beyond its free allowances, serverless hosting, logging, domain, monitoring, support and the people required to review public information. Those costs are deployment- and team-specific rather than honest per-turn constants.</div>
     </div></div>
-    <div class="cost-notes"><p>Model: OpenAI gpt-5.6-terra. Speech-to-text: OpenAI gpt-transcribe. Voice: Google Cloud Chirp 3 HD. Estimate assumes about 1,500 input tokens and 300 generated tokens per answer plus a moderation pass. Pricing checked 11 August 2026; provider billing pages remain the authority.</p><div class="cost-sources"><a href="https://platform.openai.com/docs/pricing" target="_blank" rel="noopener">OpenAI pricing ↗</a><a href="https://cloud.google.com/text-to-speech/pricing" target="_blank" rel="noopener">Google Cloud pricing ↗</a></div></div>
+    <div class="cost-notes"><p>Model: OpenAI gpt-5.6-terra. Speech-to-text: OpenAI gpt-transcribe. Voice: Google Cloud Chirp 3 HD. Estimate assumes about 1,500 input tokens and 300 generated tokens per answer. Every question also runs an input and output moderation pass on omni-moderation-latest, free at the time of writing and not reflected in the total below. Pricing checked 11 August 2026; provider billing pages remain the authority.</p><div class="cost-sources"><a href="https://platform.openai.com/docs/pricing" target="_blank" rel="noopener">OpenAI pricing ↗</a><a href="https://cloud.google.com/text-to-speech/pricing" target="_blank" rel="noopener">Google Cloud pricing ↗</a></div></div>
   </div></section>
 
   <section class="architecture-section" id="architecture"><div class="wrap"><div class="architecture-head"><div><div class="section-kicker">System architecture</div><h2>One voice turn, end to end.</h2></div><p>Solid connectors are required in a normal turn. Dashed borders and connectors mark optional account, worker or history behavior. Arrowheads show data direction; gold dots mark hand-offs between system boundaries.</p></div>
@@ -88,7 +88,7 @@
 import { mountPreferenceControls } from "./lib/preferences.js";
 mountPreferenceControls("#about-preferences",{compact:true});
 
-const COST_RATES={sttPerHour:.04,llmInputPerMillion:.15,llmOutputPerMillion:.60,guardPerMillion:.20,ttsPerMillionChars:30};
+const COST_RATES={sttPerHour:.04,llmInputPerMillion:.15,llmOutputPerMillion:.60,guardPerMillion:0,ttsPerMillionChars:30};
 const costInputs={turns:document.querySelector("#cost-turns"),audio:document.querySelector("#cost-audio"),answer:document.querySelector("#cost-answer"),volume:document.querySelector("#cost-volume")};
 const money=(value,digits=4)=>`$${value.toLocaleString("en-US",{minimumFractionDigits:digits,maximumFractionDigits:digits})}`;
 function updateCostView(){
