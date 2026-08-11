@@ -629,7 +629,7 @@ import { firebaseConfig } from "./lib/firebaseClient.js";
 import { DEMO_DELAYS, DEMO_SUGGESTIONS, matchDemoResponse, localizeDemoResponse } from "./lib/demoFixtures.js";
 import { getPreferences, setPreferences, getCopy } from "./lib/preferences.js";
 import { resolveLoginIdentifier, seededAccountForEmail } from "./lib/seededAccounts.js";
-import { sessionScriptForEmail, matchSessionTurn, sessionArtifact, applySessionExperience, clearSessionExperience } from "./lib/sessionScripts.js";
+import { sessionScriptForEmail, matchSessionTurn, sessionArtifact, sessionTurnById, applySessionExperience, clearSessionExperience } from "./lib/sessionScripts.js";
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -1794,7 +1794,14 @@ function buildMessageEl(m, index) {
         <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="15" cy="4" r="2"/><circle cx="5" cy="10" r="2"/><circle cx="15" cy="16" r="2"/><path d="m7 9 6-4M7 11l6 4"/></svg>
         Share
       </button>
-      ${m.tier === "refuse" ? "" : `<button class="icon-text-btn draft-action" data-build-artifact="application" data-message-index="${index}">${state.lang === "hi" ? "आवेदन ड्राफ़्ट" : "Draft application"}</button><button class="icon-text-btn draft-action" data-build-artifact="checklist" data-message-index="${index}">${state.lang === "hi" ? "तैयारी सूची" : "Build checklist"}</button>`}
+      ${(() => {
+        // Scripted turns only offer these once the turn actually carries
+        // authored artifacts; otherwise clicking them would fall through to
+        // the real, billed /api/artifact call mid-scripted-session.
+        if (m.tier === "refuse") return "";
+        if (m.scripted && !sessionTurnById(state.sessionScript, m.scriptTurnId)?.artifacts) return "";
+        return `<button class="icon-text-btn draft-action" data-build-artifact="application" data-message-index="${index}">${state.lang === "hi" ? "आवेदन ड्राफ़्ट" : "Draft application"}</button><button class="icon-text-btn draft-action" data-build-artifact="checklist" data-message-index="${index}">${state.lang === "hi" ? "तैयारी सूची" : "Build checklist"}</button>`;
+      })()}
       ${state.workerMode ? `<button class="icon-text-btn worker-action" data-whatsapp="${index}">WhatsApp-ready</button><button class="icon-text-btn worker-action" data-print="${index}">Print</button><button class="icon-text-btn report-button" data-report="${index}">Report a wrong answer</button>` : ""}
       <button class="icon-text-btn danger" data-delete-answer="${index}">${state.lang === "hi" ? "यह जवाब मिटाएँ" : "Delete answer"}</button>
       ${state.user?.isAnonymous ? `<button class="icon-text-btn" data-sign-in="${index}">Sign in to keep answers</button>` : ""}
